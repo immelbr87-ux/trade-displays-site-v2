@@ -2,204 +2,225 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Create Display</title>
-  <link rel="stylesheet" href="/app.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trade Displays — Create Display</title>
+  <link rel="stylesheet" href="./app.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Create Display</h1>
-    <p class="sub">Enter display details. Bad inputs should produce a clear error (like the original).</p>
-
-    <div class="nav">
-      <a href="/">Home</a>
-      <a href="/trade-displays.html">Display Inventory</a>
-    </div>
-
-    <div class="card">
-      <form id="createForm">
-        <div class="grid">
-          <div>
-            <label for="category">Category <span class="badge">required</span></label>
-            <select id="category" required>
-              <option value="">Select…</option>
-              <option>Faucet</option>
-              <option>Sink</option>
-              <option>Toilet</option>
-              <option>Vanity</option>
-              <option>Tub</option>
-              <option>Shower</option>
-              <option>Accessory</option>
-              <option>Other</option>
-            </select>
-            <div class="small">Used for filtering/reporting.</div>
-          </div>
-
-          <div>
-            <label for="showroom">Location / Showroom <span class="badge">required</span></label>
-            <input id="showroom" placeholder="e.g., Mequon" required />
-            <div class="small">Where the display physically is.</div>
-          </div>
-
-          <div>
-            <label for="sku">SKU / Model <span class="badge">required</span></label>
-            <input id="sku" placeholder="e.g., K-3817-0" required />
-            <div class="small">Whatever identifier your team uses.</div>
-          </div>
-
-          <div>
-            <label for="price">Price <span class="badge">required</span></label>
-            <input id="price" placeholder="e.g., 250" inputmode="decimal" required />
-            <div class="small">Numbers only. Ex: 250 or 250.00</div>
-          </div>
-
-          <div>
-            <label for="condition">Condition</label>
-            <select id="condition">
-              <option value="">Select…</option>
-              <option>New</option>
-              <option>Like New</option>
-              <option>Good</option>
-              <option>Fair</option>
-              <option>Damaged</option>
-            </select>
-            <div class="small">Optional.</div>
-          </div>
-
-          <div>
-            <label for="status">Status</label>
-            <select id="status">
-              <option value="">Select…</option>
-              <option>Available</option>
-              <option>Reserved</option>
-              <option>Sold</option>
-              <option>Removed</option>
-            </select>
-            <div class="small">Optional.</div>
-          </div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">TD</div>
+        <div class="brand-title">
+          <strong>Trade Displays</strong>
+          <span>Create a new display record</span>
         </div>
-
-        <div style="margin-top:14px;">
-          <label for="notes">Notes</label>
-          <textarea id="notes" placeholder="Any context, special instructions, cosmetic issues, pickup notes…"></textarea>
-          <div class="small">Optional.</div>
-        </div>
-
-        <div class="row" style="margin-top:14px;">
-          <button class="primary" type="submit" id="btnSubmit">Create Display</button>
-          <button type="button" id="btnSample">Fill Sample</button>
-          <span class="small" id="hint"></span>
-        </div>
-
-        <div id="msg"></div>
-        <pre id="out" style="display:none;"></pre>
-      </form>
+      </div>
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a class="active" href="./market.html">Create Display</a>
+        <a href="./trade-displays.html">Display Inventory</a>
+      </nav>
     </div>
   </div>
 
-<script>
-  const $ = (id) => document.getElementById(id);
+  <main class="container">
+    <h1>Create Display</h1>
+    <p class="subhead">Enter display details. Bad inputs should produce a clear error (like the original).</p>
 
-  function show(type, text, data) {
-    $("msg").innerHTML = `<div class="alert ${type}">${text}</div>`;
-    if (data !== undefined) {
-      $("out").style.display = "block";
-      $("out").textContent = JSON.stringify(data, null, 2);
-    } else {
-      $("out").style.display = "none";
-      $("out").textContent = "";
+    <section class="panel">
+      <form id="form" class="form" autocomplete="off">
+        <div class="field">
+          <label>Category <span class="pill">required</span></label>
+          <select id="category" required>
+            <option value="">Select…</option>
+            <option>Faucet</option>
+            <option>Sink</option>
+            <option>Toilet</option>
+            <option>Shower</option>
+            <option>Tub</option>
+            <option>Vanity</option>
+            <option>Accessory</option>
+            <option>Other</option>
+          </select>
+          <div class="help">Used for filtering/reporting.</div>
+        </div>
+
+        <div class="field">
+          <label>Location <span class="pill">required</span></label>
+          <input id="location" placeholder="e.g. Mequon" required />
+          <div class="help">Where the display physically is.</div>
+        </div>
+
+        <div class="field">
+          <label>Brand</label>
+          <input id="brand" placeholder="e.g. Kohler" />
+          <div class="help">Optional.</div>
+        </div>
+
+        <div class="field">
+          <label>Model / SKU</label>
+          <input id="model" placeholder="e.g. K-3817-0" />
+          <div class="help">Optional identifier your team uses.</div>
+        </div>
+
+        <div class="field">
+          <label>Title</label>
+          <input id="title" placeholder="Optional short descriptor" />
+          <div class="help">Optional.</div>
+        </div>
+
+        <div class="field">
+          <label>Price <span class="pill">required</span></label>
+          <input id="price" placeholder="e.g. 250 or 250.00" inputmode="decimal" required />
+          <div class="help">Numbers only.</div>
+        </div>
+
+        <div class="field">
+          <label>Condition</label>
+          <select id="condition">
+            <option value="">Select…</option>
+            <option>New</option>
+            <option>Like New</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>Damaged</option>
+          </select>
+          <div class="help">Optional.</div>
+        </div>
+
+        <div class="field">
+          <label>Status</label>
+          <select id="status">
+            <option value="">Select…</option>
+            <option>Available</option>
+            <option>Reserved</option>
+            <option>Sold</option>
+            <option>Removed</option>
+          </select>
+          <div class="help">Optional.</div>
+        </div>
+
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Notes</label>
+          <textarea id="notes" placeholder="Optional notes (ex: missing wax ring)"></textarea>
+          <div class="help">Optional.</div>
+        </div>
+
+        <div style="grid-column: 1 / -1; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <button type="submit" class="btn primary" id="btnSubmit">Create Display</button>
+          <button type="button" class="btn" id="btnSample">Fill Sample</button>
+          <span class="kbd">/.netlify/functions/createDisplay</span>
+        </div>
+      </form>
+
+      <div id="msg" style="margin-top:14px;"></div>
+      <pre id="out" style="display:none;"></pre>
+    </section>
+  </main>
+
+  <script>
+    const endpoint = "/.netlify/functions/createDisplay";
+
+    const el = (id) => document.getElementById(id);
+    const form = el("form");
+    const msg = el("msg");
+    const out = el("out");
+    const btnSubmit = el("btnSubmit");
+    const btnSample = el("btnSample");
+
+    function setBanner(type, title, meta) {
+      msg.innerHTML = "";
+      const div = document.createElement("div");
+      div.className = `banner ${type || ""}`.trim();
+      div.innerHTML = `<div><strong>${title}</strong><div class="meta">${meta || ""}</div></div>`;
+      msg.appendChild(div);
     }
-  }
 
-  function normalizePrice(raw) {
-    const cleaned = String(raw).replace(/[$,\s]/g, "");
-    if (!cleaned) return { ok: false, value: null, reason: "Price is required." };
-    if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) {
-      return { ok: false, value: null, reason: "Price must be a number (max 2 decimals)." };
-    }
-    return { ok: true, value: Number(cleaned), reason: "" };
-  }
-
-  $("btnSample").addEventListener("click", () => {
-    $("category").value = "Toilet";
-    $("showroom").value = "Mequon";
-    $("sku").value = "K-3817-0";
-    $("price").value = "250";
-    $("condition").value = "Good";
-    $("status").value = "Available";
-    $("notes").value = "Display unit. Minor scuffs. Pickup by appointment.";
-    $("hint").textContent = "Sample filled.";
-    setTimeout(() => $("hint").textContent = "", 1500);
-  });
-
-  $("createForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    $("btnSubmit").disabled = true;
-    $("btnSubmit").textContent = "Creating…";
-    $("out").style.display = "none";
-    $("out").textContent = "";
-
-    // client-side validation (this is the “original behavior” you described)
-    const category = $("category").value.trim();
-    const showroom = $("showroom").value.trim();
-    const sku = $("sku").value.trim();
-    const priceRaw = $("price").value.trim();
-    const condition = $("condition").value.trim();
-    const status = $("status").value.trim();
-    const notes = $("notes").value.trim();
-
-    if (!category || !showroom || !sku) {
-      show("err", "Missing required fields: Category, Location/Showroom, and SKU are required.");
-      $("btnSubmit").disabled = false;
-      $("btnSubmit").textContent = "Create Display";
-      return;
+    function showJson(obj) {
+      out.style.display = "block";
+      out.textContent = JSON.stringify(obj, null, 2);
     }
 
-    const p = normalizePrice(priceRaw);
-    if (!p.ok) {
-      show("err", p.reason);
-      $("btnSubmit").disabled = false;
-      $("btnSubmit").textContent = "Create Display";
-      return;
+    function gather() {
+      return {
+        // Matches the function’s input handling + Airtable columns you showed
+        category: el("category").value.trim(),
+        location: el("location").value.trim(),
+        brand: el("brand").value.trim(),
+        model: el("model").value.trim(),
+        title: el("title").value.trim(),
+        price: el("price").value.trim(),
+        condition: el("condition").value.trim(),
+        status: el("status").value.trim(),
+        notes: el("notes").value.trim(),
+      };
     }
 
-    const payload = {
-      category,
-      showroom,
-      sku,
-      price: p.value,
-      condition: condition || null,
-      status: status || null,
-      notes: notes || null,
-      createdAt: new Date().toISOString()
-    };
+    btnSample.addEventListener("click", () => {
+      el("category").value = "Faucet";
+      el("location").value = "Mequon";
+      el("brand").value = "Kohler";
+      el("model").value = "K-3817-0";
+      el("title").value = "Demo display";
+      el("price").value = "250";
+      el("condition").value = "New";
+      el("status").value = "Available";
+      el("notes").value = "No wax ring included";
+      msg.innerHTML = "";
+      out.style.display = "none";
+    });
 
-    try {
-      const res = await fetch("/.netlify/functions/createDisplay", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-        cache: "no-store"
-      });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      let data;
-      try { data = await res.json(); } catch { data = { error: "Non-JSON response from function." }; }
+      msg.innerHTML = "";
+      out.style.display = "none";
+      out.textContent = "";
 
-      if (!res.ok || data?.error) {
-        // show server-side error message
-        const msg = data?.error || `Create failed (HTTP ${res.status}).`;
-        show("err", msg, data);
-      } else {
-        show("ok", "Created successfully.", data);
+      const payload = gather();
+
+      // client-side validation for nicer UX (server will still validate)
+      const missing = [];
+      if (!payload.category) missing.push("category");
+      if (!payload.location) missing.push("location");
+      if (!payload.price || Number.isNaN(Number(payload.price))) missing.push("price(number)");
+
+      if (missing.length) {
+        const text = `Missing required fields: ${missing.join(", ")}`;
+        setBanner("danger", text, "Fix the fields above and try again.");
+        showJson({ error: text });
+        return;
       }
-    } catch (err) {
-      show("err", "Network error calling createDisplay.", { error: String(err) });
-    } finally {
-      $("btnSubmit").disabled = false;
-      $("btnSubmit").textContent = "Create Display";
-    }
-  });
-</script>
+
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Creating…";
+      setBanner("", "Working…", "Submitting to server");
+
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          setBanner("danger", data.error || "Create failed", data.detail || `HTTP ${res.status}`);
+          showJson(data);
+        } else {
+          setBanner("success", "Created", `Saved at ${new Date().toLocaleTimeString()}`);
+          showJson(data);
+        }
+      } catch (err) {
+        setBanner("danger", "Request failed", "Network / function error");
+        showJson({ error: String(err) });
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Create Display";
+      }
+    });
+  </script>
 </body>
 </html>
