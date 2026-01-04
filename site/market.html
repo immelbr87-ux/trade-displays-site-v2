@@ -1,147 +1,205 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Create Display</title>
   <link rel="stylesheet" href="/app.css" />
-  <style>
-    .wrap { max-width: 900px; margin: 40px auto; padding: 0 16px; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    label { display:block; font-weight: 600; margin: 10px 0 6px; }
-    input, select, textarea { width: 100%; padding: 10px; font-size: 16px; }
-    textarea { min-height: 110px; }
-    button { padding: 10px 14px; font-size: 16px; cursor: pointer; }
-    pre { background:#f4f4f4; padding: 12px; overflow:auto; }
-    .muted { opacity: .7; }
-    .error { color: #b00020; font-weight: 700; }
-    .ok { color: #0a7a2f; font-weight: 700; }
-    .actions { margin-top: 14px; display:flex; gap: 10px; align-items:center; }
-  </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="container">
     <h1>Create Display</h1>
-    <p class="muted">Creates a record via <code>/.netlify/functions/createDisplay</code></p>
+    <p class="sub">Enter display details. Bad inputs should produce a clear error (like the original).</p>
 
-    <form id="displayForm">
-      <div class="row">
-        <div>
-          <label for="category">Category</label>
-          <select id="category" name="category" required>
-            <option value="">Select…</option>
-            <option>Vanity</option>
-            <option>Faucet</option>
-            <option>Toilet</option>
-            <option>Shower</option>
-            <option>Tub</option>
-            <option>Sink</option>
-            <option>Accessory</option>
-            <option>Other</option>
-          </select>
+    <div class="nav">
+      <a href="/">Home</a>
+      <a href="/trade-displays.html">Display Inventory</a>
+    </div>
+
+    <div class="card">
+      <form id="createForm">
+        <div class="grid">
+          <div>
+            <label for="category">Category <span class="badge">required</span></label>
+            <select id="category" required>
+              <option value="">Select…</option>
+              <option>Faucet</option>
+              <option>Sink</option>
+              <option>Toilet</option>
+              <option>Vanity</option>
+              <option>Tub</option>
+              <option>Shower</option>
+              <option>Accessory</option>
+              <option>Other</option>
+            </select>
+            <div class="small">Used for filtering/reporting.</div>
+          </div>
+
+          <div>
+            <label for="showroom">Location / Showroom <span class="badge">required</span></label>
+            <input id="showroom" placeholder="e.g., Mequon" required />
+            <div class="small">Where the display physically is.</div>
+          </div>
+
+          <div>
+            <label for="sku">SKU / Model <span class="badge">required</span></label>
+            <input id="sku" placeholder="e.g., K-3817-0" required />
+            <div class="small">Whatever identifier your team uses.</div>
+          </div>
+
+          <div>
+            <label for="price">Price <span class="badge">required</span></label>
+            <input id="price" placeholder="e.g., 250" inputmode="decimal" required />
+            <div class="small">Numbers only. Ex: 250 or 250.00</div>
+          </div>
+
+          <div>
+            <label for="condition">Condition</label>
+            <select id="condition">
+              <option value="">Select…</option>
+              <option>New</option>
+              <option>Like New</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Damaged</option>
+            </select>
+            <div class="small">Optional.</div>
+          </div>
+
+          <div>
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="">Select…</option>
+              <option>Available</option>
+              <option>Reserved</option>
+              <option>Sold</option>
+              <option>Removed</option>
+            </select>
+            <div class="small">Optional.</div>
+          </div>
         </div>
 
-        <div>
-          <label for="location">Location (Showroom / City)</label>
-          <input id="location" name="location" placeholder="Mequon" required />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label for="sku">SKU / Model</label>
-          <input id="sku" name="sku" placeholder="K-3817-0" />
+        <div style="margin-top:14px;">
+          <label for="notes">Notes</label>
+          <textarea id="notes" placeholder="Any context, special instructions, cosmetic issues, pickup notes…"></textarea>
+          <div class="small">Optional.</div>
         </div>
 
-        <div>
-          <label for="condition">Condition</label>
-          <select id="condition" name="condition">
-            <option>Display</option>
-            <option>New in box</option>
-            <option>Open box</option>
-            <option>Used</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label for="price">Price (USD)</label>
-          <input id="price" name="price" type="number" min="0" step="1" placeholder="250" required />
+        <div class="row" style="margin-top:14px;">
+          <button class="primary" type="submit" id="btnSubmit">Create Display</button>
+          <button type="button" id="btnSample">Fill Sample</button>
+          <span class="small" id="hint"></span>
         </div>
 
-        <div>
-          <label for="qty">Quantity</label>
-          <input id="qty" name="qty" type="number" min="1" step="1" value="1" />
-        </div>
-      </div>
-
-      <label for="notes">Notes</label>
-      <textarea id="notes" name="notes" placeholder="Any notes, measurements, finish, missing parts, pickup constraints, etc."></textarea>
-
-      <div class="actions">
-        <button type="submit">Create Display</button>
-        <a href="/trade-displays.html">View Inventory</a>
-        <span id="status" class="muted"></span>
-      </div>
-    </form>
-
-    <h3>Result</h3>
-    <div id="msg"></div>
-    <pre id="out">{}</pre>
+        <div id="msg"></div>
+        <pre id="out" style="display:none;"></pre>
+      </form>
+    </div>
   </div>
 
-  <script>
-    const form = document.getElementById('displayForm');
-    const statusEl = document.getElementById('status');
-    const out = document.getElementById('out');
-    const msg = document.getElementById('msg');
+<script>
+  const $ = (id) => document.getElementById(id);
 
-    function setStatus(text, kind) {
-      statusEl.textContent = text || '';
-      msg.className = kind || '';
-      msg.textContent = text || '';
+  function show(type, text, data) {
+    $("msg").innerHTML = `<div class="alert ${type}">${text}</div>`;
+    if (data !== undefined) {
+      $("out").style.display = "block";
+      $("out").textContent = JSON.stringify(data, null, 2);
+    } else {
+      $("out").style.display = "none";
+      $("out").textContent = "";
+    }
+  }
+
+  function normalizePrice(raw) {
+    const cleaned = String(raw).replace(/[$,\s]/g, "");
+    if (!cleaned) return { ok: false, value: null, reason: "Price is required." };
+    if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) {
+      return { ok: false, value: null, reason: "Price must be a number (max 2 decimals)." };
+    }
+    return { ok: true, value: Number(cleaned), reason: "" };
+  }
+
+  $("btnSample").addEventListener("click", () => {
+    $("category").value = "Toilet";
+    $("showroom").value = "Mequon";
+    $("sku").value = "K-3817-0";
+    $("price").value = "250";
+    $("condition").value = "Good";
+    $("status").value = "Available";
+    $("notes").value = "Display unit. Minor scuffs. Pickup by appointment.";
+    $("hint").textContent = "Sample filled.";
+    setTimeout(() => $("hint").textContent = "", 1500);
+  });
+
+  $("createForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    $("btnSubmit").disabled = true;
+    $("btnSubmit").textContent = "Creating…";
+    $("out").style.display = "none";
+    $("out").textContent = "";
+
+    // client-side validation (this is the “original behavior” you described)
+    const category = $("category").value.trim();
+    const showroom = $("showroom").value.trim();
+    const sku = $("sku").value.trim();
+    const priceRaw = $("price").value.trim();
+    const condition = $("condition").value.trim();
+    const status = $("status").value.trim();
+    const notes = $("notes").value.trim();
+
+    if (!category || !showroom || !sku) {
+      show("err", "Missing required fields: Category, Location/Showroom, and SKU are required.");
+      $("btnSubmit").disabled = false;
+      $("btnSubmit").textContent = "Create Display";
+      return;
     }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      setStatus('Submitting…', 'muted');
-      out.textContent = '{}';
+    const p = normalizePrice(priceRaw);
+    if (!p.ok) {
+      show("err", p.reason);
+      $("btnSubmit").disabled = false;
+      $("btnSubmit").textContent = "Create Display";
+      return;
+    }
 
-      const payload = {
-        category: form.category.value.trim(),
-        location: form.location.value.trim(),
-        sku: form.sku.value.trim(),
-        condition: form.condition.value,
-        price: Number(form.price.value),
-        qty: Number(form.qty.value || 1),
-        notes: form.notes.value.trim(),
-      };
+    const payload = {
+      category,
+      showroom,
+      sku,
+      price: p.value,
+      condition: condition || null,
+      status: status || null,
+      notes: notes || null,
+      createdAt: new Date().toISOString()
+    };
 
-      try {
-        const res = await fetch('/.netlify/functions/createDisplay', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+    try {
+      const res = await fetch("/.netlify/functions/createDisplay", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        cache: "no-store"
+      });
 
-        const data = await res.json().catch(() => ({}));
-        out.textContent = JSON.stringify(data, null, 2);
+      let data;
+      try { data = await res.json(); } catch { data = { error: "Non-JSON response from function." }; }
 
-        if (!res.ok) {
-          setStatus('Create failed (see JSON).', 'error');
-          return;
-        }
-
-        setStatus('Created ✅', 'ok');
-        form.reset();
-        form.condition.value = 'Display';
-        form.qty.value = 1;
-      } catch (err) {
-        setStatus('Network error. Check Functions deploy + console.', 'error');
-        out.textContent = JSON.stringify({ error: String(err) }, null, 2);
+      if (!res.ok || data?.error) {
+        // show server-side error message
+        const msg = data?.error || `Create failed (HTTP ${res.status}).`;
+        show("err", msg, data);
+      } else {
+        show("ok", "Created successfully.", data);
       }
-    });
-  </script>
+    } catch (err) {
+      show("err", "Network error calling createDisplay.", { error: String(err) });
+    } finally {
+      $("btnSubmit").disabled = false;
+      $("btnSubmit").textContent = "Create Display";
+    }
+  });
+</script>
 </body>
 </html>
