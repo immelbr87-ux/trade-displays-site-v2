@@ -2,67 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Trade Displays</title>
-  <link rel="stylesheet" href="/app.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trade Displays — Home</title>
+  <link rel="stylesheet" href="./app.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Trade Displays</h1>
-    <p class="sub">Admin tools for creating and viewing display inventory.</p>
-
-    <div class="nav">
-      <a href="/market.html">Create Display</a>
-      <a href="/trade-displays.html">Display Inventory</a>
-      <a href="/.netlify/functions/ping" target="_blank" rel="noreferrer">Ping API</a>
-    </div>
-
-    <div class="card">
-      <div class="row" style="justify-content: space-between;">
-        <div>
-          <div style="font-weight:700;">API status</div>
-          <div class="small">Checks whether Netlify Functions are responding.</div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">TD</div>
+        <div class="brand-title">
+          <strong>Trade Displays</strong>
+          <span>Admin tools for display inventory</span>
         </div>
-        <button class="primary" id="btnPing">Run Ping</button>
       </div>
-      <div id="pingMsg"></div>
-      <pre id="pingOut" style="display:none;"></pre>
-    </div>
-
-    <div class="card">
-      <div style="font-weight:700; margin-bottom:6px;">Quick start</div>
-      <div class="small">
-        1) Go to <span class="kbd">Create Display</span> and submit a record.<br/>
-        2) Go to <span class="kbd">Display Inventory</span> and load the table.
-      </div>
+      <nav class="nav">
+        <a class="active" href="./index.html">Home</a>
+        <a href="./market.html">Create Display</a>
+        <a href="./trade-displays.html">Display Inventory</a>
+      </nav>
     </div>
   </div>
 
-<script>
-  const $ = (id) => document.getElementById(id);
+  <main class="container">
+    <h1>Trade Displays</h1>
+    <p class="subhead">Quick health check + navigation.</p>
 
-  function showMsg(type, text) {
-    const el = $("pingMsg");
-    el.innerHTML = `<div class="alert ${type}">${text}</div>`;
-  }
+    <div class="grid">
+      <section class="panel">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div>
+            <h3 style="margin:0 0 6px;">API status</h3>
+            <p class="help" style="margin:0;">Checks whether Netlify Functions are responding.</p>
+          </div>
+          <button class="btn primary" id="btnPing">Run Ping</button>
+        </div>
 
-  $("btnPing").addEventListener("click", async () => {
-    $("pingOut").style.display = "none";
-    $("pingOut").textContent = "";
-    showMsg("ok", "Checking API...");
+        <div id="statusWrap" style="margin-top:14px;"></div>
+        <pre id="rawOut" style="display:none;"></pre>
 
-    try {
-      const res = await fetch("/.netlify/functions/ping", { cache: "no-store" });
-      const data = await res.json();
-      showMsg("ok", `API OK @ ${new Date().toLocaleTimeString()}`);
-      $("pingOut").style.display = "block";
-      $("pingOut").textContent = JSON.stringify(data, null, 2);
-    } catch (e) {
-      showMsg("err", "Ping failed. Check Netlify deploy logs + Functions.");
-      $("pingOut").style.display = "block";
-      $("pingOut").textContent = String(e);
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" href="./market.html" style="text-decoration:none; display:inline-flex; align-items:center;">Create Display</a>
+          <a class="btn" href="./trade-displays.html" style="text-decoration:none; display:inline-flex; align-items:center;">Display Inventory</a>
+          <span class="kbd">/.netlify/functions/ping</span>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="card">
+          <h3>Quick start</h3>
+          <p>
+            1) Create a display record<br/>
+            2) Load inventory to confirm it saved<br/>
+            3) If something breaks, the error box should be readable (not vague)
+          </p>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <h3>What this uses</h3>
+          <p>
+            Netlify Functions + Airtable API (server-side).<br/>
+            You should never expose Airtable keys in the browser.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const pingUrl = "/.netlify/functions/ping";
+
+    const statusWrap = document.getElementById("statusWrap");
+    const rawOut = document.getElementById("rawOut");
+    const btnPing = document.getElementById("btnPing");
+
+    function banner(type, title, meta) {
+      const div = document.createElement("div");
+      div.className = `banner ${type || ""}`.trim();
+      div.innerHTML = `
+        <div>
+          <strong>${title}</strong><div class="meta">${meta || ""}</div>
+        </div>
+      `;
+      return div;
     }
-  });
-</script>
+
+    async function runPing() {
+      statusWrap.innerHTML = "";
+      rawOut.style.display = "none";
+      rawOut.textContent = "";
+
+      statusWrap.appendChild(banner("", "Checking…", "Calling Netlify Function ping"));
+
+      try {
+        const res = await fetch(pingUrl, { method: "GET" });
+        const data = await res.json();
+
+        statusWrap.innerHTML = "";
+        statusWrap.appendChild(
+          banner("success", "API OK", `Responded at ${new Date().toLocaleTimeString()}`)
+        );
+
+        rawOut.style.display = "block";
+        rawOut.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        statusWrap.innerHTML = "";
+        statusWrap.appendChild(
+          banner("danger", "Ping failed", "Netlify function did not respond with JSON")
+        );
+        rawOut.style.display = "block";
+        rawOut.textContent = String(err);
+      }
+    }
+
+    btnPing.addEventListener("click", runPing);
+    runPing();
+  </script>
 </body>
 </html>
