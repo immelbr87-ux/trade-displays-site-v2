@@ -1,34 +1,147 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Create Display</title>
-  <link rel="stylesheet" href="app.css" />
+  <link rel="stylesheet" href="/app.css" />
+  <style>
+    .wrap { max-width: 900px; margin: 40px auto; padding: 0 16px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { display:block; font-weight: 600; margin: 10px 0 6px; }
+    input, select, textarea { width: 100%; padding: 10px; font-size: 16px; }
+    textarea { min-height: 110px; }
+    button { padding: 10px 14px; font-size: 16px; cursor: pointer; }
+    pre { background:#f4f4f4; padding: 12px; overflow:auto; }
+    .muted { opacity: .7; }
+    .error { color: #b00020; font-weight: 700; }
+    .ok { color: #0a7a2f; font-weight: 700; }
+    .actions { margin-top: 14px; display:flex; gap: 10px; align-items:center; }
+  </style>
 </head>
 <body>
-  <h1>Create Display</h1>
+  <div class="wrap">
+    <h1>Create Display</h1>
+    <p class="muted">Creates a record via <code>/.netlify/functions/createDisplay</code></p>
 
-  <button id="create">Create Sample Display</button>
-  <pre id="result"></pre>
+    <form id="displayForm">
+      <div class="row">
+        <div>
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            <option value="">Select…</option>
+            <option>Vanity</option>
+            <option>Faucet</option>
+            <option>Toilet</option>
+            <option>Shower</option>
+            <option>Tub</option>
+            <option>Sink</option>
+            <option>Accessory</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="location">Location (Showroom / City)</label>
+          <input id="location" name="location" placeholder="Mequon" required />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="sku">SKU / Model</label>
+          <input id="sku" name="sku" placeholder="K-3817-0" />
+        </div>
+
+        <div>
+          <label for="condition">Condition</label>
+          <select id="condition" name="condition">
+            <option>Display</option>
+            <option>New in box</option>
+            <option>Open box</option>
+            <option>Used</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="price">Price (USD)</label>
+          <input id="price" name="price" type="number" min="0" step="1" placeholder="250" required />
+        </div>
+
+        <div>
+          <label for="qty">Quantity</label>
+          <input id="qty" name="qty" type="number" min="1" step="1" value="1" />
+        </div>
+      </div>
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" placeholder="Any notes, measurements, finish, missing parts, pickup constraints, etc."></textarea>
+
+      <div class="actions">
+        <button type="submit">Create Display</button>
+        <a href="/trade-displays.html">View Inventory</a>
+        <span id="status" class="muted"></span>
+      </div>
+    </form>
+
+    <h3>Result</h3>
+    <div id="msg"></div>
+    <pre id="out">{}</pre>
+  </div>
 
   <script>
-    document.getElementById('create').onclick = async () => {
+    const form = document.getElementById('displayForm');
+    const statusEl = document.getElementById('status');
+    const out = document.getElementById('out');
+    const msg = document.getElementById('msg');
+
+    function setStatus(text, kind) {
+      statusEl.textContent = text || '';
+      msg.className = kind || '';
+      msg.textContent = text || '';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setStatus('Submitting…', 'muted');
+      out.textContent = '{}';
+
       const payload = {
-        showroom: "Mequon",
-        sku: "K-3817-0",
-        price: 250
+        category: form.category.value.trim(),
+        location: form.location.value.trim(),
+        sku: form.sku.value.trim(),
+        condition: form.condition.value,
+        price: Number(form.price.value),
+        qty: Number(form.qty.value || 1),
+        notes: form.notes.value.trim(),
       };
 
-      const res = await fetch('/.netlify/functions/createDisplay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      try {
+        const res = await fetch('/.netlify/functions/createDisplay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-      const json = await res.json();
-      document.getElementById('result').textContent =
-        JSON.stringify(json, null, 2);
-    };
+        const data = await res.json().catch(() => ({}));
+        out.textContent = JSON.stringify(data, null, 2);
+
+        if (!res.ok) {
+          setStatus('Create failed (see JSON).', 'error');
+          return;
+        }
+
+        setStatus('Created ✅', 'ok');
+        form.reset();
+        form.condition.value = 'Display';
+        form.qty.value = 1;
+      } catch (err) {
+        setStatus('Network error. Check Functions deploy + console.', 'error');
+        out.textContent = JSON.stringify({ error: String(err) }, null, 2);
+      }
+    });
   </script>
 </body>
 </html>
