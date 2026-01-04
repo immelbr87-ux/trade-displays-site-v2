@@ -1,1 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trade Displays</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <h1>Trade Displays</h1>
 
+  <p id="status">Checking API…</p>
+
+  <script>
+    fetch('/.netlify/functions/ping')
+      .then(r => r.json())
+      .then(d => {
+        document.getElementById('status').textContent =
+          'API OK @ ' + new Date(d.ts).toLocaleTimeString();
+      })
+      .catch(err => {
+        document.getElementById('status').textContent =
+          'API ERROR';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
