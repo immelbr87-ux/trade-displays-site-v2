@@ -3,120 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trade Displays — Home</title>
-  <link rel="stylesheet" href="./app.css" />
+  <title>Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Buy showroom displays at a discount before they’re removed. For trade professionals only." />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
-  <div class="topbar">
-    <div class="topbar-inner">
+  <header class="nav">
+    <div class="nav__left">
+      <div class="logo">B</div>
       <div class="brand">
-        <div class="brand-badge">TD</div>
-        <div class="brand-title">
-          <strong>Trade Displays</strong>
-          <span>Admin tools for display inventory</span>
-        </div>
+        <div class="brand__name">TRADE DISPLAYS</div>
+        <div class="brand__sub">by Bargain Bond</div>
       </div>
-      <nav class="nav">
-        <a class="active" href="./index.html">Home</a>
-        <a href="./market.html">Create Display</a>
-        <a href="./trade-displays.html">Display Inventory</a>
-      </nav>
     </div>
-  </div>
 
-  <main class="container">
-    <h1>Trade Displays</h1>
-    <p class="subhead">Quick health check + navigation.</p>
-
-    <div class="grid">
-      <section class="panel">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-          <div>
-            <h3 style="margin:0 0 6px;">API status</h3>
-            <p class="help" style="margin:0;">Checks whether Netlify Functions are responding.</p>
-          </div>
-          <button class="btn primary" id="btnPing">Run Ping</button>
-        </div>
-
-        <div id="statusWrap" style="margin-top:14px;"></div>
-        <pre id="rawOut" style="display:none;"></pre>
-
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn" href="./market.html" style="text-decoration:none; display:inline-flex; align-items:center;">Create Display</a>
-          <a class="btn" href="./trade-displays.html" style="text-decoration:none; display:inline-flex; align-items:center;">Display Inventory</a>
-          <span class="kbd">/.netlify/functions/ping</span>
-        </div>
-      </section>
-
-      <aside class="panel">
-        <div class="card">
-          <h3>Quick start</h3>
-          <p>
-            1) Create a display record<br/>
-            2) Load inventory to confirm it saved<br/>
-            3) If something breaks, the error box should be readable (not vague)
-          </p>
-        </div>
-
-        <div class="card" style="margin-top:12px;">
-          <h3>What this uses</h3>
-          <p>
-            Netlify Functions + Airtable API (server-side).<br/>
-            You should never expose Airtable keys in the browser.
-          </p>
-        </div>
-      </aside>
+    <div class="nav__right">
+      <a class="nav__link" href="#signin">Sign In</a>
+      <a class="btn btn--ghost" href="#create">Create Account</a>
     </div>
-  </main>
+  </header>
 
-  <script>
-    const pingUrl = "/.netlify/functions/ping";
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__overlay"></div>
 
-    const statusWrap = document.getElementById("statusWrap");
-    const rawOut = document.getElementById("rawOut");
-    const btnPing = document.getElementById("btnPing");
+      <div class="container hero__content">
+        <h1>Buy showroom displays<br/>at a discount before<br/>they’re removed.</h1>
 
-    function banner(type, title, meta) {
-      const div = document.createElement("div");
-      div.className = `banner ${type || ""}`.trim();
-      div.innerHTML = `
-        <div>
-          <strong>${title}</strong><div class="meta">${meta || ""}</div>
+        <p class="subhead">
+          Pre-commit to upcoming display removals from trusted showrooms. Local pickup. Locked pricing.
+          No bidding. No returns.
+        </p>
+
+        <div class="ctaRow">
+          <a class="btn btn--primary" href="#browse">Browse upcoming displays</a>
+          <a class="btn btn--ghost" href="#showrooms">For showrooms + List upcoming removals</a>
         </div>
-      `;
-      return div;
-    }
 
-    async function runPing() {
-      statusWrap.innerHTML = "";
-      rawOut.style.display = "none";
-      rawOut.textContent = "";
+        <p class="fineprint">For contractors, builders, and trade professionals only.</p>
+      </div>
+    </section>
 
-      statusWrap.appendChild(banner("", "Checking…", "Calling Netlify Function ping"));
+    <!-- HOW IT WORKS -->
+    <section class="section">
+      <div class="container">
+        <h2>How Trade Displays by Bargain Bond Works</h2>
 
-      try {
-        const res = await fetch(pingUrl, { method: "GET" });
-        const data = await res.json();
+        <div class="cards">
+          <article class="card">
+            <div class="card__icon">📅</div>
+            <h3>Upcoming inventory</h3>
+            <ul>
+              <li>Displays scheduled for removal.</li>
+              <li>Dimensions, finish family, condition listed.</li>
+              <li>Local pickup window shown upfront.</li>
+            </ul>
+          </article>
 
-        statusWrap.innerHTML = "";
-        statusWrap.appendChild(
-          banner("success", "API OK", `Responded at ${new Date().toLocaleTimeString()}`)
-        );
-
-        rawOut.style.display = "block";
-        rawOut.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        statusWrap.innerHTML = "";
-        statusWrap.appendChild(
-          banner("danger", "Ping failed", "Netlify function did not respond with JSON")
-        );
-        rawOut.style.display = "block";
-        rawOut.textContent = String(err);
-      }
-    }
-
-    btnPing.addEventListener("click", runPing);
-    runPing();
-  </script>
-</body>
-</html>
+          <article class="card">
+            <div class="card__icon">🔒</div>
+            <h3>Reserve before removal</h3>
+            <ul>
+              <li>Lock price and
