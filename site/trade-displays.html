@@ -1,1 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Displays</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <h1>Display Inventory</h1>
 
+  <button id="load">Load Displays</button>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById('load').onclick = async () => {
+      const res = await fetch('/.netlify/functions/listDisplays');
+      const json = await res.json();
+      document.getElementById('output').textContent =
+        JSON.stringify(json, null, 2);
+    };
+  </script>
+</body>
+</html>
