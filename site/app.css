@@ -1,34 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Create Display</title>
-  <link rel="stylesheet" href="app.css" />
-</head>
-<body>
-  <h1>Create Display</h1>
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 24px;
+  background: #fafafa;
+}
 
-  <button id="create">Create Sample Display</button>
-  <pre id="result"></pre>
+button {
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
 
-  <script>
-    document.getElementById('create').onclick = async () => {
-      const payload = {
-        showroom: "Mequon",
-        sku: "K-3817-0",
-        price: 250
-      };
-
-      const res = await fetch('/.netlify/functions/createDisplay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      const json = await res.json();
-      document.getElementById('result').textContent =
-        JSON.stringify(json, null, 2);
-    };
-  </script>
-</body>
-</html>
+pre {
+  background: #eee;
+  padding: 12px;
+  margin-top: 12px;
+  max-width: 800px;
+  overflow-x: auto;
+}
