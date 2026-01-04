@@ -2,138 +2,72 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Display Inventory</title>
-  <link rel="stylesheet" href="/app.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trade Displays — Inventory</title>
+  <link rel="stylesheet" href="./app.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Display Inventory</h1>
-    <p class="sub">Loads current displays from Airtable via Netlify Functions.</p>
-
-    <div class="nav">
-      <a href="/">Home</a>
-      <a href="/market.html">Create Display</a>
-    </div>
-
-    <div class="card">
-      <div class="row" style="justify-content: space-between;">
-        <div>
-          <div style="font-weight:700;">Load Displays</div>
-          <div class="small">Pulls from <span class="kbd">/.netlify/functions/listDisplays</span></div>
-        </div>
-        <div class="row">
-          <button id="btnLoad" class="primary">Load Displays</button>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">TD</div>
+        <div class="brand-title">
+          <strong>Trade Displays</strong>
+          <span>Display inventory</span>
         </div>
       </div>
-
-      <div id="msg"></div>
-
-      <div style="margin-top:12px; overflow:auto;">
-        <table id="tbl" style="display:none;">
-          <thead>
-            <tr>
-              <th>Created</th>
-              <th>Category</th>
-              <th>SKU</th>
-              <th>Showroom</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Condition</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-
-      <pre id="raw" style="display:none;"></pre>
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a href="./market.html">Create Display</a>
+        <a class="active" href="./trade-displays.html">Display Inventory</a>
+      </nav>
     </div>
   </div>
 
-<script>
-  const $ = (id) => document.getElementById(id);
+  <main class="container">
+    <h1>Display Inventory</h1>
+    <p class="subhead">Loads current displays from Airtable via Netlify Functions.</p>
 
-  function show(type, text, raw) {
-    $("msg").innerHTML = `<div class="alert ${type}">${text}</div>`;
-    if (raw !== undefined) {
-      $("raw").style.display = "block";
-      $("raw").textContent = JSON.stringify(raw, null, 2);
-    } else {
-      $("raw").style.display = "none";
-      $("raw").textContent = "";
+    <section class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+          <h3 style="margin:0 0 6px;">Load Displays</h3>
+          <p class="help" style="margin:0;">Pulls from <span class="kbd">/.netlify/functions/listDisplays</span></p>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <label class="help" style="font-weight:700; color:var(--muted);">Limit</label>
+          <select id="limit" style="width:120px;">
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+          </select>
+          <button class="btn primary" id="btnLoad">Load Displays</button>
+        </div>
+      </div>
+
+      <div id="msg" style="margin-top:14px;"></div>
+
+      <div id="tableWrap" style="margin-top:14px;"></div>
+      <pre id="raw" style="display:none;"></pre>
+    </section>
+  </main>
+
+  <script>
+    const endpoint = "/.netlify/functions/listDisplays";
+
+    const msg = document.getElementById("msg");
+    const raw = document.getElementById("raw");
+    const tableWrap = document.getElementById("tableWrap");
+    const btnLoad = document.getElementById("btnLoad");
+    const limitSel = document.getElementById("limit");
+
+    function setBanner(type, title, meta) {
+      msg.innerHTML = "";
+      const div = document.createElement("div");
+      div.className = `banner ${type || ""}`.trim();
+      div.innerHTML = `<div><strong>${title}</strong><div class="meta">${meta || ""}</div></div>`;
+      msg.appendChild(div);
     }
-  }
 
-  function fmtDate(v) {
-    if (!v) return "";
-    const d = new Date(v);
-    if (isNaN(d.getTime())) return String(v);
-    return d.toLocaleString();
-  }
-
-  function fmtPrice(v) {
-    if (v === null || v === undefined || v === "") return "";
-    const n = Number(v);
-    if (isNaN(n)) return String(v);
-    return n.toLocaleString(undefined, { style: "currency", currency: "USD" });
-  }
-
-  function esc(s) {
-    return String(s ?? "").replace(/[&<>"']/g, (c) => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[c]));
-  }
-
-  $("btnLoad").addEventListener("click", async () => {
-    $("btnLoad").disabled = true;
-    $("btnLoad").textContent = "Loading…";
-    $("tbl").style.display = "none";
-    $("tbody").innerHTML = "";
-
-    try {
-      const res = await fetch("/.netlify/functions/listDisplays", { cache: "no-store" });
-      const data = await res.json();
-
-      if (!res.ok || data?.error) {
-        show("err", data?.error || `Load failed (HTTP ${res.status}).`, data);
-        $("btnLoad").disabled = false;
-        $("btnLoad").textContent = "Load Displays";
-        return;
-      }
-
-      const items = data?.items || [];
-      show("ok", `Loaded ${items.length} display(s).`);
-
-      const rows = items.map((it) => {
-        // support both {fields:{...}} (airtable style) and flat records
-        const f = it.fields || it;
-
-        return `
-          <tr>
-            <td>${esc(fmtDate(f.createdAt || f.Created || f.created || f.ts))}</td>
-            <td>${esc(f.category || f.Category || "")}</td>
-            <td>${esc(f.sku || f.SKU || f.Model || "")}</td>
-            <td>${esc(f.showroom || f.Location || "")}</td>
-            <td>${esc(fmtPrice(f.price || f.Price || ""))}</td>
-            <td>${esc(f.status || f.Status || "")}</td>
-            <td>${esc(f.condition || f.Condition || "")}</td>
-            <td>${esc(f.notes || f.Notes || "")}</td>
-          </tr>
-        `;
-      }).join("");
-
-      $("tbody").innerHTML = rows;
-      $("tbl").style.display = "table";
-    } catch (e) {
-      show("err", "Network error calling listDisplays.", { error: String(e) });
-    } finally {
-      $("btnLoad").disabled = false;
-      $("btnLoad").textContent = "Load Displays";
-    }
-  });
-</script>
-</body>
-</html>
-
-
+   
