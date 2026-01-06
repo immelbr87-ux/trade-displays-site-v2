@@ -4,8 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FAQ — Trade Displays</title>
-  <meta name="description" content="FAQs for Trade Displays: who can buy, how reservation works, escrow timing, condition grading, and pickup confirmation." />
+  <meta name="description" content="FAQ: who can buy, what you're buying, how reserve works, escrow timing, pickup confirmation, grade mismatch, and returns." />
   <link rel="stylesheet" href="app.css" />
+  <style>
+    .navlinks a.active{background:rgba(15,23,42,.06);color:var(--ink)}
+    .footer-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .footer-nav a{padding:6px 10px;border-radius:12px;border:1px solid var(--line2);background:#fff}
+    .footer-nav a:hover{background:rgba(15,23,42,.04)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      background:rgba(15,23,42,.05);color:var(--muted);font-size:12px;font-weight:750}
+    .badge .dot{width:8px;height:8px;border-radius:99px;background:var(--accent)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .faq{margin-top:18px}
+    .faq h2{margin-top:18px}
+    .mini{font-size:13px;color:var(--muted)}
+  </style>
 </head>
 <body>
 
@@ -18,14 +31,16 @@
 
       <div class="navlinks" aria-label="Primary">
         <a href="market.html">Browse displays</a>
+        <a href="what.html">What is this</a>
         <a href="for-showrooms.html">For showrooms</a>
         <a href="brand-compliance.html">Brand compliance</a>
-        <a class="nav-strong" href="faq.html">FAQ</a>
+        <a href="faq.html">FAQ</a>
+        <a href="pilot-program.html">Pilot</a>
       </div>
 
       <div class="navcta">
         <a class="btn btn-ghost" href="#">Sign In</a>
-        <a class="btn btn-primary" href="#">Create Account</a>
+        <a class="btn btn-primary btn-pill" href="#">Create Account</a>
       </div>
     </div>
   </div>
@@ -33,74 +48,84 @@
   <div class="container pagewrap">
     <div class="page">
 
-      <div class="kicker"><span class="dot"></span> Clear rules • trade buyers only • pickup confirmed</div>
-      <h1>FAQ</h1>
-
-      <h2>Who can buy?</h2>
-      <p>
-        Trade professionals only (contractors, builders, remodelers, designers sourcing installs, property managers). This is not a consumer marketplace.
+      <div class="badge"><span class="dot"></span> Clear rules • trade-only • pickup confirmed</div>
+      <h1 style="margin-top:10px;">FAQ</h1>
+      <p class="lede" style="margin:10px 0 0;">
+        Quick answers for buyers and showrooms. This is a pilot-friendly flow designed to feel operational and brand-safe.
       </p>
 
-      <h2>What am I buying?</h2>
-      <p>
-        Showroom displays scheduled for removal. Items may show cosmetic wear. All listings disclose the condition grade (A or B) and key specs.
-      </p>
-
-      <h2>How does “Reserve” work?</h2>
-      <p>
-        You reserve a display for a specific pickup window at a fixed price. The showroom holds the item for that window once the reservation is confirmed.
-      </p>
-
-      <h2>When does money move?</h2>
-      <p>
-        Funds are held until pickup confirmation. Once pickup is confirmed (QR + staff confirmation), funds are released to the showroom.
-      </p>
-
-      <h2>What happens at pickup?</h2>
-      <p>
-        You inspect the item at pickup. The showroom confirms the condition grade on-site. If the grade matches, the reservation closes and payment is released.
-      </p>
-
-      <h2>What if the condition doesn’t match?</h2>
-      <p>
-        Condition mismatches require photo evidence at pickup. If the item materially differs from the listed grade, the reservation can be canceled under the mismatch policy.
-      </p>
-
-      <h2>Are there returns?</h2>
-      <p>
-        No. Sales are final. The system is designed around inspection + confirmation at pickup.
-      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-pill" href="market.html">Browse displays</a>
+        <a class="btn btn-pill" href="listing-details.html">Example details</a>
+        <a class="btn btn-pill" href="request-pilot.html">Request pilot access</a>
+      </div>
 
       <div class="hr"></div>
 
-      <div class="callout">
-        <strong>Still unsure?</strong>
-        Start by browsing upcoming removals. You’ll see how pickup windows, grades, and pricing are presented before you ever reserve.
+      <div class="faq">
+        <h2>Who can buy?</h2>
+        <p>Trade professionals only (contractors, builders, remodelers, designers sourcing installs, property managers). This is not a consumer marketplace.</p>
+
+        <h2>What am I buying?</h2>
+        <p>Showroom displays scheduled for removal. Items may show cosmetic wear. Listings disclose condition grade (A or B) and key specs.</p>
+
+        <h2>How does “Reserve” work?</h2>
+        <p>You reserve a display for a specific pickup window at a fixed price. The showroom holds the item for that window once the reservation is confirmed.</p>
+
+        <h2>When does money move?</h2>
+        <p>Funds are held until pickup confirmation. Once pickup is confirmed (QR + staff confirmation), funds are released to the showroom.</p>
+
+        <h2>What happens at pickup?</h2>
+        <p>You inspect the item at pickup. The showroom confirms the condition grade on-site. If it matches, the reservation closes and payment is released.</p>
+
+        <h2>What if the condition doesn’t match?</h2>
+        <p class="mini">Pilot behavior:</p>
+        <ul>
+          <li>Material mismatches require photo evidence at pickup.</li>
+          <li>If the item materially differs from the listed grade, the reservation can be canceled under the mismatch policy.</li>
+        </ul>
+
+        <h2>Are there returns?</h2>
+        <p>No. Sales are final. The system is designed around inspection + confirmation at pickup.</p>
       </div>
 
-      <div class="inline-cta" style="margin-top:18px;">
-        <a class="btn btn-primary btn-pill" href="market.html">Browse upcoming displays</a>
-        <a class="btn btn-pill" href="for-showrooms.html">For showrooms</a>
-        <a class="btn btn-pill" href="brand-compliance.html">Brand compliance</a>
+      <div class="callout" style="margin-top:18px;">
+        <strong>Want to see it “feel real”?</strong>
+        Use the example listing + reserve preview to show the end-to-end flow in outreach.
+        <div class="cta-row" style="margin-top:12px;">
+          <a class="btn btn-primary btn-pill" href="listing-details.html">View example listing</a>
+          <a class="btn btn-pill" href="reserve.html">Reserve preview</a>
+          <a class="btn btn-pill" href="contact.html">Contact</a>
+        </div>
       </div>
 
     </div>
-  </div>
 
-  <div class="container footer">
-    <div class="hr"></div>
-    <div class="footer-grid">
+    <div class="footer">
+      <div class="hr"></div>
       <div class="fine">
-        These FAQs are written for Phase 1 pilot operations. Final terms should be reviewed for your specific showroom policies.
-      </div>
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="market.html">Browse</a>
-        <a href="for-showrooms.html">Showrooms</a>
-        <a href="brand-compliance.html">Compliance</a>
+        This FAQ is written for the pilot. Final terms should be reviewed for your showroom policies.
+        <div class="footer-nav" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="market.html">Browse</a>
+          <a href="brand-compliance.html">Compliance</a>
+          <a href="request-pilot.html">Pilot request</a>
+          <a href="contact.html">Contact</a>
+        </div>
       </div>
     </div>
   </div>
 
+  <script>
+    (function(){
+      const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.navlinks a').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(!href) return;
+        if(path === href || (path === '' && href === 'index.html')) a.classList.add('active');
+        if(path.replace('.html','') === href.replace('.html','')) a.classList.add('active');
+      });
+    })();
+  </script>
 </body>
 </html>
