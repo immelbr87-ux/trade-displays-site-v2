@@ -163,7 +163,7 @@
 
       try {
         // This must exist: netlify/functions/listings.js
-        const r = await fetch("/.netlify/functions/listings?pageSize=12", { cache: "no-store" });
+        const r = await fetch("/.netlify/functions/listDisplays?pageSize=12", { cache: "no-store" });
         const data = await r.json();
 
         if (!r.ok) throw new Error(data?.error || "Failed to load listings.");
