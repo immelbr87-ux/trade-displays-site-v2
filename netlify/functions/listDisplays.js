@@ -1,70 +1,100 @@
+// netlify/functions/listDisplays.js
 const Airtable = require("airtable");
 
 function json(statusCode, body) {
   return {
     statusCode,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
     body: JSON.stringify(body),
   };
 }
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "GET") {
-    return json(405, { error: "Method Not Allowed" });
+function pick(fields, names, fallback = "") {
+  for (const n of names) {
+    if (fields && fields[n] !== undefined && fields[n] !== null && fields[n] !== "") return fields[n];
   }
+  return fallback;
+}
 
-  const apiKey = process.env.AIRTABLE_API_KEY;
+exports.handler = async (event) => {
+  if (event.httpMethod !== "GET") return json(405, { error: "Method Not Allowed" });
+
+  // Support your old var name too, but prefer AIRTABLE_TOKEN
+  const token = process.env.AIRTABLE_TOKEN || process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = process.env.AIRTABLE_TABLE || "Displays";
+  const tableName = process.env.AIRTABLE_TABLE || "Listings";
+  const viewName = process.env.AIRTABLE_VIEW || "Public_Active";
 
   const q = event.queryStringParameters || {};
-  const category = (q.category || "").trim();
-  const location = (q.location || "").trim();
-  const sku = (q.sku || "").trim();
-  const maxPrice = q.maxPrice ? Number(q.maxPrice) : null;
+  const pageSize = Math.min(200, Math.max(1, parseInt(q.pageSize || "12", 10)));
 
-  if (!apiKey || !baseId) {
-    return json(200, {
-      items: [],
-      warning: "Airtable env vars not set. Set AIRTABLE_API_KEY and AIRTABLE_BASE_ID in Netlify.",
+  if (!token || !baseId) {
+    return json(500, {
+      error: "Missing Airtable env vars",
+      needed: ["AIRTABLE_TOKEN (or AIRTABLE_API_KEY)", "AIRTABLE_BASE_ID", "AIRTABLE_TABLE", "AIRTABLE_VIEW"],
+      current: {
+        AIRTABLE_TOKEN: Boolean(process.env.AIRTABLE_TOKEN),
+        AIRTABLE_API_KEY: Boolean(process.env.AIRTABLE_API_KEY),
+        AIRTABLE_BASE_ID: Boolean(process.env.AIRTABLE_BASE_ID),
+        AIRTABLE_TABLE: process.env.AIRTABLE_TABLE || "",
+        AIRTABLE_VIEW: process.env.AIRTABLE_VIEW || "",
+      },
     });
   }
 
   try {
-    Airtable.configure({ apiKey });
+    Airtable.configure({ apiKey: token });
     const base = Airtable.base(baseId);
 
-    // Build a filter formula (optional filters)
-    const parts = [];
-    if (category) parts.push(`{Category} = "${category.replace(/"/g, '\\"')}"`);
-    if (location) parts.push(`FIND(LOWER("${location.toLowerCase().replace(/"/g, '\\"')}"), LOWER({Location}))`);
-    if (sku) parts.push(`FIND(LOWER("${sku.toLowerCase().replace(/"/g, '\\"')}"), LOWER({SKU}))`);
-    if (Number.isFinite(maxPrice)) parts.push(`{Price} <= ${maxPrice}`);
-
-    const filterByFormula = parts.length ? `AND(${parts.join(",")})` : undefined;
-
+    // Pull records from the VIEW (this is the important part)
     const records = await base(tableName)
       .select({
-        maxRecords: 200,
-        sort: [{ field: "Created", direction: "desc" }],
-        ...(filterByFormula ? { filterByFormula } : {}),
+        view: viewName,
+        maxRecords: pageSize,
       })
       .all();
 
-    const items = records.map((r) => ({
-      id: r.id,
-      createdAt: r.fields.Created || "",
-      category: r.fields.Category || "",
-      location: r.fields.Location || "",
-      sku: r.fields.SKU || "",
-      condition: r.fields.Condition || "",
-      price: r.fields.Price || "",
-      qty: r.fields.Qty || "",
-      notes: r.fields.Notes || "",
-    }));
+    const listings = records.map((r) => {
+      const f = r.fields || {};
 
-    return json(200, { items });
+      // Map your Airtable fields to what market.html expects.
+      // These "pick(...)" calls make it tolerant if your column names differ slightly.
+      const title = pick(f, ["title", "Title", "listing_title", "Listing Title"], "Display Listing");
+      const price = pick(f, ["price", "Price"], "");
+      const condition_grade = pick(f, ["condition_grade", "Condition Grade", "grade", "Grade"], "");
+      const category = pick(f, ["category", "Category"], "");
+      const finish_family = pick(f, ["finish_family", "Finish Family", "finish", "Finish"], "");
+      const dimensions = pick(f, ["dimensions", "Dimensions"], "");
+      const key_spec = pick(f, ["key_spec", "Key Spec", "Rough-In / Key Spec", "rough_in_key_spec"], "");
+      const pickup_window_start = pick(f, ["pickup_window_start", "Pickup Window Start"], "");
+      const pickup_window_end = pick(f, ["pickup_window_end", "Pickup Window End"], "");
+      const thumbnail_url = pick(f, ["thumbnail_url", "Thumbnail URL", "thumbnail", "Thumbnail"], "");
+
+      return {
+        id: r.id,
+        title,
+        price,
+        condition_grade,
+        category,
+        finish_family,
+        dimensions,
+        key_spec,
+        pickup_window_start,
+        pickup_window_end,
+        thumbnail_url,
+      };
+    });
+
+    return json(200, { listings });
   } catch (err) {
-    return json(500, { error: "Airtable list failed", detail: String(err) });
+    return json(500, {
+      error: "Airtable fetch failed",
+      detail: String(err && err.message ? err.message : err),
+      hint:
+        "Most common causes: wrong AIRTABLE_TABLE, wrong AIRTABLE_VIEW, token lacks base access, or the Airtable package not installed.",
+    });
   }
 };
