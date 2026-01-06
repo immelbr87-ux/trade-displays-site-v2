@@ -2,225 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trade Displays — Create Display</title>
-  <link rel="stylesheet" href="./app.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Browse Displays — Trade Displays</title>
+  <meta name="description" content="Browse upcoming showroom display removals. Trade buyers only. Local pickup. Fixed pricing. Condition confirmed at pickup." />
+  <link rel="stylesheet" href="app.css" />
 </head>
 <body>
+
   <div class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <div class="brand-badge">TD</div>
-        <div class="brand-title">
-          <strong>Trade Displays</strong>
-          <span>Create a new display record</span>
-        </div>
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <div class="logo">B</div>
+        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+      </a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a class="nav-strong" href="market.html">Browse displays</a>
+        <a href="for-showrooms.html">For showrooms</a>
+        <a href="brand-compliance.html">Brand compliance</a>
+        <a href="faq.html">FAQ</a>
       </div>
-      <nav class="nav">
-        <a href="./index.html">Home</a>
-        <a class="active" href="./market.html">Create Display</a>
-        <a href="./trade-displays.html">Display Inventory</a>
-      </nav>
+
+      <div class="navcta">
+        <a class="btn btn-ghost" href="#">Sign In</a>
+        <a class="btn btn-primary" href="#">Create Account</a>
+      </div>
     </div>
   </div>
 
-  <main class="container">
-    <h1>Create Display</h1>
-    <p class="subhead">Enter display details. Bad inputs should produce a clear error (like the original).</p>
+  <div class="container pagewrap">
+    <div class="page">
 
-    <section class="panel">
-      <form id="form" class="form" autocomplete="off">
-        <div class="field">
-          <label>Category <span class="pill">required</span></label>
-          <select id="category" required>
-            <option value="">Select…</option>
-            <option>Faucet</option>
-            <option>Sink</option>
-            <option>Toilet</option>
-            <option>Shower</option>
-            <option>Tub</option>
-            <option>Vanity</option>
-            <option>Accessory</option>
-            <option>Other</option>
-          </select>
-          <div class="help">Used for filtering/reporting.</div>
+      <div class="kicker"><span class="dot"></span> Browse upcoming removals • local pickup only</div>
+      <h1>Upcoming display removals</h1>
+      <p class="muted" style="max-width:70ch;">
+        These are showroom displays scheduled to be removed. You’ll see the pickup window, condition grade, key specs, and fixed price. Reserve to hold it.
+      </p>
+
+      <div class="hr"></div>
+
+      <div class="grid3" aria-label="Filters (placeholder)">
+        <div class="kv">
+          <div class="k">Category</div>
+          <div class="v">Vanities, Faucets, Toilets…</div>
+        </div>
+        <div class="kv">
+          <div class="k">Pickup month</div>
+          <div class="v">Next 30 / 60 / 90 days</div>
+        </div>
+        <div class="kv">
+          <div class="k">Distance</div>
+          <div class="v">Within 25 / 50 / 100 miles</div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;" class="cards">
+        <div class="card">
+          <div class="icon">🧱</div>
+          <h3>48&quot; Vanity Display</h3>
+          <ul class="bullets">
+            <li><strong>Pickup:</strong> May 12–14</li>
+            <li><strong>Condition:</strong> Grade A</li>
+            <li><strong>Specs:</strong> 48&quot; width, single sink cutout</li>
+            <li><strong>Finish:</strong> White / Chrome family</li>
+            <li><strong>Price:</strong> $650 (fixed)</li>
+          </ul>
+          <div class="inline-cta" style="margin-top:14px;">
+            <a class="btn btn-primary btn-pill" href="#">Reserve this display</a>
+            <a class="btn btn-pill" href="#">View details</a>
+          </div>
+          <div class="small muted2" style="margin-top:10px;">Local pickup only • Condition confirmed at pickup</div>
         </div>
 
-        <div class="field">
-          <label>Location <span class="pill">required</span></label>
-          <input id="location" placeholder="e.g. Mequon" required />
-          <div class="help">Where the display physically is.</div>
+        <div class="card">
+          <div class="icon">🚿</div>
+          <h3>Widespread Faucet Display</h3>
+          <ul class="bullets">
+            <li><strong>Pickup:</strong> May 20–22</li>
+            <li><strong>Condition:</strong> Grade B</li>
+            <li><strong>Specs:</strong> 8&quot;-16&quot; spread, includes handles</li>
+            <li><strong>Finish:</strong> Chrome family</li>
+            <li><strong>Price:</strong> $220 (fixed)</li>
+          </ul>
+          <div class="inline-cta" style="margin-top:14px;">
+            <a class="btn btn-primary btn-pill" href="#">Reserve this display</a>
+            <a class="btn btn-pill" href="#">View details</a>
+          </div>
+          <div class="small muted2" style="margin-top:10px;">Local pickup only • Condition confirmed at pickup</div>
         </div>
 
-        <div class="field">
-          <label>Brand</label>
-          <input id="brand" placeholder="e.g. Kohler" />
-          <div class="help">Optional.</div>
+        <div class="card">
+          <div class="icon">🚽</div>
+          <h3>Toilet Display (Complete)</h3>
+          <ul class="bullets">
+            <li><strong>Pickup:</strong> June 3–5</li>
+            <li><strong>Condition:</strong> Grade A</li>
+            <li><strong>Specs:</strong> Standard rough-in</li>
+            <li><strong>Finish:</strong> White</li>
+            <li><strong>Price:</strong> $180 (fixed)</li>
+          </ul>
+          <div class="inline-cta" style="margin-top:14px;">
+            <a class="btn btn-primary btn-pill" href="#">Reserve this display</a>
+            <a class="btn btn-pill" href="#">View details</a>
+          </div>
+          <div class="small muted2" style="margin-top:10px;">Local pickup only • Condition confirmed at pickup</div>
         </div>
+      </div>
 
-        <div class="field">
-          <label>Model / SKU</label>
-          <input id="model" placeholder="e.g. K-3817-0" />
-          <div class="help">Optional identifier your team uses.</div>
-        </div>
+      <div class="hr"></div>
+      <div class="callout">
+        <strong>Heads up</strong>
+        Display items are not new and may show cosmetic wear. Condition grade is confirmed at pickup. Sales are final.
+      </div>
 
-        <div class="field">
-          <label>Title</label>
-          <input id="title" placeholder="Optional short descriptor" />
-          <div class="help">Optional.</div>
-        </div>
+    </div>
+  </div>
 
-        <div class="field">
-          <label>Price <span class="pill">required</span></label>
-          <input id="price" placeholder="e.g. 250 or 250.00" inputmode="decimal" required />
-          <div class="help">Numbers only.</div>
-        </div>
+  <div class="container footer">
+    <div class="hr"></div>
+    <div class="footer-grid">
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate reservation, holding, and pickup confirmation for upcoming showroom display removals.
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="for-showrooms.html">For showrooms</a>
+        <a href="brand-compliance.html">Brand compliance</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
 
-        <div class="field">
-          <label>Condition</label>
-          <select id="condition">
-            <option value="">Select…</option>
-            <option>New</option>
-            <option>Like New</option>
-            <option>Good</option>
-            <option>Fair</option>
-            <option>Damaged</option>
-          </select>
-          <div class="help">Optional.</div>
-        </div>
-
-        <div class="field">
-          <label>Status</label>
-          <select id="status">
-            <option value="">Select…</option>
-            <option>Available</option>
-            <option>Reserved</option>
-            <option>Sold</option>
-            <option>Removed</option>
-          </select>
-          <div class="help">Optional.</div>
-        </div>
-
-        <div class="field" style="grid-column: 1 / -1;">
-          <label>Notes</label>
-          <textarea id="notes" placeholder="Optional notes (ex: missing wax ring)"></textarea>
-          <div class="help">Optional.</div>
-        </div>
-
-        <div style="grid-column: 1 / -1; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <button type="submit" class="btn primary" id="btnSubmit">Create Display</button>
-          <button type="button" class="btn" id="btnSample">Fill Sample</button>
-          <span class="kbd">/.netlify/functions/createDisplay</span>
-        </div>
-      </form>
-
-      <div id="msg" style="margin-top:14px;"></div>
-      <pre id="out" style="display:none;"></pre>
-    </section>
-  </main>
-
-  <script>
-    const endpoint = "/.netlify/functions/createDisplay";
-
-    const el = (id) => document.getElementById(id);
-    const form = el("form");
-    const msg = el("msg");
-    const out = el("out");
-    const btnSubmit = el("btnSubmit");
-    const btnSample = el("btnSample");
-
-    function setBanner(type, title, meta) {
-      msg.innerHTML = "";
-      const div = document.createElement("div");
-      div.className = `banner ${type || ""}`.trim();
-      div.innerHTML = `<div><strong>${title}</strong><div class="meta">${meta || ""}</div></div>`;
-      msg.appendChild(div);
-    }
-
-    function showJson(obj) {
-      out.style.display = "block";
-      out.textContent = JSON.stringify(obj, null, 2);
-    }
-
-    function gather() {
-      return {
-        // Matches the function’s input handling + Airtable columns you showed
-        category: el("category").value.trim(),
-        location: el("location").value.trim(),
-        brand: el("brand").value.trim(),
-        model: el("model").value.trim(),
-        title: el("title").value.trim(),
-        price: el("price").value.trim(),
-        condition: el("condition").value.trim(),
-        status: el("status").value.trim(),
-        notes: el("notes").value.trim(),
-      };
-    }
-
-    btnSample.addEventListener("click", () => {
-      el("category").value = "Faucet";
-      el("location").value = "Mequon";
-      el("brand").value = "Kohler";
-      el("model").value = "K-3817-0";
-      el("title").value = "Demo display";
-      el("price").value = "250";
-      el("condition").value = "New";
-      el("status").value = "Available";
-      el("notes").value = "No wax ring included";
-      msg.innerHTML = "";
-      out.style.display = "none";
-    });
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      msg.innerHTML = "";
-      out.style.display = "none";
-      out.textContent = "";
-
-      const payload = gather();
-
-      // client-side validation for nicer UX (server will still validate)
-      const missing = [];
-      if (!payload.category) missing.push("category");
-      if (!payload.location) missing.push("location");
-      if (!payload.price || Number.isNaN(Number(payload.price))) missing.push("price(number)");
-
-      if (missing.length) {
-        const text = `Missing required fields: ${missing.join(", ")}`;
-        setBanner("danger", text, "Fix the fields above and try again.");
-        showJson({ error: text });
-        return;
-      }
-
-      btnSubmit.disabled = true;
-      btnSubmit.textContent = "Creating…";
-      setBanner("", "Working…", "Submitting to server");
-
-      try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        const data = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          setBanner("danger", data.error || "Create failed", data.detail || `HTTP ${res.status}`);
-          showJson(data);
-        } else {
-          setBanner("success", "Created", `Saved at ${new Date().toLocaleTimeString()}`);
-          showJson(data);
-        }
-      } catch (err) {
-        setBanner("danger", "Request failed", "Network / function error");
-        showJson({ error: String(err) });
-      } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.textContent = "Create Display";
-      }
-    });
-  </script>
 </body>
 </html>
