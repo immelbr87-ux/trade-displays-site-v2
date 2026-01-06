@@ -3,132 +3,254 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Browse Displays — Trade Displays</title>
-  <meta name="description" content="Browse upcoming showroom display removals. Trade buyers only. Local pickup. Fixed pricing. Condition confirmed at pickup." />
-  <link rel="stylesheet" href="app.css" />
+  <title>Browse Displays — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Browse upcoming showroom display removals. Trade-only, fixed pricing, local pickup. Funds held in escrow until pickup confirmation." />
+  <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
 
   <div class="topbar">
     <div class="container topbar-inner">
-      <a class="brand" href="index.html">
+      <a class="brand" href="/">
         <div class="logo">B</div>
         <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
       </a>
 
       <div class="navlinks" aria-label="Primary">
-        <a class="nav-strong" href="market.html">Browse displays</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="brand-compliance.html">Brand compliance</a>
-        <a href="faq.html">FAQ</a>
+        <a href="/market" class="active">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
       </div>
 
       <div class="navcta">
-        <a class="btn btn-ghost" href="#">Sign In</a>
-        <a class="btn btn-primary" href="#">Create Account</a>
+        <a class="btn btn-ghost" href="#signin">Sign In</a>
+        <a class="btn btn-primary" href="#create">Create Account</a>
       </div>
     </div>
   </div>
 
   <div class="container pagewrap">
-    <div class="page">
-
-      <div class="kicker"><span class="dot"></span> Browse upcoming removals • local pickup only</div>
-      <h1>Upcoming display removals</h1>
-      <p class="muted" style="max-width:70ch;">
-        These are showroom displays scheduled to be removed. You’ll see the pickup window, condition grade, key specs, and fixed price. Reserve to hold it.
-      </p>
-
-      <div class="hr"></div>
-
-      <div class="grid3" aria-label="Filters (placeholder)">
-        <div class="kv">
-          <div class="k">Category</div>
-          <div class="v">Vanities, Faucets, Toilets…</div>
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Upcoming removals • verified trade buyers • pickup window upfront</div>
+          <h1>Browse upcoming displays</h1>
+          <p class="lede">
+            These are installed showroom displays scheduled for removal. Listings are specs-first (dimensions, rough-in, finish family, grade).
+            Brand identifiers can be limited in the pilot to reduce exposure.
+          </p>
         </div>
-        <div class="kv">
-          <div class="k">Pickup month</div>
-          <div class="v">Next 30 / 60 / 90 days</div>
-        </div>
-        <div class="kv">
-          <div class="k">Distance</div>
-          <div class="v">Within 25 / 50 / 100 miles</div>
+
+        <div class="page-hero-actions">
+          <a class="btn btn-pill btn-primary" href="/faq">How it works</a>
+          <a class="btn btn-pill" href="/for-showrooms">List upcoming removals</a>
         </div>
       </div>
-
-      <div style="margin-top:18px;" class="cards">
-        <div class="card">
-          <div class="icon">🧱</div>
-          <h3>48&quot; Vanity Display</h3>
-          <ul class="bullets">
-            <li><strong>Pickup:</strong> May 12–14</li>
-            <li><strong>Condition:</strong> Grade A</li>
-            <li><strong>Specs:</strong> 48&quot; width, single sink cutout</li>
-            <li><strong>Finish:</strong> White / Chrome family</li>
-            <li><strong>Price:</strong> $650 (fixed)</li>
-          </ul>
-          <div class="inline-cta" style="margin-top:14px;">
-            <a class="btn btn-primary btn-pill" href="#">Reserve this display</a>
-            <a class="btn btn-pill" href="#">View details</a>
-          </div>
-          <div class="small muted2" style="margin-top:10px;">Local pickup only • Condition confirmed at pickup</div>
-        </div>
-
-        <div class="card">
-          <div class="icon">🚿</div>
-          <h3>Widespread Faucet Display</h3>
-          <ul class="bullets">
-            <li><strong>Pickup:</strong> May 20–22</li>
-            <li><strong>Condition:</strong> Grade B</li>
-            <li><strong>Specs:</strong> 8&quot;-16&quot; spread, includes handles</li>
-            <li><strong>Finish:</strong> Chrome family</li>
-            <li><strong>Price:</strong> $220 (fixed)</li>
-          </ul>
-          <div class="inline-cta" style="margin-top:14px;">
-            <a class="btn btn-primary btn-pill" href="#">Reserve this display</a>
-            <a class="btn btn-pill" href="#">View details</a>
-          </div>
-          <div class="small muted2" style="margin-top:10px;">Local pickup only • Condition confirmed at pickup</div>
-        </div>
-
-        <div class="card">
-          <div class="icon">🚽</div>
-          <h3>Toilet Display (Complete)</h3>
-          <ul class="bullets">
-            <li><strong>Pickup:</strong> June 3–5</li>
-            <li><strong>Condition:</strong> Grade A</li>
-            <li><strong>Specs:</strong> Standard rough-in</li>
-            <li><strong>Finish:</strong> White</li>
-            <li><strong>Price:</strong> $180 (fixed)</li>
-          </ul>
-          <div class="inline-cta" style="margin-top:14px;">
-            <a class="btn btn-primary btn-pill" href="#">Reserve this display</a>
-            <a class="btn btn-pill" href="#">View details</a>
-          </div>
-          <div class="small muted2" style="margin-top:10px;">Local pickup only • Condition confirmed at pickup</div>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-      <div class="callout">
-        <strong>Heads up</strong>
-        Display items are not new and may show cosmetic wear. Condition grade is confirmed at pickup. Sales are final.
-      </div>
-
     </div>
-  </div>
 
-  <div class="container footer">
-    <div class="hr"></div>
-    <div class="footer-grid">
-      <div class="fine">
-        Trade Displays is operated by Bargain Bond. We facilitate reservation, holding, and pickup confirmation for upcoming showroom display removals.
+    <div style="height:18px"></div>
+
+    <div class="market-shell">
+      <!-- LEFT: listings -->
+      <div>
+        <div class="chiprow" aria-label="Active filters">
+          <span class="chip">Local pickup</span>
+          <span class="chip">Fixed price</span>
+          <span class="chip">No returns</span>
+          <span class="chip">Escrow until pickup</span>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="listings" aria-label="Listings">
+          <!-- Listing 1 -->
+          <div class="listing">
+            <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=75')">
+              <div class="thumb-badges">
+                <span class="pilltag ok">Grade A</span>
+                <span class="pilltag soft">Pickup in 18–24 days</span>
+              </div>
+            </div>
+
+            <div class="listing-body">
+              <div class="title">
+                <h3>Bathroom Vanity Display (48") + Top</h3>
+                <div class="price">$800</div>
+              </div>
+
+              <div class="meta">
+                <div>📍 Wauwatosa, WI</div>
+                <div>🗓️ Window: Feb 10–14</div>
+                <div>📏 48" W • 22" D</div>
+                <div>🧾 Specs-first listing</div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="actions">
+                <a class="btn btn-primary btn-pill" href="#reserve1">Reserve</a>
+                <a class="btn btn-pill" href="#details1">View details</a>
+              </div>
+
+              <div class="subnote">
+                Funds held in escrow. Inspect at pickup. Showroom staff confirms grade on-site (QR + staff confirmation).
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing 2 -->
+          <div class="listing">
+            <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1600566753051-f0d5d71a7f5b?auto=format&fit=crop&w=1600&q=75')">
+              <div class="thumb-badges">
+                <span class="pilltag">Grade B</span>
+                <span class="pilltag soft">Pickup in 10–14 days</span>
+              </div>
+            </div>
+
+            <div class="listing-body">
+              <div class="title">
+                <h3>Kitchen Faucet Display (Pull-down)</h3>
+                <div class="price">$220</div>
+              </div>
+
+              <div class="meta">
+                <div>📍 Milwaukee, WI</div>
+                <div>🗓️ Window: Jan 18–20</div>
+                <div>💧 1-hole • standard supply</div>
+                <div>✅ Fully functional</div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="actions">
+                <a class="btn btn-primary btn-pill" href="#reserve2">Reserve</a>
+                <a class="btn btn-pill" href="#details2">View details</a>
+              </div>
+
+              <div class="subnote">
+                Grade B = visible cosmetic wear, fully functional. Final sale. Best for rentals, flips, and unit turns.
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing 3 -->
+          <div class="listing">
+            <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1600566753151-384129cf4e3b?auto=format&fit=crop&w=1600&q=75')">
+              <div class="thumb-badges">
+                <span class="pilltag ok">Grade A</span>
+                <span class="pilltag soft">Pickup in 32–38 days</span>
+              </div>
+            </div>
+
+            <div class="listing-body">
+              <div class="title">
+                <h3>Sink + Mirror Display Set</h3>
+                <div class="price">$400</div>
+              </div>
+
+              <div class="meta">
+                <div>📍 Brookfield, WI</div>
+                <div>🗓️ Window: Feb 26–Mar 1</div>
+                <div>📦 Includes mounting hardware*</div>
+                <div>🧰 Trade-only pickup</div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="actions">
+                <a class="btn btn-primary btn-pill" href="#reserve3">Reserve</a>
+                <a class="btn btn-pill" href="#details3">View details</a>
+              </div>
+
+              <div class="subnote">
+                *If hardware is missing at pickup, it must be disclosed and confirmed before escrow release.
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="brand-compliance.html">Brand compliance</a>
-        <a href="faq.html">FAQ</a>
+
+      <!-- RIGHT: filter panel -->
+      <aside class="panel" aria-label="Filters">
+        <h3>Filters (pilot)</h3>
+        <div class="muted small">These filters are placeholders for the MVP. The goal is credibility + clarity, not a full marketplace yet.</div>
+
+        <div class="formrow" style="margin-top:14px;">
+          <div>
+            <div class="label">Category</div>
+            <select class="select" aria-label="Category">
+              <option>All</option>
+              <option>Vanities</option>
+              <option>Faucets</option>
+              <option>Sinks</option>
+              <option>Showers</option>
+              <option>Toilets</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="label">Condition grade</div>
+            <select class="select" aria-label="Grade">
+              <option>All</option>
+              <option>Grade A</option>
+              <option>Grade B</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="label">Pickup timing</div>
+            <select class="select" aria-label="Pickup timing">
+              <option>Any</option>
+              <option>Within 2 weeks</option>
+              <option>Within 4 weeks</option>
+              <option>4–8 weeks</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="label">Location</div>
+            <input class="input" placeholder="City or ZIP (e.g., 53226)" aria-label="Location" />
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <a class="btn btn-dark btn-full btn-pill" href="#apply">Apply (stub)</a>
+
+        <div class="callout" style="margin-top:14px;">
+          <strong>Trade-only access</strong>
+          <div class="small muted">
+            Buyers are verified (contractors, builders, remodelers, designers sourcing installs, property managers).
+          </div>
+        </div>
+
+        <div class="chiprow">
+          <span class="chip">No bidding</span>
+          <span class="chip">No returns</span>
+          <span class="chip">Pickup confirmed</span>
+        </div>
+
+        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
+          Want to list upcoming removals? Showrooms use a specs-first template to reduce brand exposure.
+          <a href="/for-showrooms" style="text-decoration:underline;">See how it works</a>.
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div class="hr"></div>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate escrow and commitment for scheduled showroom display removals.
+      </div>
+      <div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
       </div>
     </div>
   </div>
