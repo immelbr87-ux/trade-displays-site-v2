@@ -64,111 +64,9 @@
 
         <div style="height:14px"></div>
 
-        <div class="listings" aria-label="Listings">
-          <!-- Listing 1 -->
-          <div class="listing">
-            <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=75')">
-              <div class="thumb-badges">
-                <span class="pilltag ok">Grade A</span>
-                <span class="pilltag soft">Pickup in 18–24 days</span>
-              </div>
-            </div>
-
-            <div class="listing-body">
-              <div class="title">
-                <h3>Bathroom Vanity Display (48") + Top</h3>
-                <div class="price">$800</div>
-              </div>
-
-              <div class="meta">
-                <div>📍 Wauwatosa, WI</div>
-                <div>🗓️ Window: Feb 10–14</div>
-                <div>📏 48" W • 22" D</div>
-                <div>🧾 Specs-first listing</div>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="actions">
-                <a class="btn btn-primary btn-pill" href="#reserve1">Reserve</a>
-                <a class="btn btn-pill" href="#details1">View details</a>
-              </div>
-
-              <div class="subnote">
-                Funds held in escrow. Inspect at pickup. Showroom staff confirms grade on-site (QR + staff confirmation).
-              </div>
-            </div>
-          </div>
-
-          <!-- Listing 2 -->
-          <div class="listing">
-            <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1600566753051-f0d5d71a7f5b?auto=format&fit=crop&w=1600&q=75')">
-              <div class="thumb-badges">
-                <span class="pilltag">Grade B</span>
-                <span class="pilltag soft">Pickup in 10–14 days</span>
-              </div>
-            </div>
-
-            <div class="listing-body">
-              <div class="title">
-                <h3>Kitchen Faucet Display (Pull-down)</h3>
-                <div class="price">$220</div>
-              </div>
-
-              <div class="meta">
-                <div>📍 Milwaukee, WI</div>
-                <div>🗓️ Window: Jan 18–20</div>
-                <div>💧 1-hole • standard supply</div>
-                <div>✅ Fully functional</div>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="actions">
-                <a class="btn btn-primary btn-pill" href="#reserve2">Reserve</a>
-                <a class="btn btn-pill" href="#details2">View details</a>
-              </div>
-
-              <div class="subnote">
-                Grade B = visible cosmetic wear, fully functional. Final sale. Best for rentals, flips, and unit turns.
-              </div>
-            </div>
-          </div>
-
-          <!-- Listing 3 -->
-          <div class="listing">
-            <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1600566753151-384129cf4e3b?auto=format&fit=crop&w=1600&q=75')">
-              <div class="thumb-badges">
-                <span class="pilltag ok">Grade A</span>
-                <span class="pilltag soft">Pickup in 32–38 days</span>
-              </div>
-            </div>
-
-            <div class="listing-body">
-              <div class="title">
-                <h3>Sink + Mirror Display Set</h3>
-                <div class="price">$400</div>
-              </div>
-
-              <div class="meta">
-                <div>📍 Brookfield, WI</div>
-                <div>🗓️ Window: Feb 26–Mar 1</div>
-                <div>📦 Includes mounting hardware*</div>
-                <div>🧰 Trade-only pickup</div>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="actions">
-                <a class="btn btn-primary btn-pill" href="#reserve3">Reserve</a>
-                <a class="btn btn-pill" href="#details3">View details</a>
-              </div>
-
-              <div class="subnote">
-                *If hardware is missing at pickup, it must be disclosed and confirmed before escrow release.
-              </div>
-            </div>
-          </div>
+        <!-- Live listings render here -->
+        <div class="listings" id="listings" aria-label="Listings">
+          <div class="muted">Loading listings…</div>
         </div>
       </div>
 
@@ -254,6 +152,142 @@
       </div>
     </div>
   </div>
+
+  <!-- LIVE AIRTABLE LISTINGS -->
+  <script>
+    (async function () {
+      const root = document.getElementById("listings");
+      if (!root) return;
+
+      root.innerHTML = '<div class="muted">Loading listings…</div>';
+
+      try {
+        // This must exist: netlify/functions/listings.js
+        const r = await fetch("/.netlify/functions/listings?pageSize=12", { cache: "no-store" });
+        const data = await r.json();
+
+        if (!r.ok) throw new Error(data?.error || "Failed to load listings.");
+
+        const listings = Array.isArray(data.listings) ? data.listings : [];
+        if (!listings.length) {
+          root.innerHTML = '<div class="muted">No active listings yet.</div>';
+          return;
+        }
+
+        root.innerHTML = listings.map(renderListingCard).join("");
+
+      } catch (err) {
+        console.error(err);
+        root.innerHTML = `
+          <div class="muted">
+            Could not load listings. Check:
+            <ul>
+              <li>Netlify env vars set (AIRTABLE_TOKEN, AIRTABLE_BASE_ID, etc.)</li>
+              <li>Airtable view name matches <strong>Public_Active</strong></li>
+              <li>At least one record matches view filters</li>
+            </ul>
+          </div>
+        `;
+      }
+
+      function renderListingCard(x) {
+        const id = x.id || "";
+        const title = safeText(x.title || "Display Listing");
+        const price = (x.price != null && x.price !== "") ? `$${Number(x.price).toLocaleString()}` : "";
+        const grade = safeText(x.condition_grade || "?");
+        const category = safeText(x.category || "Display");
+        const finish = safeText(x.finish_family || "Specs-first listing");
+        const dimensions = safeText(x.dimensions || "");
+        const keySpec = safeText(x.key_spec || "");
+        const pickupText = pickupWindowText(x.pickup_window_start, x.pickup_window_end);
+
+        const thumb = safeAttr(x.thumbnail_url || "");
+        const thumbStyle = thumb ? `background-image:url('${thumb}')` : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
+
+        // Fake pages you will add next:
+        // listing-details.html?id=REC_ID
+        // reserve-confirmation.html?id=REC_ID
+        return `
+          <div class="listing">
+            <div class="thumb" style="${thumbStyle}">
+              <div class="thumb-badges">
+                <span class="pilltag ok">Grade ${grade}</span>
+                <span class="pilltag soft">${safeText(pickupText)}</span>
+              </div>
+            </div>
+
+            <div class="listing-body">
+              <div class="title">
+                <h3>${title}</h3>
+                <div class="price">${safeText(price)}</div>
+              </div>
+
+              <div class="meta">
+                <div>🏷️ ${finish}</div>
+                <div>📍 Local pickup</div>
+                <div>🗓️ ${safeText(pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end))}</div>
+                <div>📏 ${dimensions || keySpec || "Specs disclosed"}</div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="actions">
+                <a class="btn btn-primary btn-pill" href="/reserve-confirmation?id=${encodeURIComponent(id)}">Reserve</a>
+                <a class="btn btn-pill" href="/listing-details?id=${encodeURIComponent(id)}">View details</a>
+              </div>
+
+              <div class="subnote">
+                Funds held until pickup confirmation. Condition verified at pickup. Final sale.
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function pickupWindowText(start, end) {
+        // Keep your “Pickup in X–Y days” vibe, but safe if dates missing
+        const s = parseDate(start);
+        const e = parseDate(end);
+        if (!s || !e) return "Pickup window set";
+        const now = new Date();
+        const d1 = Math.max(0, Math.round((s - now) / 86400000));
+        const d2 = Math.max(0, Math.round((e - now) / 86400000));
+        const a = Math.min(d1, d2);
+        const b = Math.max(d1, d2);
+        if (a === b) return `Pickup in ~${a} days`;
+        return `Pickup in ${a}–${b} days`;
+      }
+
+      function pickupWindowDateLine(start, end) {
+        const s = parseDate(start);
+        const e = parseDate(end);
+        if (!s || !e) return "Window: shown after reserve";
+        return `Window: ${fmtShort(s)}–${fmtShort(e)}`;
+      }
+
+      function parseDate(v) {
+        const d = new Date(v);
+        return isNaN(d) ? null : d;
+      }
+
+      function fmtShort(d) {
+        return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      }
+
+      function safeText(str) {
+        return String(str || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function safeAttr(str) {
+        return String(str || "").replaceAll("'", "%27").replaceAll('"', "%22");
+      }
+    })();
+  </script>
 
 </body>
 </html>
