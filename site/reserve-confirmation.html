@@ -3,53 +3,196 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reservation Confirmed — Trade Displays</title>
-  <link rel="stylesheet" href="app.css" />
+  <title>Pickup Confirmation — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Pickup confirmation for reserved showroom display removals. Condition verified on-site. Escrow released after confirmation." />
+  <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
 
-<div class="topbar">
-  <div class="container topbar-inner">
-    <a class="brand" href="index.html">
-      <div class="logo">B</div>
-      <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
-    </a>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">
+        <div class="logo">B</div>
+        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+      </a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
+
+      <div class="navcta">
+        <a class="btn btn-ghost" href="#signin">Sign In</a>
+        <a class="btn btn-primary" href="#create">Create Account</a>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="container pagewrap">
-  <div class="page">
+  <div class="container pagewrap">
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Pickup • verify condition • release escrow</div>
+          <h1 id="h1">Pickup confirmation</h1>
+          <p class="lede" id="lede">Loading pickup details…</p>
+        </div>
 
-    <h1>Reservation confirmed</h1>
-    <p class="lede">Your reservation is locked. Pickup details will be shared prior to removal.</p>
-
-    <div class="grid3" style="margin-top:24px;">
-      <div class="kv">
-        <div class="k">Item</div>
-        <div class="v">48” Bathroom Vanity</div>
-      </div>
-      <div class="kv">
-        <div class="k">Pickup Window</div>
-        <div class="v">May 12–14</div>
-      </div>
-      <div class="kv">
-        <div class="k">Status</div>
-        <div class="v">Escrow Held</div>
+        <div class="page-hero-actions">
+          <a class="btn btn-pill" id="backBtn" href="/market">Back</a>
+          <a class="btn btn-pill btn-primary" id="doneBtn" href="/market">Done</a>
+        </div>
       </div>
     </div>
 
-    <div class="callout" style="margin-top:24px;">
-      <strong>What happens next</strong>
-      The showroom will hold the display for pickup during the scheduled window. 
-      Escrow is released only after onsite condition confirmation.
+    <div style="height:18px"></div>
+
+    <div class="market-shell">
+      <!-- LEFT -->
+      <div class="panel">
+        <h3>On-site verification (pilot screen)</h3>
+
+        <div class="grid3" style="margin-top:12px;">
+          <div class="kv">
+            <div class="k">Listing</div>
+            <div class="v" id="title">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Expected grade</div>
+            <div class="v" id="grade">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Pickup window</div>
+            <div class="v" id="window">—</div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="callout">
+          <strong>Confirm condition on-site</strong>
+          <div class="small muted">
+            Buyer inspects the item. Showroom confirms whether the item matches the listing grade and included components.
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <h3 style="margin-bottom:8px;">Verification (stub)</h3>
+
+        <div class="grid2">
+          <div class="pill">
+            <div>🔳</div>
+            <div>
+              <strong>Scan QR (placeholder)</strong>
+              <span>Opens the pickup confirmation record.</span>
+            </div>
+          </div>
+          <div class="pill">
+            <div>👤</div>
+            <div>
+              <strong>Staff confirmation</strong>
+              <span>Showroom verifies grade + included items.</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="actions">
+          <a class="btn btn-dark btn-pill" href="#confirm">Confirm pickup (fake)</a>
+          <a class="btn btn-pill" href="#issue">Report mismatch (fake)</a>
+        </div>
+
+        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
+          Demo note: In production, “Confirm pickup” would trigger escrow release and mark the reservation closed.
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <aside class="panel">
+        <h3>Release logic</h3>
+        <ul class="bullets">
+          <li>Buyer confirms pickup happened.</li>
+          <li>Showroom confirms grade is as-listed.</li>
+          <li>Escrow is released after confirmation.</li>
+        </ul>
+
+        <div style="height:12px"></div>
+
+        <div class="callout">
+          <strong>If something doesn’t match</strong>
+          <div class="small muted">
+            If the item materially differs from the listing, the reservation can be cancelled before release under the mismatch policy.
+          </div>
+        </div>
+
+        <div class="chiprow" style="margin-top:12px;">
+          <span class="chip">Inspect at pickup</span>
+          <span class="chip">Confirm grade</span>
+          <span class="chip">Release escrow</span>
+        </div>
+      </aside>
     </div>
 
-    <p class="small muted" style="margin-top:18px;">
-      You’ll receive pickup instructions 48 hours before the scheduled removal.
-    </p>
-
+    <div class="footer">
+      <div class="hr"></div>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate escrow and commitment for scheduled showroom display removals.
+      </div>
+      <div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
+    </div>
   </div>
-</div>
+
+  <script>
+    (async function () {
+      const params = new URLSearchParams(location.search);
+      const id = params.get("id");
+
+      const backBtn = document.getElementById("backBtn");
+      if (backBtn) backBtn.href = id ? `/reserve-confirmation?id=${encodeURIComponent(id)}` : "/market";
+
+      if (!id) {
+        document.getElementById("lede").textContent = "Missing listing id. Return to Browse displays and open a listing from there.";
+        return;
+      }
+
+      try {
+        const r = await fetch(`/.netlify/functions/listings?id=${encodeURIComponent(id)}`, { cache: "no-store" });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data?.error || "Failed to load listing.");
+
+        const x = data.listing || {};
+        document.getElementById("lede").textContent =
+          "Pilot screen for outreach: on-site inspection + showroom confirmation before escrow release.";
+
+        document.getElementById("title").textContent = x.title || "Display Listing";
+        document.getElementById("grade").textContent = `Grade ${x.condition_grade || "?"}`;
+        document.getElementById("window").textContent = pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end);
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("lede").textContent = "Could not load pickup details. Check the record id and your Public_Active view filters.";
+      }
+
+      function pickupWindowDateLine(start, end) {
+        const s = parseDate(start), e = parseDate(end);
+        if (!s || !e) return "Window: shown after reserve";
+        return `${fmtShort(s)}–${fmtShort(e)}`;
+      }
+      function parseDate(v){ const d = new Date(v); return isNaN(d) ? null : d; }
+      function fmtShort(d){ return d.toLocaleDateString(undefined, { month:"short", day:"numeric" }); }
+    })();
+  </script>
 
 </body>
 </html>
