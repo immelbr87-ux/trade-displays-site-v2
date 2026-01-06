@@ -2,68 +2,243 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Trade Displays by Bargain Bond</title>
-  <meta name="description" content="Buy showroom displays at a discount before they’re removed. For trade professionals only." />
-  <link rel="stylesheet" href="./styles.css" />
+  <meta name="description" content="Buy showroom displays at a discount before they’re removed. Trade buyers only. Local pickup. Fixed pricing. Escrow held until pickup." />
+  <link rel="stylesheet" href="app.css" />
 </head>
-
 <body>
-  <header class="nav">
-    <div class="nav__left">
-      <div class="logo">B</div>
-      <div class="brand">
-        <div class="brand__name">TRADE DISPLAYS</div>
-        <div class="brand__sub">by Bargain Bond</div>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <div class="logo">B</div>
+        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+      </a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a class="nav-strong" href="market.html">Browse displays</a>
+        <a href="for-showrooms.html">For showrooms</a>
+        <a href="brand-compliance.html">Brand compliance</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+
+      <div class="navcta">
+        <a class="btn btn-ghost" href="#">Sign In</a>
+        <a class="btn btn-primary" href="#">Create Account</a>
       </div>
     </div>
+  </div>
 
-    <div class="nav__right">
-      <a class="nav__link" href="#signin">Sign In</a>
-      <a class="btn btn--ghost" href="#create">Create Account</a>
-    </div>
-  </header>
+  <div class="container section">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="kicker"><span class="dot"></span> Trade buyers only • local pickup • fixed pricing</div>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero__overlay"></div>
+          <h1>Buy showroom displays at a discount before they’re removed.</h1>
 
-      <div class="container hero__content">
-        <h1>Buy showroom displays<br/>at a discount before<br/>they’re removed.</h1>
+          <p class="lede">
+            Reserve upcoming showroom display removals from trusted locations.
+            Lock price and a pickup window. Funds are held until pickup confirmation.
+          </p>
 
-        <p class="subhead">
-          Pre-commit to upcoming display removals from trusted showrooms. Local pickup. Locked pricing.
-          No bidding. No returns.
-        </p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary btn-pill" href="market.html">Browse upcoming displays</a>
+            <a class="btn btn-pill" href="for-showrooms.html">For showrooms — list removals</a>
+          </div>
 
-        <div class="ctaRow">
-          <a class="btn btn--primary" href="#browse">Browse upcoming displays</a>
-          <a class="btn btn--ghost" href="#showrooms">For showrooms + List upcoming removals</a>
+          <div class="trustline" aria-label="Trust signals">
+            <span class="trustchip">No bidding</span>
+            <span class="trustchip">No consumer DMs</span>
+            <span class="trustchip">Condition confirmed at pickup</span>
+            <span class="trustchip">Trade buyers only</span>
+          </div>
+
+          <div class="hero-note">
+            <span class="badge">Fixed pricing</span>
+            <span class="badge">Pickup windows</span>
+            <span class="badge">Escrow held until pickup</span>
+          </div>
         </div>
 
-        <p class="fineprint">For contractors, builders, and trade professionals only.</p>
+        <div class="hero-img" aria-hidden="true">
+          <div class="hero-mock">
+            <div class="hero-mock-top">
+              <div class="dotrow"><span></span><span></span><span></span></div>
+              <div class="hero-mock-title">Upcoming removal: 48&quot; vanity display</div>
+              <div class="hero-mock-sub">Pickup window shown before you reserve.</div>
+            </div>
+            <div class="hero-mock-body">
+              <div class="hero-mock-grid">
+                <div class="hero-mock-kv">Pickup<strong>May 12–14</strong></div>
+                <div class="hero-mock-kv">Condition<strong>Grade A</strong></div>
+                <div class="hero-mock-kv">Price<strong>$650</strong></div>
+              </div>
+
+              <div class="badge-row">
+                <span class="mini-badge">Local pickup only</span>
+                <span class="mini-badge">No returns</span>
+                <span class="mini-badge">Trade verified</span>
+              </div>
+
+              <div class="hero-mock-cta">
+                <span class="mini-btn">Reserve</span>
+                <span class="mini-btn ghost">Details</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- HOW IT WORKS -->
-    <section class="section">
-      <div class="container">
-        <h2>How Trade Displays by Bargain Bond Works</h2>
+  <div class="container section">
+    <h2>How Trade Displays by Bargain Bond Works</h2>
 
-        <div class="cards">
-          <article class="card">
-            <div class="card__icon">📅</div>
-            <h3>Upcoming inventory</h3>
-            <ul>
-              <li>Displays scheduled for removal.</li>
-              <li>Dimensions, finish family, condition listed.</li>
-              <li>Local pickup window shown upfront.</li>
-            </ul>
-          </article>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">📅</div>
+        <h3>Upcoming inventory</h3>
+        <ul class="bullets">
+          <li>Displays scheduled for removal.</li>
+          <li>Dimensions, finish family, and grade.</li>
+          <li>Pickup window shown upfront.</li>
+        </ul>
+      </div>
 
-          <article class="card">
-            <div class="card__icon">🔒</div>
-            <h3>Reserve before removal</h3>
-            <ul>
-              <li>Lock price and
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3>Reserve before removal</h3>
+        <ul class="bullets">
+          <li>Lock price + pickup window.</li>
+          <li>Funds held until pickup confirmation.</li>
+          <li>Showroom holds the display for you.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="icon">✅</div>
+        <h3>Pickup + close</h3>
+        <ul class="bullets">
+          <li>Inspect at pickup.</li>
+          <li>Confirm grade on-site.</li>
+          <li>Funds released after confirmation.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="inline-cta">
+      <a class="btn btn-pill" href="brand-compliance.html">See brand-safe rules</a>
+      <a class="btn btn-pill" href="faq.html">Read FAQs</a>
+      <a class="btn btn-pill" href="for-showrooms.html">Showroom pilot details</a>
+    </div>
+  </div>
+
+  <div class="container section">
+    <div class="split">
+
+      <div class="box">
+        <h2>Built for trade buyers</h2>
+
+        <div class="grid2">
+          <div class="pill">
+            <div>🧰</div>
+            <div>
+              <strong>Contractors</strong>
+              <span>& remodelers</span>
+            </div>
+          </div>
+
+          <div class="pill">
+            <div>🏗️</div>
+            <div>
+              <strong>Builders</strong>
+              <span>& flippers</span>
+            </div>
+          </div>
+
+          <div class="pill">
+            <div>📐</div>
+            <div>
+              <strong>Designers</strong>
+              <span>sourcing installs</span>
+            </div>
+          </div>
+
+          <div class="pill">
+            <div>🏢</div>
+            <div>
+              <strong>Property managers</strong>
+              <span>turning units</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="muted" style="margin-top:14px;">
+          If you already buy display, open-box, or back-room inventory — this formalizes it with clear pickup windows and simple confirmation at pickup.
+        </p>
+
+        <div style="margin-top:18px;">
+          <div class="card card-flat">
+            <h3 style="margin-top:0;">Condition is standardized</h3>
+            <table class="table" aria-label="Condition standards">
+              <tr>
+                <td>Grade A</td>
+                <td>Light wear, fully functional</td>
+              </tr>
+              <tr>
+                <td>Grade B</td>
+                <td>Visible wear, fully functional</td>
+              </tr>
+            </table>
+            <div class="small muted2" style="margin-top:10px;">Condition is confirmed at pickup. No surprises.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showroom">
+        <div>
+          <h3>For showrooms</h3>
+          <ul>
+            <li>Pre-sell displays before teardown</li>
+            <li>Avoid public markdown optics</li>
+            <li>Trade buyers only</li>
+            <li>Guaranteed pickup windows</li>
+          </ul>
+
+          <div class="showroom-ctas">
+            <a class="btn btn-primary btn-pill" href="for-showrooms.html">Request pilot access</a>
+            <a class="btn btn-ghost btn-pill" href="brand-compliance.html">Brand compliance</a>
+          </div>
+        </div>
+
+        <div class="linksrow">
+          <a href="brand-compliance.html">Brand compliance</a>
+          <a href="faq.html">FAQ</a>
+          <a href="market.html">Browse displays</a>
+          <a href="for-showrooms.html">Showroom pilot</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container footer">
+    <div class="hr"></div>
+    <div class="footer-grid">
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate reservation, escrow holding, and pickup confirmation for upcoming showroom display removals.
+      </div>
+      <div class="footer-links">
+        <a href="market.html">Browse displays</a>
+        <a href="for-showrooms.html">For showrooms</a>
+        <a href="brand-compliance.html">Brand compliance</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
