@@ -3,75 +3,144 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>What This Is Not</title>
-  <meta name="description" content="Trade Displays is not a marketplace, not retail, not a rental program, not a buyback program, and not consumer resale." />
+  <title>What this is — Trade Displays</title>
+  <meta name="description" content="Trade Displays is a trade-only, specs-first way to pre-sell showroom display removals with pickup windows and escrow." />
   <link rel="stylesheet" href="app.css" />
+  <style>
+    .navlinks a.active{background:rgba(15,23,42,.06);color:var(--ink)}
+    .footer-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .footer-nav a{padding:6px 10px;border-radius:12px;border:1px solid var(--line2);background:#fff}
+    .footer-nav a:hover{background:rgba(15,23,42,.04)}
+
+    /* Replace “non-link pills” with true badges */
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      background:rgba(15,23,42,.05);color:var(--muted);font-size:12px;font-weight:750}
+    .badge .dot{width:8px;height:8px;border-radius:99px;background:var(--accent)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .section{margin-top:18px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:900px){.two{grid-template-columns:1fr}}
+    .mini{font-size:13px;color:var(--muted)}
+  </style>
 </head>
 <body>
+
   <div class="topbar">
     <div class="container topbar-inner">
       <a class="brand" href="index.html">
         <div class="logo">B</div>
         <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
       </a>
-      <div class="navlinks">
+
+      <div class="navlinks" aria-label="Primary">
+        <a href="market.html">Browse displays</a>
         <a href="what.html">What is this</a>
         <a href="for-showrooms.html">For showrooms</a>
         <a href="brand-compliance.html">Brand compliance</a>
         <a href="faq.html">FAQ</a>
+        <a href="pilot-program.html">Pilot</a>
       </div>
+
       <div class="navcta">
         <a class="btn btn-ghost" href="#">Sign In</a>
-        <a class="btn" href="#">Create Account</a>
+        <a class="btn btn-primary btn-pill" href="#">Create Account</a>
       </div>
     </div>
   </div>
 
   <div class="container pagewrap">
     <div class="page">
-      <div class="kicker"><span class="dot"></span> Clear boundaries prevent misuse</div>
-      <h1>What This Is Not</h1>
 
-      <div class="grid3" style="margin-top:18px;">
-        <div class="kv">
-          <div class="k">Not a marketplace</div>
-          <div class="v">No open-ended buyer/seller browsing for anything and everything</div>
+      <div class="badge"><span class="dot"></span> Clear boundaries • specs-first • trade-only</div>
+      <h1 style="margin-top:10px;">What this is (and what it is not)</h1>
+      <p class="lede" style="margin:10px 0 0;">
+        Trade Displays lets showrooms pre-sell scheduled floor-model removals to verified trade buyers
+        using fixed pricing, pickup windows, and escrow until pickup confirmation.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary btn-pill" href="market.html">Browse upcoming displays</a>
+        <a class="btn btn-pill" href="request-pilot.html">Request pilot access</a>
+        <a class="btn btn-pill" href="brand-compliance.html">Brand compliance</a>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="section">
+        <h2>What this is</h2>
+        <div class="grid3">
+          <div class="kv">
+            <div class="k">Inventory</div>
+            <div class="v">Scheduled removals</div>
+            <p class="mini" style="margin:8px 0 0;">Listings exist only when a showroom has a real removal window.</p>
+          </div>
+          <div class="kv">
+            <div class="k">Structure</div>
+            <div class="v">Fixed price + pickup window</div>
+            <p class="mini" style="margin:8px 0 0;">No bidding. No negotiation threads. The pickup window is enforced.</p>
+          </div>
+          <div class="kv">
+            <div class="k">Payment</div>
+            <div class="v">Escrow until pickup</div>
+            <p class="mini" style="margin:8px 0 0;">Funds release only after pickup confirmation.</p>
+          </div>
         </div>
-        <div class="kv">
-          <div class="k">Not retail clearance</div>
-          <div class="v">Not positioned as consumer bargain shopping</div>
-        </div>
-        <div class="kv">
-          <div class="k">Not a rental program</div>
-          <div class="v">This is purchase + pickup, not time-based usage</div>
-        </div>
-        <div class="kv">
-          <div class="k">Not a buyback program</div>
-          <div class="v">No manufacturer buyback pricing or warranty promises</div>
-        </div>
-        <div class="kv">
-          <div class="k">Not consumer resale</div>
-          <div class="v">Verification keeps it trade-only</div>
-        </div>
-        <div class="kv">
-          <div class="k">Not peer-to-peer chat</div>
-          <div class="v">No unmoderated negotiation threads</div>
+      </div>
+
+      <div class="section">
+        <h2>What this is not</h2>
+        <div class="two">
+          <div class="box" style="box-shadow:var(--shadow-sm);">
+            <h3 style="margin-top:0;">Not a consumer marketplace</h3>
+            <ul class="bullets">
+              <li>No open-ended consumer browsing “for everything”</li>
+              <li>No consumer-to-showroom DMs or negotiation</li>
+              <li>No public marketing framing that implies brand blowouts</li>
+            </ul>
+          </div>
+          <div class="box" style="box-shadow:var(--shadow-sm);">
+            <h3 style="margin-top:0;">Not retail “new” promises</h3>
+            <ul class="bullets">
+              <li>No manufacturer warranty language</li>
+              <li>No “new” status claims</li>
+              <li>Final sale — designed around pickup inspection + confirmation</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div class="callout" style="margin-top:18px;">
         <strong>Why these boundaries matter</strong>
-        They keep this brand-safe, operationally clean for showrooms, and focused on trade buyers who already purchase displays and open-box inventory.
+        They keep the program brand-safe, operationally clean for showrooms, and focused on trade buyers who already purchase displays and open-box inventory.
       </div>
 
+    </div>
+
+    <div class="footer">
       <div class="hr"></div>
-      <a class="btn btn-primary btn-pill" href="pilot-program.html">Request pilot access</a>
-      <a class="btn btn-pill" style="margin-left:8px" href="brand-compliance.html">Brand compliance</a>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. Escrow and commitment are facilitated for scheduled display removals.
+        <div class="footer-nav" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="market.html">Browse</a>
+          <a href="listing-details.html">Example details</a>
+          <a href="reserve.html">Reserve preview</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="container footer">
-    <div class="fine">Trade Displays is operated by Bargain Bond. Escrow and commitment are facilitated for scheduled display removals.</div>
-  </div>
+  <script>
+    (function(){
+      const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.navlinks a').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(!href) return;
+        if(path === href || (path === '' && href === 'index.html')) a.classList.add('active');
+        if(path.replace('.html','') === href.replace('.html','')) a.classList.add('active');
+      });
+    })();
+  </script>
 </body>
 </html>
