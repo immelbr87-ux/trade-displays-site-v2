@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Display Details — Trade Displays</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="logo">B</div>
+      <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+    </a>
+  </div>
+</div>
+
+<div class="container pagewrap">
+  <div class="page">
+
+    <h1>48” Bathroom Vanity — Showroom Display</h1>
+    <p class="lede">Upcoming display removal • Local pickup only</p>
+
+    <div class="grid3" style="margin-top:24px;">
+      <div class="kv">
+        <div class="k">Condition</div>
+        <div class="v">Grade A</div>
+      </div>
+      <div class="kv">
+        <div class="k">Pickup Window</div>
+        <div class="v">May 12–14</div>
+      </div>
+      <div class="kv">
+        <div class="k">Location</div>
+        <div class="v">Milwaukee, WI</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>What you’re reserving</h2>
+    <ul>
+      <li>Installed showroom display</li>
+      <li>Previously plumbed</li>
+      <li>Removed during scheduled showroom refresh</li>
+    </ul>
+
+    <h2>Condition standard</h2>
+    <p><strong>Grade A:</strong> Installed showroom display with light cosmetic wear only. Fully functional at pickup.</p>
+
+    <div class="callout">
+      <strong>Condition protection</strong>
+      Condition is verified onsite at pickup before escrow is released.
+    </div>
+
+    <div style="margin-top:28px;">
+      <a class="btn btn-primary btn-pill" href="reserve-confirmation.html">Reserve this display</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
