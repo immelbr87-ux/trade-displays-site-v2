@@ -3,69 +3,168 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pilot Program</title>
-  <meta name="description" content="Trade Displays pilot program for showrooms: list upcoming removals, trade-only reservations, escrow until pickup confirmation." />
-  <link rel="stylesheet" href="app.css" />
+  <title>Pilot Program — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Pilot program for showrooms: pre-sell display removals with fixed price, pickup window, escrow until pickup confirmation. Brand-safe defaults." />
+  <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
+
   <div class="topbar">
     <div class="container topbar-inner">
-      <a class="brand" href="index.html">
+      <a class="brand" href="/">
         <div class="logo">B</div>
         <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
       </a>
-      <div class="navlinks">
-        <a href="what.html">What is this</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="brand-compliance.html">Brand compliance</a>
-        <a href="faq.html">FAQ</a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot" class="active">Pilot</a>
       </div>
+
       <div class="navcta">
-        <a class="btn btn-ghost" href="#">Sign In</a>
-        <a class="btn" href="#">Create Account</a>
+        <a class="btn btn-ghost" href="#signin">Sign In</a>
+        <a class="btn btn-primary" href="#create">Create Account</a>
       </div>
     </div>
   </div>
 
   <div class="container pagewrap">
-    <div class="page">
-      <div class="kicker"><span class="dot"></span> Small pilot • clear rules • learn fast</div>
-      <h1>Pilot Program</h1>
-      <p>
-        The pilot is designed to be low-friction for showrooms and predictable for trade buyers.
-        Start with a handful of known removals and validate the workflow end-to-end.
-      </p>
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Low-lift pilot • specs-first listings • escrow until pickup</div>
+          <h1>Pilot Program (showrooms)</h1>
+          <p class="lede">
+            This pilot is designed to monetize floor models without public markdown optics, consumer negotiation, or last-minute scrambling.
+            You list upcoming removals with a pickup window and condition grade. A verified trade buyer reserves. Funds are held until pickup confirmation.
+          </p>
+        </div>
 
-      <h2>What the pilot includes</h2>
-      <ul>
-        <li>Showroom listing flow (specs + A/B condition + pickup window)</li>
-        <li>Trade buyer verification</li>
-        <li>Reservation confirmation + escrow hold</li>
-        <li>Pickup confirmation step (staff quick check)</li>
-      </ul>
+        <div class="page-hero-actions">
+          <a class="btn btn-pill btn-primary" href="#request">Request pilot access</a>
+          <a class="btn btn-pill" href="/brand-compliance">See compliance defaults</a>
+        </div>
+      </div>
+    </div>
 
-      <h2>Minimum requirements</h2>
-      <ul>
-        <li>Known removal date or removal window</li>
-        <li>Pickup window defined in advance</li>
-        <li>Condition listed as Grade A or Grade B</li>
-        <li>Brand-safe listing standards followed</li>
-      </ul>
+    <div style="height:18px"></div>
 
-      <div class="callout" style="margin-top:18px;">
-        <strong>Next step</strong>
-        Use this page as your “send-ahead” link before calls. It sets expectations and reduces back-and-forth.
+    <div class="split">
+      <div class="box">
+        <h2>What you get</h2>
+
+        <div class="grid3">
+          <div class="kv">
+            <div class="k">Committed buyer</div>
+            <div class="v">Reservation + pickup window</div>
+          </div>
+          <div class="kv">
+            <div class="k">Operational clarity</div>
+            <div class="v">Grade confirmed on-site</div>
+          </div>
+          <div class="kv">
+            <div class="k">Brand-safe defaults</div>
+            <div class="v">Specs-first listings</div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="callout">
+          <strong>Key point</strong>
+          You’re not running a “floor model blowout.” You’re scheduling a professional pickup of an installed showroom display that’s already planned for removal.
+        </div>
+
+        <h2>What we need from you (minimum)</h2>
+        <ul>
+          <li>Confirm the item is an installed showroom display and is scheduled for removal.</li>
+          <li>Set a fixed price, a pickup window, and a condition grade (A or B).</li>
+          <li>Provide specs-first listing details (dimensions, rough-in, finish family, functional completeness).</li>
+          <li>Agree to pickup confirmation (QR + staff confirmation) to release escrow.</li>
+        </ul>
+
+        <h2>Compliance checklist (PDF)</h2>
+        <p class="muted">
+          This is what we use to keep the pilot brand-safe and operationally clean. You can share it internally.
+        </p>
+
+        <div class="cards" style="grid-template-columns:1fr;gap:12px;">
+          <div class="card" style="margin:0;">
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
+              <div>
+                <div style="font-weight:900;">Trade Displays — Showroom Compliance Checklist</div>
+                <div class="small muted2">Brand-safe listing rules + escrow + pickup confirmation (pilot defaults)</div>
+              </div>
+              <a class="btn btn-primary btn-pill" href="/Trade_Displays_Branded_Compliance_Checklist.pdf" target="_blank" rel="noopener">
+                Download PDF
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
+          Note: If your internal policy requires modifications, we can version the checklist (v1, v1.1) for legal hygiene.
+        </div>
       </div>
 
+      <div class="showroom" id="request">
+        <div>
+          <h3>Request pilot access</h3>
+          <ul>
+            <li>Start with 5–15 removals over 30 days</li>
+            <li>Trade-only buyers (verification required)</li>
+            <li>Specs-first listings to reduce brand exposure</li>
+            <li>Escrow held until pickup confirmation</li>
+          </ul>
+
+          <div style="margin-top:14px;">
+            <div class="small" style="opacity:.86;margin-bottom:10px;">
+              Pilot request (stub form)
+            </div>
+
+            <div style="display:grid;gap:10px;">
+              <input class="input" placeholder="Showroom / store name" aria-label="Showroom name" />
+              <input class="input" placeholder="Your name + role" aria-label="Name" />
+              <input class="input" placeholder="Email" aria-label="Email" />
+              <input class="input" placeholder="City / State" aria-label="Location" />
+              <a class="btn btn-primary btn-pill btn-full" href="#submitted">Submit request (stub)</a>
+            </div>
+
+            <div class="small" style="opacity:.78;margin-top:10px;line-height:1.5;">
+              We’ll reply with a short call agenda + the 1-page pilot agreement.
+              No software install required.
+            </div>
+          </div>
+        </div>
+
+        <div class="linksrow">
+          <a href="/for-showrooms">How listing works</a>
+          <a href="/brand-compliance">Compliance defaults</a>
+          <a href="/faq">FAQ</a>
+          <a href="/market">Browse displays</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
       <div class="hr"></div>
-      <a class="btn btn-primary btn-pill" href="#">Request pilot access</a>
-      <a class="btn btn-pill" style="margin-left:8px" href="for-showrooms.html">Showroom overview</a>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. Escrow and commitment are facilitated for scheduled display removals.
+      </div>
+      <div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
     </div>
   </div>
 
-  <div class="container footer">
-    <div class="fine">Trade Displays is operated by Bargain Bond. Escrow and commitment are facilitated for scheduled display removals.</div>
-  </div>
 </body>
 </html>
 
