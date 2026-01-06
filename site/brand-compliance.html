@@ -3,9 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Brand Compliance — Trade Displays</title>
-  <meta name="description" content="Brand-safe listing rules for showroom display resale: specs-first, no warranty claims, final sale, and pickup confirmation." />
+  <title>Brand compliance — Trade Displays</title>
+  <meta name="description" content="Brand-safe defaults: specs-first listings, trade-only access, standardized grades, pickup windows, and escrow until pickup confirmation." />
   <link rel="stylesheet" href="app.css" />
+  <style>
+    .navlinks a.active{background:rgba(15,23,42,.06);color:var(--ink)}
+    .footer-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .footer-nav a{padding:6px 10px;border-radius:12px;border:1px solid var(--line2);background:#fff}
+    .footer-nav a:hover{background:rgba(15,23,42,.04)}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      background:rgba(15,23,42,.05);color:var(--muted);font-size:12px;font-weight:750}
+    .badge .dot{width:8px;height:8px;border-radius:99px;background:var(--accent)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:900px){.two{grid-template-columns:1fr}}
+    .mini{font-size:13px;color:var(--muted)}
+  </style>
 </head>
 <body>
 
@@ -18,14 +31,16 @@
 
       <div class="navlinks" aria-label="Primary">
         <a href="market.html">Browse displays</a>
+        <a href="what.html">What is this</a>
         <a href="for-showrooms.html">For showrooms</a>
-        <a class="nav-strong" href="brand-compliance.html">Brand compliance</a>
+        <a href="brand-compliance.html">Brand compliance</a>
         <a href="faq.html">FAQ</a>
+        <a href="pilot-program.html">Pilot</a>
       </div>
 
       <div class="navcta">
         <a class="btn btn-ghost" href="#">Sign In</a>
-        <a class="btn btn-primary" href="#">Create Account</a>
+        <a class="btn btn-primary btn-pill" href="#">Create Account</a>
       </div>
     </div>
   </div>
@@ -33,62 +48,102 @@
   <div class="container pagewrap">
     <div class="page">
 
-      <div class="kicker"><span class="dot"></span> Specs-first • professional buyers • brand-safe defaults</div>
-      <h1>Brand compliance (pilot defaults)</h1>
-
-      <p class="muted" style="max-width:75ch;">
-        Trade Displays is designed to reduce brand exposure and misrepresentation risk. Listings prioritize the information trade buyers actually need:
-        dimensions, rough-in, finish family, functional completeness, condition grading, and pickup timing.
+      <div class="badge"><span class="dot"></span> Specs-first • professional buyers • pilot defaults</div>
+      <h1 style="margin-top:10px;">Brand compliance (pilot defaults)</h1>
+      <p class="lede" style="margin:10px 0 0;">
+        Trade Displays reduces exposure and misrepresentation risk by presenting specs, condition, and pickup timing first.
+        Listings are explicitly “showroom display (installed previously)” and avoid “new/warranty” language.
       </p>
 
-      <div class="hr"></div>
-
-      <h2>Listing rules (what we do)</h2>
-      <ul>
-        <li><strong>Specs-first:</strong> dimensions, rough-in, finish family, completeness, and grade are shown upfront.</li>
-        <li><strong>No warranty language:</strong> listings do not imply manufacturer warranty or “new” status.</li>
-        <li><strong>Display disclosure:</strong> items are clearly described as showroom displays (installed previously).</li>
-        <li><strong>Final sale:</strong> no returns or exchanges.</li>
-        <li><strong>Local pickup:</strong> pickup window is shown and enforced.</li>
-      </ul>
-
-      <h2 style="margin-top:26px;">What we don’t do</h2>
-      <ul>
-        <li>No public “blowout” framing or marketing language that implies discounting the brand.</li>
-        <li>No consumer-to-showroom direct messaging or negotiation.</li>
-        <li>No claims about warranty, certification, or “like new” beyond the grade definition.</li>
-      </ul>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-pill" href="request-pilot.html">Request pilot access</a>
+        <a class="btn btn-pill" href="Trade_Displays_Branded_Compliance_Checklist.pdf">Open checklist PDF</a>
+        <a class="btn btn-pill" href="listing-details.html">View example listing</a>
+      </div>
 
       <div class="hr"></div>
 
-      <div class="callout">
+      <div class="two">
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h2 style="margin-top:0;">Listing rules (what we do)</h2>
+          <ul>
+            <li><strong>Specs-first:</strong> dimensions, rough-in, finish family, completeness, grade</li>
+            <li><strong>Display disclosure:</strong> installed previously (showroom display)</li>
+            <li><strong>Pickup window:</strong> shown and enforced</li>
+            <li><strong>Final sale:</strong> designed around pickup inspection + confirmation</li>
+          </ul>
+        </div>
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h2 style="margin-top:0;">What we don’t do</h2>
+          <ul>
+            <li>No brand “blowout” framing or public discount marketing language</li>
+            <li>No consumer-to-showroom negotiation threads</li>
+            <li>No implied warranty / certification / “like new” beyond grade definition</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:18px;">
         <strong>Showroom control</strong>
-        Your store can decide whether brand identifiers are shown on listings. The pilot default is “specs-first” and professional-only access.
+        Your store decides what brand identifiers appear on listings. Pilot default: minimize brand exposure and keep listings specs-first.
       </div>
 
-      <div class="inline-cta" style="margin-top:18px;">
-        <a class="btn btn-primary btn-pill" href="for-showrooms.html">Pilot request</a>
-        <a class="btn btn-pill" href="faq.html">FAQ</a>
-        <a class="btn btn-pill" href="market.html">Browse displays</a>
+      <div class="hr"></div>
+
+      <h2>Condition grades (used consistently)</h2>
+      <p class="mini" style="margin-top:6px;">These definitions show up the same way across browse, details, and pickup confirmation.</p>
+      <div class="two">
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h3 style="margin:0 0 6px;">Grade A</h3>
+          <p class="mini" style="margin:0 0 10px;">Light wear, fully functional, all core components present.</p>
+          <ul class="bullets">
+            <li>Minor scuffs / small marks</li>
+            <li>No missing core pieces</li>
+            <li>Ready-to-install condition expected</li>
+          </ul>
+        </div>
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h3 style="margin:0 0 6px;">Grade B</h3>
+          <p class="mini" style="margin:0 0 10px;">Visible wear and/or minor non-critical parts variance (disclosed).</p>
+          <ul class="bullets">
+            <li>Visible scratches / finish wear</li>
+            <li>Minor replacement part may be needed</li>
+            <li>Still functional; details shown in listing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="small muted2" style="margin-top:16px;">
+        Pilot defaults are for risk reduction. Final program language should be reviewed with internal policies and agreements.
       </div>
 
     </div>
-  </div>
 
-  <div class="container footer">
-    <div class="hr"></div>
-    <div class="footer-grid">
+    <div class="footer">
+      <div class="hr"></div>
       <div class="fine">
-        These are pilot defaults for risk reduction. Final program language should be reviewed with your internal policies and agreements.
-      </div>
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="market.html">Browse</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="faq.html">FAQ</a>
+        Trade Displays is operated by Bargain Bond.
+        <div class="footer-nav" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="market.html">Browse</a>
+          <a href="reserve.html">Reserve preview</a>
+          <a href="request-pilot.html">Pilot request</a>
+          <a href="contact.html">Contact</a>
+        </div>
       </div>
     </div>
   </div>
 
+  <script>
+    (function(){
+      const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.navlinks a').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(!href) return;
+        if(path === href || (path === '' && href === 'index.html')) a.classList.add('active');
+        if(path.replace('.html','') === href.replace('.html','')) a.classList.add('active');
+      });
+    })();
+  </script>
 </body>
 </html>
