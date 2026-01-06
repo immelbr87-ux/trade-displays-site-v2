@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pickup Confirmation — Trade Displays</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="logo">B</div>
+      <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+    </a>
+  </div>
+</div>
+
+<div class="container pagewrap">
+  <div class="page">
+
+    <h1>Pickup confirmation</h1>
+    <p class="lede">Confirm condition to complete the transaction.</p>
+
+    <div class="callout">
+      <strong>Confirm before release</strong>
+      Only confirm if the display reasonably matches the listed condition grade.
+    </div>
+
+    <div class="formrow" style="margin-top:18px;">
+      <label class="label">Condition at pickup</label>
+      <select class="select">
+        <option>Matches listed condition</option>
+        <option>Does not match condition</option>
+      </select>
+    </div>
+
+    <div style="margin-top:22px;">
+      <a class="btn btn-primary btn-pill btn-full" href="#">Confirm pickup & release escrow</a>
+    </div>
+
+    <p class="small muted2" style="margin-top:12px;">
+      If condition does not match, escrow will remain held and support will review.
+    </p>
+
+  </div>
+</div>
+
+</body>
+</html>
+
+
