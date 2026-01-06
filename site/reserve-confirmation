@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reservation Confirmed — Trade Displays</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="logo">B</div>
+      <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+    </a>
+  </div>
+</div>
+
+<div class="container pagewrap">
+  <div class="page">
+
+    <h1>Reservation confirmed</h1>
+    <p class="lede">Your reservation is locked. Pickup details will be shared prior to removal.</p>
+
+    <div class="grid3" style="margin-top:24px;">
+      <div class="kv">
+        <div class="k">Item</div>
+        <div class="v">48” Bathroom Vanity</div>
+      </div>
+      <div class="kv">
+        <div class="k">Pickup Window</div>
+        <div class="v">May 12–14</div>
+      </div>
+      <div class="kv">
+        <div class="k">Status</div>
+        <div class="v">Escrow Held</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:24px;">
+      <strong>What happens next</strong>
+      The showroom will hold the display for pickup during the scheduled window. 
+      Escrow is released only after onsite condition confirmation.
+    </div>
+
+    <p class="small muted" style="margin-top:18px;">
+      You’ll receive pickup instructions 48 hours before the scheduled removal.
+    </p>
+
+  </div>
+</div>
+
+</body>
+</html>
