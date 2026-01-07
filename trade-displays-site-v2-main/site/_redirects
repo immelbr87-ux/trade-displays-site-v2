@@ -1,0 +1,10 @@
+/                 /index.html             200
+
+/what             /what.html              200
+/for-showrooms    /for-showrooms.html     200
+/brand-compliance /brand-compliance.html  200
+/faq              /faq.html               200
+/pilot            /pilot-program.html     200
+/market           /market.html            200
+
+/*                /index.html             404

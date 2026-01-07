@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reserve Confirmation — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Reserve a showroom display. Confirm pickup window, final sale terms, and re-list option." />
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <div class="logo">B</div>
+        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+      </a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a href="what.html">How it works</a>
+        <a href="for-showrooms.html">For showrooms</a>
+        <a href="pilot-program.html">Pilot</a>
+        <a href="condition-standards.html">Trust &amp; safety</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="navcta">
+        <a class="btn btn-ghost" href="market.html">Browse inventory</a>
+        <a class="btn btn-primary" href="list-a-display.html">List a display</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pagewrap">
+
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Reserve • confirm pickup • funds held until pickup</div>
+          <h1>Reserve this display</h1>
+          <p class="lede">
+            This is a pilot reservation screen for credibility. It explains the commitment, pickup window, and the re-list option if plans change.
+          </p>
+        </div>
+
+        <div class="page-hero-actions">
+          <a class="btn btn-pill" id="detailsLink" href="/listing-details">Back to details</a>
+          <a class="btn btn-pill btn-primary" href="/market">Browse more</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:18px"></div>
+
+    <div class="market-shell">
+      <!-- LEFT -->
+      <div class="panel">
+        <h3 style="margin-top:0;">Reservation summary</h3>
+        <div class="muted small" id="summaryLine">Loading…</div>
+
+        <div style="height:12px"></div>
+
+        <div class="grid3">
+          <div class="kv">
+            <div class="k">Price</div>
+            <div class="v" id="price">$—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Condition</div>
+            <div class="v" id="grade">Grade —</div>
+          </div>
+          <div class="kv">
+            <div class="k">Pickup window</div>
+            <div class="v" id="window">—</div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="callout">
+          <strong>Escrow trigger moment (pilot)</strong>
+          <div class="small muted" style="line-height:1.55;">
+            Escrow is created when you click <strong>Confirm reservation</strong> below. Funds are held until pickup confirmation (staff QR + buyer acknowledgment).
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <h2 style="margin-top:0;">Required acknowledgements</h2>
+
+        <div class="formrow" style="gap:10px;">
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="c1" />
+            <span>
+              <strong>Installed showroom display.</strong>
+              <span>May show cosmetic wear from installation/handling.</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="c2" />
+            <span>
+              <strong>As-is / final sale.</strong>
+              <span>No returns. No warranties unless stated in writing.</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="c3" />
+            <span>
+              <strong>Pickup window commitment.</strong>
+              <span>I will coordinate pickup within the stated window.</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="c4" />
+            <span>
+              <strong>Condition verified at pickup.</strong>
+              <span>If materially different from posted grade, it must be documented with photos <em>before</em> escrow release.</span>
+            </span>
+          </label>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <button class="btn btn-primary btn-pill btn-full" id="confirmBtn" disabled>
+          Confirm reservation (pilot)
+        </button>
+
+        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
+          This is a pilot flow screen. In production, this button would create escrow and lock the pickup window.
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <aside class="panel">
+        <h3 style="margin-top:0;">If plans change</h3>
+        <div class="muted small" style="line-height:1.55;">
+          For the pilot, the replacement mechanism is <strong>re-listing</strong> (not matching). You can re-list the display back to the market rather than waiting until the last minute.
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="callout">
+          <strong>Re-list option</strong>
+          <div class="small muted" style="line-height:1.55;">
+            If you re-list and another trade buyer reserves, you’re released from the pickup obligation.
+            A small re-list fee may apply (pilot policy).
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <a class="btn btn-dark btn-pill btn-full" href="/market">Return to Browse</a>
+
+        <div style="height:12px"></div>
+
+        <div class="chiprow">
+          <span class="chip">Final sale</span>
+          <span class="chip">Local pickup</span>
+          <span class="chip">Re-list supported</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div class="hr"></div>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate escrow and commitment for scheduled showroom display removals.
+      </div>
+      <div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (async function(){
+      setActiveNav();
+
+      const params = new URLSearchParams(location.search);
+      const id = params.get("id") || "";
+      document.getElementById("detailsLink").href = "/listing-details?id=" + encodeURIComponent(id);
+
+      // Checkbox gating
+      const checks = ["c1","c2","c3","c4"].map(id => document.getElementById(id));
+      const btn = document.getElementById("confirmBtn");
+      function updateBtn(){
+        btn.disabled = !checks.every(c => c.checked);
+      }
+      checks.forEach(c => c.addEventListener("change", updateBtn));
+      updateBtn();
+
+      // Load listing (optional) for credibility
+      if (!id) {
+        hydrateStub();
+        return;
+      }
+
+      try {
+        const r = await fetch("/.netlify/functions/listDisplays?id=" + encodeURIComponent(id), { cache: "no-store" });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data?.error || "Failed");
+
+        const x = data.listing || null;
+        if (!x) { hydrateStub(); return; }
+
+        document.getElementById("summaryLine").textContent =
+          safeText(x.title || "Display Listing") + " • Local pickup • Pilot reservation";
+
+        document.getElementById("price").textContent =
+          (x.price != null && x.price !== "") ? "$" + Number(x.price).toLocaleString() : "$—";
+
+        const g = String(x.condition_grade || "—").trim().toUpperCase();
+        document.getElementById("grade").textContent = "Grade " + g;
+
+        document.getElementById("window").textContent =
+          pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end);
+
+      } catch(e){
+        console.error(e);
+        hydrateStub();
+      }
+
+      btn.addEventListener("click", () => {
+        btn.textContent = "Reservation confirmed (pilot)";
+        btn.disabled = true;
+      });
+
+      function hydrateStub(){
+        document.getElementById("summaryLine").textContent =
+          "Display Listing (pilot stub) • Local pickup • Pilot reservation";
+        document.getElementById("price").textContent = "$—";
+        document.getElementById("grade").textContent = "Grade A";
+        document.getElementById("window").textContent = "Pickup window set after reserve";
+      }
+
+      function pickupWindowDateLine(start, end) {
+        const s = parseDate(start);
+        const e = parseDate(end);
+        if (!s || !e) return "Pickup window: shown after reserve";
+        return `Window: ${fmtShort(s)}–${fmtShort(e)}`;
+      }
+      function parseDate(v){ const d = new Date(v); return isNaN(d) ? null : d; }
+      function fmtShort(d){ return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+
+      function safeText(str){
+        return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+      }
+
+      function setActiveNav(){
+        const path = location.pathname.replace(/\/$/,"") || "/";
+        document.querySelectorAll(".navlinks a").forEach(a=>{
+          const href = (a.getAttribute("href")||"").replace(/\/$/,"") || "/";
+          if (href === path) a.classList.add("active");
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
+
+

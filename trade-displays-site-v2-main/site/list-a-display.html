@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>List a Display</title>
+  <meta name="description" content="Showroom-only listing form (pilot). Minimal specs, A/B condition, pickup window. Brand-safe by design." />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html">
+        <div class="logo">B</div>
+        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+      </a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a href="what.html">How it works</a>
+        <a href="for-showrooms.html">For showrooms</a>
+        <a href="pilot-program.html">Pilot</a>
+        <a href="condition-standards.html">Trust &amp; safety</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="navcta">
+        <a class="btn btn-ghost" href="market.html">Browse inventory</a>
+        <a class="btn btn-primary" href="list-a-display.html">List a display</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pagewrap">
+    <div class="page">
+      <div class="kicker"><span class="dot"></span> Showroom listing • pilot mock • brand-safe format</div>
+      <h1>List a Display (Pilot)</h1>
+      <p>
+        This is a preview of the pilot listing format. It’s intentionally minimal: specs + timing + A/B condition.
+        Phase 1 listings avoid public brand names, SKUs, and model numbers.
+      </p>
+
+      <div class="callout" style="margin-top:16px;">
+        <strong>Brand-safe listing rule</strong>
+        Do not include brand names, SKUs, or model numbers in the public title or description.
+      </div>
+
+      <form style="margin-top:18px;">
+        <h2 style="margin-top:0;">Listing basics</h2>
+        <div class="grid2">
+          <div>
+            <label class="small muted2">Public listing title (specs-first)</label><br/>
+            <input
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Bathroom vanity display — 60&quot; — matte black hardware"/>
+          </div>
+          <div>
+            <label class="small muted2">Category</label><br/>
+            <select
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;">
+              <option selected>Vanity</option>
+              <option>Faucet</option>
+              <option>Sink</option>
+              <option>Toilet</option>
+              <option>Tub</option>
+              <option>Shower system</option>
+              <option>Accessory / hardware</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:14px;">
+          <div>
+            <label class="small muted2">Finish family</label><br/>
+            <input
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Brushed nickel / chrome / matte black / white / etc."/>
+          </div>
+          <div>
+            <label class="small muted2">Condition grade</label><br/>
+            <select
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;">
+              <option selected>Grade A — light wear, fully functional</option>
+              <option>Grade B — visible wear, fully functional</option>
+            </select>
+          </div>
+        </div>
+
+        <h2>Timing</h2>
+        <div class="grid2">
+          <div>
+            <label class="small muted2">Removal date (or week of)</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Feb 14, 2026 (or Week of Feb 14)"/>
+          </div>
+          <div>
+            <label class="small muted2">Pickup window</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Mon–Wed, 9am–2pm"/>
+          </div>
+        </div>
+
+        <h2>Pricing + pickup</h2>
+        <div class="grid2">
+          <div>
+            <label class="small muted2">Fixed price (USD)</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="$850"/>
+          </div>
+          <div>
+            <label class="small muted2">Pickup location (city only in Phase 1)</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Milwaukee area"/>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <label class="small muted2">Notes (no brands/SKUs)</label><br/>
+          <textarea rows="5"
+            style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+            placeholder="Example: Includes countertop. Minor scuff on left interior panel. Must be removed by buyer."></textarea>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid2">
+          <div class="callout">
+            <strong>Compliance confirmation</strong>
+            By publishing, you confirm the listing does not include brand names, SKUs, model numbers, or warranty language.
+          </div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:10px;">
+            <a class="btn btn-primary btn-pill" href="brand-compliance.html">Review brand compliance</a>
+            <span class="small muted2">This page is a mock for now — used to show showrooms the exact format.</span>
+          </div>
+        </div>
+      </form>
+
+      <div class="hr"></div>
+      <a class="btn btn-pill" href="example-listing.html">See an example listing →</a>
+    </div>
+  </div>
+
+  <div class="container footer">
+    <div class="hr"></div>
+    <div class="fine">
+      Trade Displays is operated by Bargain Bond. Pickup-only transactions. Buyers inspect at pickup before acceptance and fund release.
+    </div>
+    <div class="fine" style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="terms.html">Terms</a>
+      <a href="condition-standards.html">Trust &amp; safety</a>
+      <a href="brand-compliance.html">Brand compliance</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div></body>
+</html>
+
+
