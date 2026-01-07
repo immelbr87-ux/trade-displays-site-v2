@@ -3,129 +3,146 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Contact</title>
-  <meta name="description" content="Contact Trade Displays by Bargain Bond. Request pilot access or ask a question." />
-  <link rel="stylesheet" href="app.css" />
+  <title>Contact — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Contact Trade Displays. Request pilot access or ask questions." />
+  <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
+
   <div class="topbar">
     <div class="container topbar-inner">
-      <a class="brand" href="index.html">
+      <a class="brand" href="/">
         <div class="logo">B</div>
         <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
       </a>
-      <div class="navlinks">
-        <a href="what.html">What is this</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="brand-compliance.html">Brand compliance</a>
-        <a href="faq.html">FAQ</a>
+
+      <div class="navlinks" aria-label="Primary">
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
       </div>
+
       <div class="navcta">
-        <a class="btn btn-ghost" href="#">Sign In</a>
-        <a class="btn" href="#">Create Account</a>
+        <a class="btn btn-ghost" href="#signin">Sign In</a>
+        <a class="btn btn-primary" href="#create">Create Account</a>
       </div>
     </div>
   </div>
 
   <div class="container pagewrap">
-    <div class="page">
-      <div class="kicker"><span class="dot"></span> Pilot requests • questions • callbacks</div>
-      <h1>Contact</h1>
-      <p>
-        Use this form to request pilot access, ask a brand compliance question, or schedule a quick call.
-        This is built for trade workflows and showroom operations (not consumer resale).
-      </p>
 
-      <div class="callout" style="margin-top:16px;">
-        <strong>Fastest route to a pilot</strong>
-        Include your showroom name, city/state, and a rough estimate of how many displays you turn per month.
-      </div>
-
-      <!-- Netlify Forms: works automatically after deploy -->
-      <form name="trade-displays-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="margin-top:18px;">
-        <input type="hidden" name="form-name" value="trade-displays-contact" />
-        <p style="display:none;">
-          <label>Don’t fill this out: <input name="bot-field" /></label>
-        </p>
-
-        <div class="grid2">
-          <div>
-            <label class="small muted2" for="name">Full name</label><br/>
-            <input id="name" name="name" required
-              style="width:100%;margin-top:6px;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
-              placeholder="First + last name"/>
-          </div>
-          <div>
-            <label class="small muted2" for="email">Work email</label><br/>
-            <input id="email" name="email" type="email" required
-              style="width:100%;margin-top:6px;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
-              placeholder="name@company.com"/>
-          </div>
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Questions • partnerships • pilot</div>
+          <h1>Contact</h1>
+          <p class="lede">
+            Send a message or request pilot access. Submissions go directly into Netlify Forms for follow-up.
+          </p>
         </div>
 
-        <div class="grid2" style="margin-top:14px;">
-          <div>
-            <label class="small muted2" for="role">I am a…</label><br/>
-            <select id="role" name="role" required
-              style="width:100%;margin-top:6px;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;">
-              <option value="" selected disabled>Select one</option>
-              <option>Showroom manager / GM</option>
-              <option>Showroom staff</option>
-              <option>Contractor / remodeler</option>
-              <option>Builder / flipper</option>
-              <option>Designer</option>
-              <option>Property manager</option>
-              <option>Brand / vendor</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label class="small muted2" for="location">City / State</label><br/>
-            <input id="location" name="location"
-              style="width:100%;margin-top:6px;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
-              placeholder="Wauwatosa, WI"/>
-          </div>
+        <div class="page-hero-actions">
+          <a class="btn btn-pill btn-primary" href="/pilot">Request pilot access</a>
+          <a class="btn btn-pill" href="/market">Browse displays</a>
         </div>
-
-        <div style="margin-top:14px;">
-          <label class="small muted2" for="topic">Topic</label><br/>
-          <select id="topic" name="topic" required
-            style="width:100%;margin-top:6px;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;">
-            <option value="" selected disabled>Select one</option>
-            <option>Pilot program (showroom)</option>
-            <option>Brand compliance question</option>
-            <option>Listing workflow question</option>
-            <option>Trade buyer verification</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div style="margin-top:14px;">
-          <label class="small muted2" for="message">Message</label><br/>
-          <textarea id="message" name="message" rows="6" required
-            style="width:100%;margin-top:6px;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
-            placeholder="Tell us what you’re trying to accomplish and your timeline."></textarea>
-        </div>
-
-        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-          <button class="btn btn-primary btn-pill" type="submit">Send</button>
-          <span class="small muted2">We’ll respond by email. If it’s urgent, write “Urgent” in the message.</span>
-        </div>
-      </form>
-
-      <div class="hr"></div>
-      <div class="small muted2">
-        Prefer a quick overview? Start here: <a href="what.html"><strong>What Is Trade Displays</strong></a> ·
-        <a href="brand-compliance.html"><strong>Brand compliance</strong></a> ·
-        <a href="pilot-program.html"><strong>Pilot program</strong></a>
       </div>
     </div>
+
+    <div style="height:18px"></div>
+
+    <div class="market-shell">
+      <div class="panel">
+        <h3 style="margin-top:0;">Send a message</h3>
+        <div class="muted small">We’ll reply by email. (Pilot: one person monitoring.)</div>
+
+        <div style="height:12px"></div>
+
+        <form name="contact" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="contact" />
+
+          <div class="formrow">
+            <div>
+              <div class="label">Name</div>
+              <input class="input" name="name" required placeholder="Your name" />
+            </div>
+
+            <div>
+              <div class="label">Email</div>
+              <input class="input" type="email" name="email" required placeholder="you@company.com" />
+            </div>
+
+            <div>
+              <div class="label">Role</div>
+              <select class="select" name="role" required>
+                <option value="">Select</option>
+                <option>Showroom manager</option>
+                <option>Store GM</option>
+                <option>Contractor / builder</option>
+                <option>Designer</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="label">Message</div>
+              <textarea class="input" name="message" rows="6" required placeholder="What can we help with?"></textarea>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <button class="btn btn-primary btn-pill" type="submit">Send</button>
+        </form>
+      </div>
+
+      <aside class="panel">
+        <h3 style="margin-top:0;">Fast context</h3>
+        <div class="callout">
+          <strong>What this is</strong>
+          <div class="small muted" style="line-height:1.55;">
+            A specs-first system for reserving installed showroom displays before removal. Local pickup. Final sale. Funds held until pickup confirmation.
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="callout">
+          <strong>Brand-safe pilot</strong>
+          <div class="small muted" style="line-height:1.55;">
+            Brand/model identifiers can be limited until commitment, where applicable. Listings prioritize dimensions, rough-in, finish family, and condition grade.
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div class="hr"></div>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate escrow and commitment for scheduled showroom display removals.
+      </div>
+      <div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
+    </div>
+
   </div>
 
-  <div class="container footer">
-    <div class="fine">Trade Displays is operated by Bargain Bond. Escrow and commitment are facilitated for scheduled display removals.</div>
-  </div>
+  <script>
+    (function setActiveNav(){
+      const path = location.pathname.replace(/\/$/, "") || "/";
+      document.querySelectorAll(".navlinks a").forEach(a=>{
+        const href = (a.getAttribute("href")||"").replace(/\/$/,"") || "/";
+        if (href === path) a.classList.add("active");
+      });
+    })();
+  </script>
+
 </body>
 </html>
-
-
