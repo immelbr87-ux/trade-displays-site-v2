@@ -1,9 +1,0 @@
-{
-  "name": "trade-displays-site",
-  "version": "1.0.0",
-  "private": true,
-  "type": "commonjs",
-  "dependencies": {
-    "airtable": "^0.12.2"
-  }
-}
