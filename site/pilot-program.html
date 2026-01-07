@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pilot Program — Trade Displays by Bargain Bond</title>
-  <meta name="description" content="Pilot program for showrooms: pre-sell display removals with fixed price, pickup window, escrow until pickup confirmation. Brand-safe defaults." />
+  <title>Pilot — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Request pilot access for showrooms or trade buyers. Netlify Forms. No installs." />
   <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
@@ -32,127 +32,113 @@
   </div>
 
   <div class="container pagewrap">
+
     <div class="page-hero">
       <div class="page-hero-inner">
         <div>
-          <div class="kicker"><span class="dot"></span> Low-lift pilot • specs-first listings • escrow until pickup</div>
-          <h1>Pilot Program (showrooms)</h1>
+          <div class="kicker"><span class="dot"></span> 3 showrooms • trade-only buyers • brand-safe</div>
+          <h1>Request pilot access</h1>
           <p class="lede">
-            This pilot is designed to monetize floor models without public markdown optics, consumer negotiation, or last-minute scrambling.
-            You list upcoming removals with a pickup window and condition grade. A verified trade buyer reserves. Funds are held until pickup confirmation.
+            This is the pilot intake form. Submit once and we’ll follow up to confirm eligibility and next steps.
           </p>
         </div>
 
         <div class="page-hero-actions">
-          <a class="btn btn-pill btn-primary" href="#request">Request pilot access</a>
-          <a class="btn btn-pill" href="/brand-compliance">See compliance defaults</a>
+          <a class="btn btn-pill" href="/contact">Contact</a>
+          <a class="btn btn-pill btn-primary" href="/market">Browse displays</a>
         </div>
       </div>
     </div>
 
     <div style="height:18px"></div>
 
-    <div class="split">
-      <div class="box">
-        <h2>What you get</h2>
+    <div class="market-shell">
+      <div class="panel">
+        <h3 style="margin-top:0;">Pilot request</h3>
+        <div class="muted small">Netlify Forms collects this. No installs.</div>
 
-        <div class="grid3">
-          <div class="kv">
-            <div class="k">Committed buyer</div>
-            <div class="v">Reservation + pickup window</div>
-          </div>
-          <div class="kv">
-            <div class="k">Operational clarity</div>
-            <div class="v">Grade confirmed on-site</div>
-          </div>
-          <div class="kv">
-            <div class="k">Brand-safe defaults</div>
-            <div class="v">Specs-first listings</div>
-          </div>
-        </div>
+        <div style="height:12px"></div>
 
-        <div style="height:14px"></div>
+        <form name="pilot-request" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="pilot-request" />
+
+          <div class="formrow">
+            <div>
+              <div class="label">I am a</div>
+              <select class="select" name="type" required>
+                <option value="">Select</option>
+                <option>Showroom / store</option>
+                <option>Contractor / builder</option>
+                <option>Designer sourcing installs</option>
+                <option>Property manager</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="label">Name</div>
+              <input class="input" name="name" required placeholder="Full name" />
+            </div>
+
+            <div>
+              <div class="label">Email</div>
+              <input class="input" type="email" name="email" required placeholder="you@company.com" />
+            </div>
+
+            <div>
+              <div class="label">Company</div>
+              <input class="input" name="company" placeholder="Company / showroom name" />
+            </div>
+
+            <div>
+              <div class="label">City / State</div>
+              <input class="input" name="location" placeholder="Wauwatosa, WI" />
+            </div>
+
+            <div>
+              <div class="label">Notes</div>
+              <textarea class="input" name="notes" rows="6" placeholder="For showrooms: swap cadence, typical display categories, any brand restrictions you follow. For buyers: what you buy (vanities/faucets), typical budget, and pickup radius."></textarea>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <button class="btn btn-primary btn-pill" type="submit">Submit pilot request</button>
+        </form>
+      </div>
+
+      <aside class="panel">
+        <h3 style="margin-top:0;">Pilot expectations</h3>
 
         <div class="callout">
-          <strong>Key point</strong>
-          You’re not running a “floor model blowout.” You’re scheduling a professional pickup of an installed showroom display that’s already planned for removal.
-        </div>
-
-        <h2>What we need from you (minimum)</h2>
-        <ul>
-          <li>Confirm the item is an installed showroom display and is scheduled for removal.</li>
-          <li>Set a fixed price, a pickup window, and a condition grade (A or B).</li>
-          <li>Provide specs-first listing details (dimensions, rough-in, finish family, functional completeness).</li>
-          <li>Agree to pickup confirmation (QR + staff confirmation) to release escrow.</li>
-        </ul>
-
-        <h2>Compliance checklist (PDF)</h2>
-        <p class="muted">
-          This is what we use to keep the pilot brand-safe and operationally clean. You can share it internally.
-        </p>
-
-        <div class="cards" style="grid-template-columns:1fr;gap:12px;">
-          <div class="card" style="margin:0;">
-            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
-              <div>
-                <div style="font-weight:900;">Trade Displays — Showroom Compliance Checklist</div>
-                <div class="small muted2">Brand-safe listing rules + escrow + pickup confirmation (pilot defaults)</div>
-              </div>
-              <a class="btn btn-primary btn-pill" href="/Trade_Displays_Branded_Compliance_Checklist.pdf" target="_blank" rel="noopener">
-                Download PDF
-              </a>
-            </div>
+          <strong>For showrooms</strong>
+          <div class="small muted" style="line-height:1.55;">
+            List upcoming removals (specs-first). Buyer reserves before teardown. Pickup confirmed on-site (QR). Funds held until pickup confirmation.
           </div>
         </div>
 
-        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
-          Note: If your internal policy requires modifications, we can version the checklist (v1, v1.1) for legal hygiene.
-        </div>
-      </div>
+        <div style="height:12px"></div>
 
-      <div class="showroom" id="request">
-        <div>
-          <h3>Request pilot access</h3>
-          <ul>
-            <li>Start with 5–15 removals over 30 days</li>
-            <li>Trade-only buyers (verification required)</li>
-            <li>Specs-first listings to reduce brand exposure</li>
-            <li>Escrow held until pickup confirmation</li>
-          </ul>
-
-          <div style="margin-top:14px;">
-            <div class="small" style="opacity:.86;margin-bottom:10px;">
-              Pilot request (stub form)
-            </div>
-
-            <div style="display:grid;gap:10px;">
-              <input class="input" placeholder="Showroom / store name" aria-label="Showroom name" />
-              <input class="input" placeholder="Your name + role" aria-label="Name" />
-              <input class="input" placeholder="Email" aria-label="Email" />
-              <input class="input" placeholder="City / State" aria-label="Location" />
-              <a class="btn btn-primary btn-pill btn-full" href="#submitted">Submit request (stub)</a>
-            </div>
-
-            <div class="small" style="opacity:.78;margin-top:10px;line-height:1.5;">
-              We’ll reply with a short call agenda + the 1-page pilot agreement.
-              No software install required.
-            </div>
+        <div class="callout">
+          <strong>For trade buyers</strong>
+          <div class="small muted" style="line-height:1.55;">
+            Reserve with a clear pickup window. Final sale. Inspect at pickup before release. Re-list supported if plans change (pilot policy).
           </div>
         </div>
 
-        <div class="linksrow">
-          <a href="/for-showrooms">How listing works</a>
-          <a href="/brand-compliance">Compliance defaults</a>
-          <a href="/faq">FAQ</a>
-          <a href="/market">Browse displays</a>
+        <div style="height:12px"></div>
+
+        <div class="chiprow">
+          <span class="chip">Trade-only</span>
+          <span class="chip">Brand-safe</span>
+          <span class="chip">Pickup verified</span>
         </div>
-      </div>
+      </aside>
     </div>
 
     <div class="footer">
       <div class="hr"></div>
       <div class="fine">
-        Trade Displays is operated by Bargain Bond. Escrow and commitment are facilitated for scheduled display removals.
+        Trade Displays is operated by Bargain Bond. We facilitate escrow and commitment for scheduled showroom display removals.
       </div>
       <div class="footer-nav" aria-label="Footer navigation">
         <a href="/">Home</a>
@@ -163,9 +149,8 @@
         <a href="/pilot">Pilot</a>
       </div>
     </div>
+
   </div>
 
 </body>
 </html>
-
-
