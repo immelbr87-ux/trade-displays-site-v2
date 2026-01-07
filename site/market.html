@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Browse Displays — Trade Displays by Bargain Bond</title>
-  <meta name="description" content="Browse upcoming showroom display removals. Trade-only, fixed pricing, local pickup. Funds held in escrow until pickup confirmation." />
+  <meta name="description" content="Browse upcoming showroom display removals. Trade-only, fixed pricing, local pickup. Funds held until pickup confirmation." />
   <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
@@ -58,8 +58,8 @@
         <div class="chiprow" aria-label="Active filters">
           <span class="chip">Local pickup</span>
           <span class="chip">Fixed price</span>
-          <span class="chip">No returns</span>
-          <span class="chip">Escrow until pickup</span>
+          <span class="chip">Final sale</span>
+          <span class="chip">Funds held until pickup</span>
         </div>
 
         <div style="height:14px"></div>
@@ -126,7 +126,7 @@
 
         <div class="chiprow">
           <span class="chip">No bidding</span>
-          <span class="chip">No returns</span>
+          <span class="chip">Final sale</span>
           <span class="chip">Pickup confirmed</span>
         </div>
 
@@ -156,19 +156,22 @@
   <!-- LIVE AIRTABLE LISTINGS -->
   <script>
     (async function () {
+      setActiveNav();
+
       const root = document.getElementById("listings");
       if (!root) return;
 
       root.innerHTML = '<div class="muted">Loading listings…</div>';
 
       try {
-        // This must exist: netlify/functions/listings.js
+        // NOTE: your function name must match your deployed Netlify function file.
+        // If your file is netlify/functions/listDisplays.js -> URL is /.netlify/functions/listDisplays
         const r = await fetch("/.netlify/functions/listDisplays?pageSize=12", { cache: "no-store" });
         const data = await r.json();
 
         if (!r.ok) throw new Error(data?.error || "Failed to load listings.");
 
-        const listings = Array.isArray(data.listings) ? data.listings : [];
+        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
         if (!listings.length) {
           root.innerHTML = '<div class="muted">No active listings yet.</div>';
           return;
@@ -180,39 +183,47 @@
         console.error(err);
         root.innerHTML = `
           <div class="muted">
-            Could not load listings. Check:
-            <ul>
-              <li>Netlify env vars set (AIRTABLE_TOKEN, AIRTABLE_BASE_ID, etc.)</li>
-              <li>Airtable view name matches <strong>Public_Active</strong></li>
-              <li>At least one record matches view filters</li>
-            </ul>
+            Could not load listings.
+            <div class="small muted2" style="margin-top:8px;line-height:1.55;">
+              Check: Netlify env vars (AIRTABLE_TOKEN/PAT, BASE_ID, TABLE, VIEW), and that your function URL exists.
+            </div>
           </div>
         `;
       }
 
+      // ---------- YOU ASKED: UPDATE MARKET CARD HTML (JS render) ----------
       function renderListingCard(x) {
         const id = x.id || "";
         const title = safeText(x.title || "Display Listing");
         const price = (x.price != null && x.price !== "") ? `$${Number(x.price).toLocaleString()}` : "";
-        const grade = safeText(x.condition_grade || "?");
-        const category = safeText(x.category || "Display");
+        const grade = String(x.condition_grade || "").trim().toUpperCase() || "?";
         const finish = safeText(x.finish_family || "Specs-first listing");
         const dimensions = safeText(x.dimensions || "");
         const keySpec = safeText(x.key_spec || "");
         const pickupText = pickupWindowText(x.pickup_window_start, x.pickup_window_end);
 
         const thumb = safeAttr(x.thumbnail_url || "");
-        const thumbStyle = thumb ? `background-image:url('${thumb}')` : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
+        const thumbStyle = thumb
+          ? `background-image:url('${thumb}')`
+          : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
 
-        // Fake pages you will add next:
-        // listing-details.html?id=REC_ID
-        // reserve-confirmation.html?id=REC_ID
+        const gradeBubble = gradeTooltipHtml(grade);
+        const pickupBubble = pickupTooltipHtml();
+        const asIsBubble = asIsTooltipHtml();
+
         return `
           <div class="listing">
             <div class="thumb" style="${thumbStyle}">
               <div class="thumb-badges">
-                <span class="pilltag ok">Grade ${grade}</span>
-                <span class="pilltag soft">${safeText(pickupText)}</span>
+                <span class="pilltag ok">
+                  Grade ${safeText(grade)}
+                  ${gradeBubble}
+                </span>
+
+                <span class="pilltag soft">
+                  ${safeText(pickupText)}
+                  ${pickupBubble}
+                </span>
               </div>
             </div>
 
@@ -236,15 +247,65 @@
                 <a class="btn btn-pill" href="/listing-details?id=${encodeURIComponent(id)}">View details</a>
               </div>
 
+              <!-- YOU ASKED: Add same legal line to the Market card subnote -->
               <div class="subnote">
-  Funds held until pickup confirmation. Buyer inspects at pickup before acceptance. Final sale once accepted.
-  <span class="muted">Condition grades describe cosmetic condition only and do not create a warranty or guarantee.</span>
-</div>
+                Funds held until pickup confirmation. Final sale.
+                <span class="inline-tip">As-is ${asIsBubble}</span>
+                <div class="legal-mini">${legalLineHtml(grade)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // ---------- YOU ASKED: ADD THIS HELPER FUNCTION (ONCE) ----------
+      function legalLineHtml(grade) {
+        const g = String(grade || "").trim().toUpperCase();
+        if (g === "A") return "Grade A = minimal cosmetic wear consistent with prior installation and handling. Minor marks may be present.";
+        if (g === "B") return "Grade B = noticeable cosmetic wear (scratches/scuffs/finish variation). Cosmetic condition may be apparent at normal viewing distance.";
+        return "Condition grades describe cosmetic wear only. Displays are installed items and sold as-is.";
+      }
+
+      // Tooltip builders (no libraries)
+      function gradeTooltipHtml(grade){
+        return `
+          <span class="tip">
+            <button type="button" aria-label="Grade ${safeText(grade)} info">i</button>
+            <span class="tip-bubble">
+              <strong>Grade ${safeText(grade)} (cosmetic only)</strong>
+              ${safeText(legalLineHtml(grade))}
+              <div style="margin-top:6px;opacity:.9;">Installed showroom displays are sold as-is; inspect at pickup before release.</div>
+            </span>
+          </span>
+        `;
+      }
+
+      function pickupTooltipHtml(){
+        return `
+          <span class="tip">
+            <button type="button" aria-label="Pickup window info">i</button>
+            <span class="tip-bubble">
+              <strong>Pickup window</strong>
+              The timeframe the showroom can release the display. Buyer must coordinate pickup within this window.
+            </span>
+          </span>
+        `;
+      }
+
+      function asIsTooltipHtml(){
+        return `
+          <span class="tip">
+            <button type="button" aria-label="As-is info">i</button>
+            <span class="tip-bubble">
+              <strong>As-is / final sale</strong>
+              Sold in its current condition with no warranties (express or implied), unless expressly stated in writing.
+              Buyer should inspect at pickup before escrow release.
+            </span>
+          </span>
         `;
       }
 
       function pickupWindowText(start, end) {
-        // Keep your “Pickup in X–Y days” vibe, but safe if dates missing
         const s = parseDate(start);
         const e = parseDate(end);
         if (!s || !e) return "Pickup window set";
@@ -284,6 +345,14 @@
 
       function safeAttr(str) {
         return String(str || "").replaceAll("'", "%27").replaceAll('"', "%22");
+      }
+
+      function setActiveNav(){
+        const path = location.pathname.replace(/\/$/, "") || "/";
+        document.querySelectorAll(".navlinks a").forEach(a => {
+          const href = (a.getAttribute("href") || "").replace(/\/$/, "") || "/";
+          if (href === path) a.classList.add("active");
+        });
       }
     })();
   </script>
