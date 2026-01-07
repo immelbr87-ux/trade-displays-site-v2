@@ -1,112 +1,216 @@
-// netlify/functions/listings.js
-// Supports:
-//   GET /.netlify/functions/listings                -> list from view
-//   GET /.netlify/functions/listings?id=recXXXX     -> single record by id
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pickup Confirmation — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Pickup confirmation screen (pilot). Staff QR confirmation + condition confirmation + escrow release step." />
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
 
-const AIRTABLE_API = "https://api.airtable.com/v0";
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">
+        <div class="logo">B</div>
+        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
+      </a>
 
-function json(statusCode, body) {
-  return {
-    statusCode,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
-    },
-    body: JSON.stringify(body),
-  };
-}
+      <div class="navlinks" aria-label="Primary">
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
 
-function pickEnv() {
-  // Accept either naming convention
-  const token =
-    process.env.AIRTABLE_TOKEN ||
-    process.env.AIRTABLE_API_TOKEN ||
-    process.env.AIRTABLE_PAT;
+      <div class="navcta">
+        <a class="btn btn-ghost" href="#signin">Sign In</a>
+        <a class="btn btn-primary" href="#create">Create Account</a>
+      </div>
+    </div>
+  </div>
 
-  const baseId = process.env.AIRTABLE_BASE_ID;
-  const table = process.env.AIRTABLE_TABLE || "Listings";
-  const view = process.env.AIRTABLE_VIEW || "Public_Active";
+  <div class="container pagewrap">
 
-  return { token, baseId, table, view };
-}
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Staff QR • buyer present • release escrow</div>
+          <h1>Pickup confirmation (pilot)</h1>
+          <p class="lede">
+            This screen simulates the in-showroom QR confirmation. In production, staff would verify buyer presence and confirm condition before escrow release.
+          </p>
+        </div>
 
-function mapRecord(rec) {
-  const f = rec.fields || {};
+        <div class="page-hero-actions">
+          <a class="btn btn-pill" href="/market">Browse</a>
+          <a class="btn btn-pill btn-primary" href="/pilot">Request pilot access</a>
+        </div>
+      </div>
+    </div>
 
-  // Keep these "API-safe" keys stable so you can migrate off Airtable later without pain.
-  return {
-    id: rec.id,
-    title: f.Title || f.title || "",
-    category: f.Category || f.category || "",
-    condition_grade: f.Condition || f.condition || f["Condition Grade"] || "",
-    price: f.Price ?? f.price ?? "",
-    location_text: f.Location || f.location || f["City / State"] || "",
-    finish_family: f["Finish Family"] || f.finish_family || "",
-    dimensions: f.Dimensions || f.dimensions || "",
-    key_spec: f["Rough-In / Key Spec"] || f.key_spec || f["Key Spec"] || "",
-    whats_included: f["What's Included"] || f.whats_included || "",
-    pickup_window_start: f["Pickup Window Start"] || f.pickup_window_start || "",
-    pickup_window_end: f["Pickup Window End"] || f.pickup_window_end || "",
-    thumbnail_url: f["Thumbnail URL"] || f.thumbnail_url || "",
-    gallery_urls: f["Gallery URLs"] || f.gallery_urls || "",
-    status: f.Status || f.status || "",
-    created_at: f.createdAt || f["createdAt"] || "",
-  };
-}
+    <div style="height:18px"></div>
 
-async function airtableFetch(url, token) {
-  const r = await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    <div class="market-shell">
 
-  const text = await r.text();
-  let data = null;
-  try { data = JSON.parse(text); } catch { data = { raw: text }; }
+      <div class="panel">
+        <h3 style="margin-top:0;">Confirm pickup</h3>
+        <div class="muted small" id="line">Loading…</div>
 
-  if (!r.ok) {
-    const msg = data?.error?.message || data?.error || "Airtable request failed";
-    const detail = data?.error || data;
-    throw new Error(`${msg} :: ${JSON.stringify(detail)}`);
-  }
+        <div style="height:12px"></div>
 
-  return data;
-}
+        <div class="callout">
+          <strong>Condition mismatch protection (buyer-safe)</strong>
+          <div class="small muted" style="line-height:1.55;">
+            If the display materially differs from the posted grade, it must be documented with photos at pickup <em>before</em> confirming escrow release.
+          </div>
+        </div>
 
-exports.handler = async (event) => {
-  try {
-    const { token, baseId, table, view } = pickEnv();
-    if (!token || !baseId) {
-      return json(500, {
-        error: "Missing Airtable env vars. Set AIRTABLE_TOKEN (or AIRTABLE_API_TOKEN) and AIRTABLE_BASE_ID in Netlify.",
+        <div style="height:12px"></div>
+
+        <div class="formrow">
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="buyerPresent" />
+            <span>
+              <strong>Buyer present</strong>
+              <span>Identity confirmed (pilot)</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="conditionMatch" />
+            <span>
+              <strong>Condition matches posted grade</strong>
+              <span>Cosmetic wear consistent with Grade A/B definition</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="photoIfMismatch" />
+            <span>
+              <strong>If mismatch: photos captured</strong>
+              <span>Only required if condition does <em>not</em> match (pilot)</span>
+            </span>
+          </label>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <button class="btn btn-primary btn-pill btn-full" id="releaseBtn" disabled>
+          Release escrow (pilot)
+        </button>
+
+        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
+          This is a simulated screen. In production, this action would release funds to the showroom after buyer confirmation.
+        </div>
+      </div>
+
+      <aside class="panel">
+        <h3 style="margin-top:0;">Posted grade definitions</h3>
+        <div class="small muted" style="line-height:1.55;">
+          Grades describe <strong>cosmetic wear only</strong>. Displays are installed items and sold as-is.
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="kv">
+          <div class="k">Grade A</div>
+          <div class="v" style="font-size:14px;font-weight:750;color:var(--muted);line-height:1.55;">
+            Minimal cosmetic wear consistent with prior installation and handling. Minor marks may be present.
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="kv">
+          <div class="k">Grade B</div>
+          <div class="v" style="font-size:14px;font-weight:750;color:var(--muted);line-height:1.55;">
+            Noticeable cosmetic wear (scratches/scuffs/finish variation). Cosmetic condition may be apparent at normal viewing distance.
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="chiprow">
+          <span class="chip">As-is</span>
+          <span class="chip">Final sale</span>
+          <span class="chip">Pickup verified</span>
+        </div>
+      </aside>
+
+    </div>
+
+    <div class="footer">
+      <div class="hr"></div>
+      <div class="fine">
+        Trade Displays is operated by Bargain Bond. We facilitate escrow and commitment for scheduled showroom display removals.
+      </div>
+      <div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="/market">Browse displays</a>
+        <a href="/for-showrooms">For showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="/pilot">Pilot</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (async function(){
+      setActiveNav();
+
+      const params = new URLSearchParams(location.search);
+      const id = params.get("id") || "";
+
+      const line = document.getElementById("line");
+      const buyerPresent = document.getElementById("buyerPresent");
+      const conditionMatch = document.getElementById("conditionMatch");
+      const photoIfMismatch = document.getElementById("photoIfMismatch");
+      const releaseBtn = document.getElementById("releaseBtn");
+
+      function updateBtn(){
+        // If condition matches: buyer present + condition match required
+        // If condition does NOT match: buyer present + photo checkbox required
+        const buyerOK = buyerPresent.checked;
+        const match = conditionMatch.checked;
+        const photos = photoIfMismatch.checked;
+
+        releaseBtn.disabled = !(buyerOK && (match || photos));
+      }
+
+      [buyerPresent, conditionMatch, photoIfMismatch].forEach(x => x.addEventListener("change", updateBtn));
+      updateBtn();
+
+      if (!id){
+        line.textContent = "Pickup confirmation for reserved display (pilot stub).";
+      } else {
+        try {
+          const r = await fetch("/.netlify/functions/listDisplays?id=" + encodeURIComponent(id), { cache: "no-store" });
+          const data = await r.json();
+          if (!r.ok) throw new Error("fail");
+          const x = data.listing || null;
+          line.textContent = x ? ("Pickup confirmation: " + (x.title || "Display Listing")) : "Pickup confirmation (pilot stub).";
+        } catch(e){
+          line.textContent = "Pickup confirmation (pilot stub).";
+        }
+      }
+
+      releaseBtn.addEventListener("click", ()=>{
+        releaseBtn.textContent = "Escrow released (pilot)";
+        releaseBtn.disabled = true;
       });
-    }
 
-    const params = event.queryStringParameters || {};
-    const id = params.id;
-    const pageSize = Math.min(Number(params.pageSize || 12), 50);
+      function setActiveNav(){
+        const path = location.pathname.replace(/\/$/,"") || "/";
+        document.querySelectorAll(".navlinks a").forEach(a=>{
+          const href = (a.getAttribute("href")||"").replace(/\/$/,"") || "/";
+          if (href === path) a.classList.add("active");
+        });
+      }
+    })();
+  </script>
 
-    // Single record lookup
-    if (id) {
-      const url = `${AIRTABLE_API}/${baseId}/${encodeURIComponent(table)}/${encodeURIComponent(id)}`;
-      const rec = await airtableFetch(url, token);
-      return json(200, { listing: mapRecord(rec) });
-    }
-
-    // View listing
-    const url =
-      `${AIRTABLE_API}/${baseId}/${encodeURIComponent(table)}` +
-      `?view=${encodeURIComponent(view)}` +
-      `&pageSize=${encodeURIComponent(pageSize)}`;
-
-    const data = await airtableFetch(url, token);
-    const records = Array.isArray(data.records) ? data.records : [];
-    return json(200, { listings: records.map(mapRecord) });
-
-  } catch (err) {
-    console.error(err);
-    return json(500, { error: String(err.message || err) });
-  }
-};
+</body>
+</html>
