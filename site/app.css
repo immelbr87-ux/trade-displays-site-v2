@@ -647,3 +647,28 @@ hr.sep { margin: 22px 0; }
 .tooltip .tipbox, .tip .tipbox, .tooltip-content {
   z-index: 9999;
 }
+
+
+
+/* --- Screenshot-driven spacing and UI tweaks (Jan 2026) --- */
+.panel { margin-bottom: 18px; }
+.panel:last-child { margin-bottom: 0; }
+.panel details { padding: 10px 0; }
+.panel details + details { border-top: 1px solid rgba(0,0,0,0.08); }
+.pagehead { margin-bottom: 18px; }
+.cta-row { margin-top: 14px; display:flex; flex-wrap:wrap; gap:10px; }
+
+/* Pilot page: more breathing room between cards */
+.card { margin-bottom: 14px; }
+.two { gap: 18px; }
+
+/* Make primary CTAs look consistent */
+.btn-primary.btn-pill { border-radius: 999px; }
+
+/* Ensure shared chrome areas have breathing room */
+.topbar { position: sticky; top: 0; z-index: 50; }
+
+/* Fix FAQ: prevent cramped feel on smaller screens */
+@media (max-width: 820px) {
+  .panel { padding: 16px; }
+}
