@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Browse Displays — Trade Displays by Bargain Bond</title>
-  <meta name="description" content="Browse upcoming showroom display removals. Trade-only, fixed pricing, local pickup. Funds held until pickup confirmation." />
+  <title>Browse Floor Models — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Browse upcoming showroom floor model removals. Trade-only, fixed pricing, local pickup. Funds held until pickup confirmation." />
   <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
@@ -15,9 +15,9 @@
       <div class="page-hero-inner">
         <div>
           <div class="kicker"><span class="dot"></span> Local pickup • fixed price • buyer inspection at pickup</div>
-          <h1>Browse available showroom displays</h1>
+          <h1>Browse available showroom floor models</h1>
           <p class="lede">
-            These are showroom display removals offered for local pickup. Listings are specs‑first (dimensions, rough‑in, finish family, grade) so buyers can evaluate quickly. Items are sold as‑is and confirmed at pickup before funds are released.</p>
+            These are showroom floor model removals offered for local pickup. Listings are specs‑first (dimensions, rough‑in, finish family, grade) so buyers can evaluate quickly. Items are sold as‑is and confirmed at pickup before funds are released.</p>
         </div>
 
         <div class="page-hero-actions">
@@ -118,8 +118,8 @@
       <div class="hr"></div>
 <div class="footer-nav" aria-label="Footer navigation">
         <a href="/">Home</a>
-        <a href="market.html">Browse displays</a>
-        <a href="for-showrooms.html">For Showrooms</a>
+        <a href="market.html">Browse floor models</a>
+        <a href="for-showrooms.html">For Sellers (Showrooms)</a>
         <a href="/brand-compliance">Brand compliance</a>
         <a href="what.html">FAQ</a>
         <a href="pilot-program.html">Pilot</a>
@@ -168,7 +168,7 @@
       // ---------- YOU ASKED: UPDATE MARKET CARD HTML (JS render) ----------
       function renderListingCard(x) {
         const id = x.id || "";
-        const title = safeText(x.title || "Display Listing");
+        const title = safeText(x.title || "Floor Model Listing");
         const price = (x.price != null && x.price !== "") ? `$${Number(x.price).toLocaleString()}` : "";
         const grade = String(x.condition_grade || "").trim().toUpperCase() || "?";
         const finish = safeText(x.finish_family || "Specs-first listing");
@@ -237,7 +237,7 @@
         const g = String(grade || "").trim().toUpperCase();
         if (g === "A") return "Grade A = minimal cosmetic wear consistent with prior installation and handling. Minor marks may be present.";
         if (g === "B") return "Grade B = noticeable cosmetic wear (scratches/scuffs/finish variation). Cosmetic condition may be apparent at normal viewing distance.";
-        return "Condition grades describe cosmetic wear only. Displays are installed items and sold as-is.";
+        return "Condition grades describe cosmetic wear only. Floor models are installed items and sold as-is.";
       }
 
       // Tooltip builders (no libraries)
@@ -248,7 +248,7 @@
             <span class="tip-bubble">
               <strong>Grade ${safeText(grade)} (cosmetic only)</strong>
               ${safeText(legalLineHtml(grade))}
-              <div style="margin-top:6px;opacity:.9;">Installed showroom displays are sold as-is; inspect at pickup before release.</div>
+              <div style="margin-top:6px;opacity:.9;">Installed showroom floor models are sold as-is; inspect at pickup before release.</div>
             </span>
           </span>
         `;
