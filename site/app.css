@@ -701,3 +701,33 @@ hr.sep { margin: 22px 0; }
 /* FAQ spacing */
 details { margin-bottom: 14px; }
 details:last-child { margin-bottom: 0; }
+
+
+/* Secondary button (non-primary CTA) */
+.btn.secondary {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.18);
+  color: rgba(0,0,0,0.78);
+}
+.btn.secondary:hover { border-color: rgba(0,0,0,0.28); }
+
+/* Placeholder styling (clear "edit me") */
+input::placeholder, textarea::placeholder {
+  color: rgba(0,0,0,0.55);
+  font-style: italic;
+}
+
+/* Strong mock-flow callout */
+.callout.warning {
+  background: rgba(227,179,65,0.18);
+  border: 1px solid rgba(227,179,65,0.45);
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin: 14px 0 18px;
+}
+.callout.warning.bottom { margin-top: 18px; }
+.callout-title { font-weight: 800; margin-bottom: 4px; }
+.callout-body { font-size: 14px; line-height: 1.4; color: rgba(0,0,0,0.78); }
+
+/* Pilot spacing tweaks */
+.page .cta-row { margin: 20px 0 30px; }
