@@ -9,132 +9,79 @@
 </head>
 <body>
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <div class="logo">B</div>
-        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
-      </a>
+  <div id="bb-header"></div>
+<div class="container pagewrap">
+    <div class="page">
 
-      <div class="navlinks" aria-label="Primary">
-        <a href="what.html">How it works</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="pilot-program.html">Pilot</a>
-        <a href="condition-standards.html">Trust &amp; safety</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
+      <div class="badge"><span class="dot"></span> 30‑day pilot • 1 showroom • 2–5 items • $0 during pilot</div>
+      <h1 style="margin-top:10px;">A small, reversible pilot that proves the workflow</h1>
+      <p class="lede" style="margin:10px 0 0;">
+        The pilot is intentionally narrow: pickup-only, buyer inspection before acceptance, and clean reporting.
+        If it doesn’t add value or creates friction, we shut it off.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="list-a-display.html">Start listing (pilot)</a>
+        <a class="btn btn-ghost" href="contact.html">Request pilot access</a>
       </div>
 
-      <div class="navcta">
-        <a class="btn btn-ghost" href="market.html">Browse inventory</a>
-        <a class="btn btn-primary" href="list-a-display.html">List a display</a>
+      <div style="height:18px"></div>
+
+      <div class="two">
+        <div class="card">
+          <h3>Pilot scope</h3>
+          <ul class="bul">
+            <li><b>Locations:</b> 1 showroom</li>
+            <li><b>Inventory:</b> 2–5 items (floor models / clearance)</li>
+            <li><b>Fulfillment:</b> pickup-only</li>
+            <li><b>Duration:</b> 30 days</li>
+          </ul>
+          <p class="muted mini">No integrations. No minimums. No long-term commitment.</p>
+        </div>
+
+        <div class="card">
+          <h3>What stays out of scope</h3>
+          <ul class="bul">
+            <li>No delivery or shipping</li>
+            <li>No returns after acceptance</li>
+            <li>No changes to warranties or brand policies</li>
+            <li>No requirement to show brand in listing titles (pilot option)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Success criteria</h3>
+          <ul class="bul">
+            <li>At least one completed pickup (buyer accepted; funds released)</li>
+            <li>No disputes or only clearly-resolved edge cases</li>
+            <li>Staff time to list feels manageable between customers</li>
+            <li>Sales summary is usable for leadership reporting</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Exit is simple</h3>
+          <ul class="bul">
+            <li>Deactivate listings at any time</li>
+            <li>No obligation to continue</li>
+            <li>We provide a final recap of completed sales</li>
+          </ul>
+        </div>
       </div>
+
+      <div style="height:18px"></div>
+
+      <div class="card">
+        <h3>How pricing works after a successful pilot</h3>
+        <p class="muted">
+          If the pilot is successful, the cleanest structure for most showrooms is a simple monthly fee per location
+          (no listing fees, no commission). We keep it month‑to‑month so it remains reversible.
+        </p>
+        <p class="muted mini">We do not ask for payment details to start the pilot.</p>
+      </div>
+
     </div>
-  </div>
 
-  <div class="container pagewrap">
-
-    <div class="page-hero">
-      <div class="page-hero-inner">
-        <div>
-          <div class="kicker"><span class="dot"></span> 3 showrooms • trade-only buyers • brand-safe</div>
-          <h1>Request pilot access</h1>
-          <p class="lede">
-            This is the pilot intake form. Submit once and we’ll follow up to confirm eligibility and next steps.
-          </p>
-        </div>
-
-        <div class="page-hero-actions">
-          <a class="btn btn-pill" href="/contact">Contact</a>
-          <a class="btn btn-pill btn-primary" href="/market">Browse displays</a>
-        </div>
-      </div>
-    </div>
-
-    <div style="height:18px"></div>
-
-    <div class="market-shell">
-      <div class="panel">
-        <h3 style="margin-top:0;">Pilot request</h3>
-        <div class="muted small">Netlify Forms collects this. No installs.</div>
-
-        <div style="height:12px"></div>
-
-        <form name="pilot-request" method="POST" data-netlify="true">
-          <input type="hidden" name="form-name" value="pilot-request" />
-
-          <div class="formrow">
-            <div>
-              <div class="label">I am a</div>
-              <select class="select" name="type" required>
-                <option value="">Select</option>
-                <option>Showroom / store</option>
-                <option>Contractor / builder</option>
-                <option>Designer sourcing installs</option>
-                <option>Property manager</option>
-              </select>
-            </div>
-
-            <div>
-              <div class="label">Name</div>
-              <input class="input" name="name" required placeholder="Full name" />
-            </div>
-
-            <div>
-              <div class="label">Email</div>
-              <input class="input" type="email" name="email" required placeholder="you@company.com" />
-            </div>
-
-            <div>
-              <div class="label">Company</div>
-              <input class="input" name="company" placeholder="Company / showroom name" />
-            </div>
-
-            <div>
-              <div class="label">City / State</div>
-              <input class="input" name="location" placeholder="Wauwatosa, WI" />
-            </div>
-
-            <div>
-              <div class="label">Notes</div>
-              <textarea class="input" name="notes" rows="6" placeholder="For showrooms: swap cadence, typical display categories, any brand restrictions you follow. For buyers: what you buy (vanities/faucets), typical budget, and pickup radius."></textarea>
-            </div>
-          </div>
-
-          <div style="height:12px"></div>
-
-          <button class="btn btn-primary btn-pill" type="submit">Submit pilot request</button>
-        </form>
-      </div>
-
-      <aside class="panel">
-        <h3 style="margin-top:0;">Pilot expectations</h3>
-
-        <div class="callout">
-          <strong>For showrooms</strong>
-          <div class="small muted" style="line-height:1.55;">
-            List upcoming removals (specs-first). Buyer reserves before teardown. Pickup confirmed on-site (QR). Funds held until pickup confirmation.
-          </div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="callout">
-          <strong>For trade buyers</strong>
-          <div class="small muted" style="line-height:1.55;">
-            Reserve with a clear pickup window. Final sale. Inspect at pickup before release. Re-list supported if plans change (pilot policy).
-          </div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <div class="chiprow">
-          <span class="chip">Trade-only</span>
-          <span class="chip">Brand-safe</span>
-          <span class="chip">Pickup verified</span>
-        </div>
-      </aside>
-    </div>
 
     <div class="footer">
       <div class="hr"></div>
@@ -153,5 +100,7 @@
 
   </div>
 
+<div id="bb-footer"></div>
+<script src="shared/include.js"></script>
 </body>
 </html>

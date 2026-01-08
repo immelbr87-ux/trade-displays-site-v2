@@ -9,44 +9,22 @@
 </head>
 <body>
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <div class="logo">B</div>
-        <div>TRADE DISPLAYS <small>by Bargain Bond</small></div>
-      </a>
-
-      <div class="navlinks" aria-label="Primary">
-        <a href="what.html">How it works</a>
-        <a href="for-showrooms.html">For showrooms</a>
-        <a href="pilot-program.html">Pilot</a>
-        <a href="condition-standards.html">Trust &amp; safety</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
-      </div>
-
-      <div class="navcta">
-        <a class="btn btn-ghost" href="market.html">Browse inventory</a>
-        <a class="btn btn-primary" href="list-a-display.html">List a display</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="container pagewrap">
+  <div id="bb-header"></div>
+<div class="container pagewrap">
 
     <div class="page-hero">
       <div class="page-hero-inner">
         <div>
           <div class="kicker"><span class="dot"></span> Staff QR • buyer present • release escrow</div>
-          <h1>Pickup confirmation (pilot)</h1>
+          <h1>Pickup confirmation</h1>
           <p class="lede">
             This screen simulates the in-showroom QR confirmation. In production, staff would verify buyer presence and confirm condition before escrow release.
           </p>
         </div>
 
         <div class="page-hero-actions">
-          <a class="btn btn-pill" href="/market">Browse</a>
-          <a class="btn btn-pill btn-primary" href="/pilot">Request pilot access</a>
+          <a class="btn btn-pill" href="market.html">Browse</a>
+          <a class="btn btn-pill btn-primary" href="pilot-program.html">Request pilot access</a>
         </div>
       </div>
     </div>
@@ -57,12 +35,17 @@
 
       <div class="panel">
         <h3 style="margin-top:0;">Confirm pickup</h3>
+        <ol class="small muted" style="margin:8px 0 0 18px;">
+          <li>Verify the buyer is present (name + order/QR).</li>
+          <li>Buyer inspects the item (finish, damage, completeness).</li>
+          <li>Confirm acceptance to release funds.</li>
+        </ol>
         <div class="muted small" id="line">Loading…</div>
 
         <div style="height:12px"></div>
 
         <div class="callout">
-          <strong>Condition mismatch protection (buyer-safe)</strong>
+          <strong>Condition mismatch protection</strong>
           <div class="small muted" style="line-height:1.55;">
             If the display materially differs from the posted grade, it must be documented with photos at pickup <em>before</em> confirming escrow release.
           </div>
@@ -149,11 +132,11 @@
       </div>
       <div class="footer-nav" aria-label="Footer navigation">
         <a href="/">Home</a>
-        <a href="/market">Browse displays</a>
-        <a href="/for-showrooms">For showrooms</a>
+        <a href="market.html">Browse displays</a>
+        <a href="for-showrooms.html">For showrooms</a>
         <a href="/brand-compliance">Brand compliance</a>
         <a href="/faq">FAQ</a>
-        <a href="/pilot">Pilot</a>
+        <a href="pilot-program.html">Pilot</a>
       </div>
     </div>
   </div>
@@ -213,5 +196,7 @@
     })();
   </script>
 
+<div id="bb-footer"></div>
+<script src="shared/include.js"></script>
 </body>
 </html>
