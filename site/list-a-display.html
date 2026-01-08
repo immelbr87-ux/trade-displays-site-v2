@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>List a Display</title>
+  <title>List A Display</title>
   <meta name="description" content="Showroom-only listing form (pilot). Minimal specs, A/B condition, pickup window. Brand-safe by design." />
   <link rel="stylesheet" href="app.css" />
 </head>
@@ -20,7 +20,7 @@
 
       <div class="callout" style="margin-top:16px;">
         <strong>Brand-safe pilot mode</strong>
-        Keep public titles specs-first (e.g., “60&quot; white vanity display”). Add brand/model details only where your program allows.
+        Keep public titles specs-first (e.g., “<span class="placeholder">60&quot;</span> white vanity display”). Add brand/model details only where your program allows.
       </div>
 
       <form style="margin-top:18px;">
@@ -32,7 +32,7 @@
             <label class="small muted2">Public listing title (specs-first)</label><br/>
             <input
               style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
-              placeholder="Bathroom vanity display — 60&quot; — matte black hardware"/>
+              placeholder="<span class="placeholder">Bathroom vanity display</span> — <span class="placeholder">60&quot;</span> — matte black hardware"/>
           </div>
           <div>
             <label class="small muted2">Category</label><br/>
@@ -127,16 +127,16 @@
 
   <div class="container footer">
     <div class="hr"></div>
-    <div class="fine">
-      Trade Displays is operated by Bargain Bond. Pickup-only transactions. Buyers inspect at pickup before acceptance and fund release.
-    </div>
-    <div class="fine" style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap">
+<div class="fine" style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap">
       <a href="terms.html">Terms</a>
       <a href="condition-standards.html">Trust &amp; safety</a>
       <a href="brand-compliance.html">Brand compliance</a>
       <a href="contact.html">Contact</a>
     </div>
-  </div><div id="bb-footer"></div>
+  </div><div class="callout warning">
+  <b>Mock Flow:</b> This page is a demonstration of the listing format used during pilots. Your team will copy this format and we will preload defaults.
+</div>
+<div id="bb-footer"></div>
 <script src="shared/include.js"></script>
 </body>
 </html>
