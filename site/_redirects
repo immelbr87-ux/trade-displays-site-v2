@@ -1,26 +1,4 @@
-/                 /index.html             200
-
-/how-it-works        /what.html                 200
-/what                /what.html                 200
-
-/for-showrooms       /for-showrooms.html        200
-/pilot               /pilot-program.html        200
-/trust               /condition-standards.html  200
-
-/market              /market.html               200
-/listing-details     /listing-details.html      200
-/reserve-confirmation /reserve-confirmation.html 200
-/pickup-confirmation /pickup-confirmation.html  200
-/list-a-display      /list-a-display.html       200
-
-/faq                 /faq.html                  200
-/contact             /contact.html              200
-/terms               /terms.html                200
-/brand-compliance    /brand-compliance.html     200
-/kohler-compliance   /kohler-compliance.html    200
-
-/who                 /faq.html#who-can-buy      301
-/who-can-buy         /faq.html#who-can-buy      301
-/trade-displays      /trade-displays.html       200
-/example-listing     /example-listing.html      200
-/*                  /index.html                 404
+/for-showrooms   /how-it-works.html  301
+/trade-displays  /how-it-works.html  301
+/brand-compliance /trust-brand-safety.html 301
+/list-a-floor-model /list-a-display.html 301
