@@ -2,3 +2,10 @@
 /trade-displays  /how-it-works.html  301
 /brand-compliance /trust-brand-safety.html 301
 /list-a-floor-model /list-a-display.html 301
+
+# Aliases / legacy links
+/pilot        /pilot-program.html 301
+/pilot.html   /pilot-program.html 301
+/listings     /market.html 301
+/listings.html /market.html 301
+/contact      /contact.html 301
