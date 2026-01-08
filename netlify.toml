@@ -48,3 +48,24 @@
   from = "/pickup-confirmation"
   to = "/pickup-confirmation.html"
   status = 200
+
+
+[[redirects]]
+  from = "/listings"
+  to = "/market.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact"
+  to = "/contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/pilot.html"
+  to = "/pilot-program.html"
+  status = 301
+
+[[redirects]]
+  from = "/listings.html"
+  to = "/market.html"
+  status = 301
