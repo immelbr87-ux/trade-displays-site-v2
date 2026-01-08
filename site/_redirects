@@ -19,4 +19,8 @@
 /brand-compliance    /brand-compliance.html     200
 /kohler-compliance   /kohler-compliance.html    200
 
+/who                 /faq.html#who-can-buy      301
+/who-can-buy         /faq.html#who-can-buy      301
+/trade-displays      /trade-displays.html       200
+/example-listing     /example-listing.html      200
 /*                  /index.html                 404
