@@ -1,26 +1,54 @@
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="brandlock">
-          <span class="brandmark">B</span>
-          <div>
-            <div class="brandname">Trade Displays</div>
-            <div class="brandsub">Pickup-Only Floor Model Resale For Showrooms And Trade Buyers.</div>
-          </div>
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brandlock">
+        <span class="brandmark" aria-hidden="true">B</span>
+        <div class="brandtext">
+          <div class="brandname">TRADE DISPLAYS</div>
+          <div class="byline">by Bargain Bond</div>
         </div>
       </div>
-
-      <div class="footer-links">
-        <a href="/terms">Terms</a>
-        <a href="/trust">Trust &amp; Safety</a>
-        <a href="/brand-compliance.html">Brand Compliance</a>
-        <a href="/contact">Contact</a>
-      </div>
+      <p class="footer-tagline">Pickup-only floor-model resale for showroom teams and trade buyers. Buyer inspection at pickup; funds are released after acceptance.</p>
     </div>
 
-    <div class="footer-bottom">
-      <span class="muted">Trade Displays Is Operated By Bargain Bond.</span>
+    <nav class="footer-cols" aria-label="Footer">
+      <div class="footer-col">
+        <div class="footer-title">Showrooms</div>
+        <a href="for-showrooms.html">For Showrooms</a>
+        <a href="pilot-program.html">Pilot Info</a>
+        <a href="list-a-display.html">List A Display</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-title">Trade Buyers</div>
+        <a href="browse.html">Browse Current Listings</a>
+        <a href="condition-standards.html">Trust &amp; Safety</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-title">Company</div>
+        <a href="contact.html">Contact</a>
+        <a href="terms.html">Terms</a>
+        <a href="brand-compliance.html">Brand Compliance</a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span>© <span id="bbYear"></span> Bargain Bond</span>
+      <span class="footer-sep" aria-hidden="true">•</span>
+      <a href="terms.html">Terms</a>
+      <span class="footer-sep" aria-hidden="true">•</span>
+      <a href="contact.html">Contact</a>
     </div>
   </div>
+
+  <script>
+    (function(){
+      var y = document.getElementById('bbYear');
+      if (y) y.textContent = new Date().getFullYear();
+    })();
+  </script>
 </footer>
