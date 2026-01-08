@@ -591,3 +591,59 @@ h3{margin:0 0 10px;font-size:var(--h3)}
 @media (max-width: 820px){
   .topnav{gap:12px}
 }
+
+
+
+/* ---- Polishing pass: spacing, link visibility, footer, steps, tooltips ---- */
+.pagewrap { padding-top: 28px; padding-bottom: 56px; }
+.page .lead { margin-bottom: 18px; }
+.stack-lg > * { margin-bottom: 18px; }
+.stack-lg > *:last-child { margin-bottom: 0; }
+
+.page p { margin: 0 0 12px; }
+.page h2 { margin-top: 22px; }
+.page h3 { margin-top: 18px; }
+
+/* Make inline links obvious (not just color) */
+.page a:not(.btn) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+/* Footer spacing & visual structure */
+.site-footer {
+  padding: 28px 0 36px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.site-footer .footer-grid { gap: 18px; }
+.site-footer .footer-bottom { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.10); }
+.site-footer a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Pilot / FAQ / Contact: reduce “crammed” feel */
+.page .card { padding: 18px; }
+.cards.two { gap: 16px; }
+hr.sep { margin: 22px 0; }
+
+/* Step icons (1/2/3/4): use badges instead of plain numbers */
+.step-badge, .stepnum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.8);
+}
+
+/* Tooltip visibility in example listing */
+.tooltip, .tip {
+  position: relative;
+  overflow: visible;
+}
+.tooltip .tipbox, .tip .tipbox, .tooltip-content {
+  z-index: 9999;
+}
