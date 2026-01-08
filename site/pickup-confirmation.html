@@ -2,32 +2,198 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pickup confirmation — Trade Displays</title>
-  <link rel="stylesheet" href="app.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pickup Confirmation — Trade Displays by Bargain Bond</title>
+  <meta name="description" content="Pickup confirmation screen (pilot). Staff QR confirmation + condition confirmation + escrow release step." />
+  <link rel="stylesheet" href="/app.css" />
 </head>
 <body>
-  <div data-include="shared/header.html"></div>
-  <main>
-<section class="hero">
-  <div class="container">
-    <div class="kicker"><b>Pickup</b> • Move floor models without the usual headache.</div>
-    <h1>Pickup confirmation</h1>
-    <p class="lead">Confirmation page after pickup is scheduled.</p>
-    
-    <div class="cta-row">
-      <a class="btn primary" href="pilot-program.html">Request a 30‑Day Pilot</a>
-      <a class="btn" href="market.html">Browse Current Listings</a>
-      <a class="btn good" href="example-listing.html">Create Example Listing</a>
+
+  <div id="bb-header"></div>
+<div class="container pagewrap">
+
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Staff QR • buyer present • release escrow</div>
+          <h1>Pickup confirmation</h1>
+          <p class="lede">
+            This screen simulates the in-showroom QR confirmation. In production, staff would verify buyer presence and confirm condition before escrow release.
+          </p>
+        </div>
+
+        <div class="page-hero-actions">
+          <a class="btn btn-pill" href="market.html">Browse</a>
+          <a class="btn btn-pill btn-primary" href="pilot-program.html">Request pilot access</a>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <h3 style="margin-top:0">Placeholder</h3>
-      <p style="color:var(--muted); margin:0">This page is included to match your repo structure. Replace with your live content as needed.</p>
+
+    <div style="height:18px"></div>
+
+    <div class="market-shell">
+
+      <div class="panel">
+        <h3 style="margin-top:0;">Confirm pickup</h3>
+        <ol class="small muted" style="margin:8px 0 0 18px;">
+          <li>Verify the buyer is present (name + order/QR).</li>
+          <li>Buyer inspects the item (finish, damage, completeness).</li>
+          <li>Confirm acceptance to release funds.</li>
+        </ol>
+        <div class="muted small" id="line">Loading…</div>
+
+        <div style="height:12px"></div>
+
+        <div class="callout">
+          <strong>Condition mismatch protection</strong>
+          <div class="small muted" style="line-height:1.55;">
+            If the display materially differs from the posted grade, it must be documented with photos at pickup <em>before</em> confirming escrow release.
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="formrow">
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="buyerPresent" />
+            <span>
+              <strong>Buyer present</strong>
+              <span>Identity confirmed (pilot)</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="conditionMatch" />
+            <span>
+              <strong>Condition matches posted grade</strong>
+              <span>Cosmetic wear consistent with Grade A/B definition</span>
+            </span>
+          </label>
+
+          <label class="pill" style="align-items:center;gap:10px;">
+            <input type="checkbox" id="photoIfMismatch" />
+            <span>
+              <strong>If mismatch: photos captured</strong>
+              <span>Only required if condition does <em>not</em> match (pilot)</span>
+            </span>
+          </label>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <button class="btn btn-primary btn-pill btn-full" id="releaseBtn" disabled>
+          Release escrow (pilot)
+        </button>
+
+        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
+          This is a simulated screen. In production, this action would release funds to the showroom after buyer confirmation.
+        </div>
+      </div>
+
+      <aside class="panel">
+        <h3 style="margin-top:0;">Posted grade definitions</h3>
+        <div class="small muted" style="line-height:1.55;">
+          Grades describe <strong>cosmetic wear only</strong>. Displays are installed items and sold as-is.
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="kv">
+          <div class="k">Grade A</div>
+          <div class="v" style="font-size:14px;font-weight:750;color:var(--muted);line-height:1.55;">
+            Minimal cosmetic wear consistent with prior installation and handling. Minor marks may be present.
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="kv">
+          <div class="k">Grade B</div>
+          <div class="v" style="font-size:14px;font-weight:750;color:var(--muted);line-height:1.55;">
+            Noticeable cosmetic wear (scratches/scuffs/finish variation). Cosmetic condition may be apparent at normal viewing distance.
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="chiprow">
+          <span class="chip">As-is</span>
+          <span class="chip">Final sale</span>
+          <span class="chip">Pickup verified</span>
+        </div>
+      </aside>
+
+    </div>
+
+    <div class="footer">
+      <div class="hr"></div>
+<div class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="market.html">Browse displays</a>
+        <a href="for-showrooms.html">For Showrooms</a>
+        <a href="/brand-compliance">Brand compliance</a>
+        <a href="/faq">FAQ</a>
+        <a href="pilot-program.html">Pilot</a>
+      </div>
     </div>
   </div>
-</section>
-  </main>
-  <div data-include="shared/footer.html"></div>
-  <script src="shared/include.js"></script>
+
+  <script>
+    (async function(){
+      setActiveNav();
+
+      const params = new URLSearchParams(location.search);
+      const id = params.get("id") || "";
+
+      const line = document.getElementById("line");
+      const buyerPresent = document.getElementById("buyerPresent");
+      const conditionMatch = document.getElementById("conditionMatch");
+      const photoIfMismatch = document.getElementById("photoIfMismatch");
+      const releaseBtn = document.getElementById("releaseBtn");
+
+      function updateBtn(){
+        // If condition matches: buyer present + condition match required
+        // If condition does NOT match: buyer present + photo checkbox required
+        const buyerOK = buyerPresent.checked;
+        const match = conditionMatch.checked;
+        const photos = photoIfMismatch.checked;
+
+        releaseBtn.disabled = !(buyerOK && (match || photos));
+      }
+
+      [buyerPresent, conditionMatch, photoIfMismatch].forEach(x => x.addEventListener("change", updateBtn));
+      updateBtn();
+
+      if (!id){
+        line.textContent = "Pickup confirmation for reserved display (pilot stub).";
+      } else {
+        try {
+          const r = await fetch("/.netlify/functions/listDisplays?id=" + encodeURIComponent(id), { cache: "no-store" });
+          const data = await r.json();
+          if (!r.ok) throw new Error("fail");
+          const x = data.listing || null;
+          line.textContent = x ? ("Pickup confirmation: " + (x.title || "Display Listing")) : "Pickup confirmation (pilot stub).";
+        } catch(e){
+          line.textContent = "Pickup confirmation (pilot stub).";
+        }
+      }
+
+      releaseBtn.addEventListener("click", ()=>{
+        releaseBtn.textContent = "Escrow released (pilot)";
+        releaseBtn.disabled = true;
+      });
+
+      function setActiveNav(){
+        const path = location.pathname.replace(/\/$/,"") || "/";
+        document.querySelectorAll(".navlinks a").forEach(a=>{
+          const href = (a.getAttribute("href")||"").replace(/\/$/,"") || "/";
+          if (href === path) a.classList.add("active");
+        });
+      }
+    })();
+  </script>
+
+<div id="bb-footer"></div>
+<script src="shared/include.js"></script>
 </body>
 </html>

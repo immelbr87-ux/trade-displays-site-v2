@@ -2,85 +2,143 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>List a Floor Model — Trade Displays</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>List A Display</title>
+  <meta name="description" content="Showroom-only listing form (pilot). Minimal specs, A/B condition, pickup window. Brand-safe by design." />
   <link rel="stylesheet" href="app.css" />
 </head>
 <body>
-  <div data-include="shared/header.html"></div>
-  <main>
-<section class="hero">
-  <div class="container">
-    <div class="kicker"><b>List a Floor Model</b> • 10–15 minutes.</div>
-    <h1>List a showroom floor model</h1>
-    <p class="lead">This is a template listing form. Wire this to your existing form handler (Netlify Forms, a serverless function, Airtable, etc.).</p>
+  <div id="bb-header"></div>
+<div class="container pagewrap">
+    <div class="page">
+      <div class="kicker"><span class="dot"></span> Showroom listing • pilot mock • brand-safe format</div>
+      <h1>Create a showroom listing</h1>
+      <p>
+        This is the pilot listing format. It’s intentionally minimal: specs, timing, pickup notes, and Grade A/B condition.
+        Publish quickly, then refine details only if needed.
+      </p>
 
-    <div class="card">
-      <form>
-        <div class="form-row">
+      <div class="callout" style="margin-top:16px;">
+        <strong>Brand-safe pilot mode</strong>
+        Keep public titles specs-first (e.g., “<span class="placeholder">60&quot;</span> white vanity display”). Add brand/model details only where your program allows.
+      </div>
+
+      <form style="margin-top:18px;">
+        <p class="small muted" style="margin-top:10px;">Fields marked required should be accurate at the time of listing. Buyers will verify condition at pickup before acceptance.</p>
+
+        <h2 style="margin-top:0;">Listing basics</h2>
+        <div class="grid2">
           <div>
-            <label>Item title</label>
-            <input placeholder="e.g., Vanity 48&quot; — White oak" />
-            <div class="helper">Use the product type + size/finish.</div>
+            <label class="small muted2">Public listing title (specs-first)</label><br/>
+            <input
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="<span class="placeholder">Bathroom vanity display</span> — <span class="placeholder">60&quot;</span> — matte black hardware"/>
           </div>
           <div>
-            <label>Condition grade</label>
-            <select>
-              <option>Grade A (excellent)</option>
-              <option>Grade B (visible wear / minor issues)</option>
+            <label class="small muted2">Category</label><br/>
+            <select
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;">
+              <option selected>Vanity</option>
+              <option>Faucet</option>
+              <option>Sink</option>
+              <option>Toilet</option>
+              <option>Tub</option>
+              <option>Shower system</option>
+              <option>Accessory / hardware</option>
+              <option>Other</option>
             </select>
-            <div class="helper">Grade A/B definitions should match your Trust &amp; Brand Safety page.</div>
           </div>
         </div>
 
-        <div class="form-row" style="margin-top:12px">
+        <div class="grid2" style="margin-top:14px;">
           <div>
-            <label>Ask price</label>
-            <input placeholder="e.g., 650" />
+            <label class="small muted2">Finish family</label><br/>
+            <input
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Brushed nickel / chrome / matte black / white / etc."/>
           </div>
           <div>
-            <label>Pickup window</label>
-            <select>
-              <option>Within 7 days</option>
-              <option>7–14 days</option>
-              <option>Flexible (by appointment)</option>
+            <label class="small muted2">Condition grade</label><br/>
+            <select
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;">
+              <option selected>Grade A — light wear, fully functional</option>
+              <option>Grade B — visible wear, fully functional</option>
             </select>
           </div>
         </div>
 
-        <div style="margin-top:12px">
-          <label>What’s included</label>
-          <textarea placeholder="List included components, hardware, manuals, packaging, etc."></textarea>
-        </div>
-
-        <div style="margin-top:12px">
-          <label>Known issues / missing parts</label>
-          <textarea placeholder="Be explicit. Buyers value clarity over perfection."></textarea>
-        </div>
-
-        <div class="form-row" style="margin-top:12px">
+        <h2>Timing</h2>
+        <div class="grid2">
           <div>
-            <label>City</label>
-            <input placeholder="e.g., Mequon" />
+            <label class="small muted2">Removal date (or week of)</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Feb 14, 2026 (or Week of Feb 14)"/>
           </div>
           <div>
-            <label>State</label>
-            <input placeholder="e.g., WI" />
+            <label class="small muted2">Pickup window</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Mon–Wed, 9am–2pm"/>
           </div>
         </div>
 
-        <div class="cta-row" style="margin:14px 0 0">
-          <button class="btn primary" type="button">Submit (placeholder)</button>
-          <a class="btn" href="trust-brand-safety.html">Review Trust &amp; Brand Safety</a>
+        <h2>Pricing + pickup</h2>
+        <div class="grid2">
+          <div>
+            <label class="small muted2">Fixed price (USD)</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="$850"/>
+          </div>
+          <div>
+            <label class="small muted2">Pickup location (city only in Phase 1)</label><br/>
+            <input type="text"
+              style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+              placeholder="Milwaukee area"/>
+          </div>
         </div>
 
-        <div class="notice">This page is a styled placeholder. It does not submit anywhere until connected to your backend.</div>
+        <div style="margin-top:14px;">
+          <label class="small muted2">Notes (no brands/SKUs)</label><br/>
+          <textarea rows="5"
+            style="width:100%;margin-top:6px;padding:12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);"
+            placeholder="Example: Includes countertop. Minor scuff on left interior panel. Must be removed by buyer."></textarea>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid2">
+          <div class="callout">
+            <strong>Compliance confirmation</strong>
+            By publishing, you confirm the listing does not include brand names, SKUs, model numbers, or warranty language.
+          </div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:10px;">
+            <a class="btn btn-primary btn-pill" href="brand-compliance.html">Review brand compliance</a>
+            <span class="small muted2">This page is a mock for now — used to show showrooms the exact format.</span>
+          </div>
+        </div>
       </form>
+
+      <div class="hr"></div>
+      <a class="btn btn-pill" href="example-listing.html">See an example listing →</a>
     </div>
   </div>
-</section>
-  </main>
-  <div data-include="shared/footer.html"></div>
-  <script src="shared/include.js"></script>
+
+  <div class="container footer">
+    <div class="hr"></div>
+<div class="fine" style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="terms.html">Terms</a>
+      <a href="condition-standards.html">Trust &amp; safety</a>
+      <a href="brand-compliance.html">Brand compliance</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div><div class="callout warning">
+  <b>Mock Flow:</b> This page is a demonstration of the listing format used during pilots. Your team will copy this format and we will preload defaults.
+</div>
+<div id="bb-footer"></div>
+<script src="shared/include.js"></script>
 </body>
 </html>
+
+
