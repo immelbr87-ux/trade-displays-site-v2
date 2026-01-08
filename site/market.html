@@ -9,37 +9,102 @@
 <body>
   <div data-include="shared/header.html"></div>
   <main>
+
 <section class="hero">
   <div class="container">
     <div class="kicker"><b>Browse</b> • Current showroom floor models.</div>
     <h1>Browse current listings</h1>
-    <p class="lead">Placeholder page. Connect this to your existing listings feed or static inventory.</p>
+    <p class="lead">Placeholder page. Connect this to your listings feed (Netlify function / CMS) when ready.</p>
 
     <div class="cta-row">
-      <a class="btn primary" href="list-floor-model.html">List a Floor Model</a>
+      <a class="btn good" href="list-a-display.html">List a Floor Model</a>
       <a class="btn" href="how-it-works.html">How it works</a>
-      <a class="btn good" href="create-example-listing.html">Create Example Listing</a>
+      <a class="btn" href="condition-standards.html">Condition standards</a>
     </div>
 
-    <div class="grid cards-3">
+    <div class="grid-2" style="margin-top:18px">
       <div class="card">
         <h3>Example: Vanity (Showroom Floor Model)</h3>
-        <p>Oak finish • Grade A • Pickup within 7 days</p>
-        <div class="meta"><span class="pill">$650</span><span class="pill">Mequon, WI</span><span class="pill">As‑Is</span></div>
+        <p>
+          36&quot; •
+          <span class="with-tip">Grade A
+            <details class="tip">
+              <summary aria-label="Grade A definition">i</summary>
+              <div class="tip-bubble">
+                <b>Grade A:</b> Excellent overall. Minor cosmetic wear from being on a showroom floor. Fully usable as‑is. Any included parts/accessories are listed.
+              </div>
+            </details>
+          </span>
+          •
+          <span class="with-tip">Buyer pickup window
+            <details class="tip">
+              <summary aria-label="Pickup window definition">i</summary>
+              <div class="tip-bubble">
+                <b>Pickup window:</b> Seller provides a 2–4 hour pickup window. Buyer inspects onsite and accepts at pickup.
+              </div>
+            </details>
+          </span>
+        </p>
+        <div class="meta">
+          <span class="pill">$420</span>
+          <span class="pill">Mequon, WI</span>
+          <span class="with-tip pill">As‑Is
+            <details class="tip">
+              <summary aria-label="As-is definition">i</summary>
+              <div class="tip-bubble">
+                <b>As‑Is:</b> No returns after onsite acceptance. Inspect at pickup before confirming.
+              </div>
+            </details>
+          </span>
+        </div>
+        <p class="subtle" style="margin-top:10px; margin-bottom:0">
+          Pick‑up only. Bring appropriate vehicle + help to load.
+        </p>
       </div>
-      <div class="card">
-        <h3>Example: Faucet (Showroom Floor Model)</h3>
-        <p>Polished chrome • Grade B • Missing install hardware</p>
-        <div class="meta"><span class="pill">$90</span><span class="pill">Kohler, WI</span><span class="pill">As‑Is</span></div>
-      </div>
+
       <div class="card">
         <h3>Example: Toilet (Showroom Floor Model)</h3>
-        <p>Elongated • Grade A • Buyer pickup window required</p>
-        <div class="meta"><span class="pill">$180</span><span class="pill">Milwaukee, WI</span><span class="pill">As‑Is</span></div>
+        <p>
+          Elongated •
+          <span class="with-tip">Grade B
+            <details class="tip">
+              <summary aria-label="Grade B definition">i</summary>
+              <div class="tip-bubble">
+                <b>Grade B:</b> Good overall with visible cosmetic wear or minor imperfections. Any missing parts are disclosed in the listing.
+              </div>
+            </details>
+          </span>
+          •
+          <span class="with-tip">Buyer pickup window
+            <details class="tip">
+              <summary aria-label="Pickup window definition">i</summary>
+              <div class="tip-bubble">
+                <b>Pickup window:</b> Seller provides a 2–4 hour pickup window. Buyer inspects onsite and accepts at pickup.
+              </div>
+            </details>
+          </span>
+        </p>
+        <div class="meta">
+          <span class="pill">$180</span>
+          <span class="pill">Milwaukee, WI</span>
+          <span class="with-tip pill">As‑Is
+            <details class="tip">
+              <summary aria-label="As-is definition">i</summary>
+              <div class="tip-bubble">
+                <b>As‑Is:</b> No returns after onsite acceptance. Inspect at pickup before confirming.
+              </div>
+            </details>
+          </span>
+        </div>
+        <p class="subtle" style="margin-top:10px; margin-bottom:0">
+          Pickup‑only. Buyer confirms condition onsite; funds release after acceptance.
+        </p>
       </div>
     </div>
+
   </div>
 </section>
+
   </main>
   <div data-include="shared/footer.html"></div>
   <script src="shared/include.js"></script>
