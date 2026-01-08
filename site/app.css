@@ -721,3 +721,28 @@ details:last-child { margin-bottom: 0; }
 
 .checklist li{list-style:none;position:relative;padding-left:22px}
 .checklist li:before{content:"□";position:absolute;left:0;top:0;color:var(--muted2)}
+
+
+/* --- Layout fixes: header/footer crowding + mobile wrap (Jan 2026) --- */
+.topbar-inner{flex-wrap:wrap;gap:12px}
+.topnav{flex:1 1 520px;justify-content:center}
+.topbar-actions{margin-left:auto}
+@media (max-width: 980px){
+  .topnav{order:3;width:100%;justify-content:flex-start}
+  .topbar-actions{order:2}
+  .brand{order:1}
+}
+
+/* Global footer: ensure columns + wrap (avoid crowded links) */
+.site-footer .footer-grid{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+.site-footer .footer-links{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  align-items:center;
+}
