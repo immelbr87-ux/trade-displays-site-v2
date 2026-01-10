@@ -1,40 +1,44 @@
-<div class="topbar">
-  <div class="container topbar-inner">
-    <div class="brand">
-      <a class="brand-link" href="/"><div class="logo">B</div><div class="brand-text">TRADE DISPLAYS <small>by Bargain Bond</small></div></a>
-    </div>
+<header class="site-header">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/index.html" aria-label="Trade Displays Home">
+        <span class="brand-mark" aria-hidden="true">■</span>
+        <span class="brand-text">
+          <span class="brand-name">Trade Displays</span>
+          <span class="brand-sub">by Bargain Bond</span>
+        </span>
+      </a>
 
-    <div class="searchbar">
-      <div class="searchicon">
-        <input type="search" aria-label="Search" placeholder="Search floor models…" />
-      </div>
-    </div>
+      <form class="search" action="/market.html" role="search">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input type="search" name="q" placeholder="Search for floor models…" autocomplete="off" />
+      </form>
 
-    <nav class="topnav" aria-label="Primary">
-            <a href="/market">Browse</a>
-<a href="/market">News</a>
-      <a href="/what">About</a>
-      <a href="/faq">Help</a>
-      <a href="/list-a-display.html">Sell</a>
-    </nav>
+      <nav class="topnav" aria-label="Primary">
+        <a href="/market.html">Browse</a>
+        <a href="/news.html">News</a>
+        <a href="/about.html">About</a>
+        <a href="/help.html">Help</a>
+        <a href="/sell.html">Sell</a>
+      </nav>
 
-    <div class="topbar-actions">
-      <a class="btn btn-primary btn-pill" href="/pilot-program.html">Start a 30-Day Pilot</a>
+      <a class="cta cta-primary" href="/pilot-program.html">Start a 30-Day Pilot</a>
     </div>
   </div>
-</div>
 
-<div class="catbar" role="navigation" aria-label="Categories">
-  <div class="container catbar-inner">
-    <a class="active" href="/market">All</a>
-    <a href="/market#trending">Trending</a>
-    <a href="/market#vanities">Vanities</a>
-    <a href="/market#faucets">Faucets</a>
-    <a href="/market#toilets">Toilets</a>
-    <a href="/market#sinks">Sinks</a>
-    <a href="/market#shower">Shower</a>
-    <a href="/market#accessories">Accessories</a>
-    <a href="/for-showrooms">For Sellers</a>
-    <a href="/what">How it Works</a>
+  <div class="catbar">
+    <div class="container catbar-inner" aria-label="Categories">
+      <a class="cat active" href="/market.html">All</a>
+      <a class="cat" href="/market.html?cat=Trending">Trending</a>
+      <a class="cat" href="/market.html?cat=Vanities">Vanities</a>
+      <a class="cat" href="/market.html?cat=Faucets">Faucets</a>
+      <a class="cat" href="/market.html?cat=Toilets">Toilets</a>
+      <a class="cat" href="/market.html?cat=Sinks">Sinks</a>
+      <a class="cat" href="/market.html?cat=Shower">Shower</a>
+      <a class="cat" href="/market.html?cat=Accessories">Accessories</a>
+      <span class="cat-sep" aria-hidden="true"></span>
+      <a class="cat" href="/for-showrooms.html">For Sellers</a>
+      <a class="cat" href="/how-it-works.html">How it Works</a>
+    </div>
   </div>
-</div>
+</header>
