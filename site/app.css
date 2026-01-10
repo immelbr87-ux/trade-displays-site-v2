@@ -56,7 +56,7 @@ button{font-family:inherit}
 
 /* Topbar */
 .topbar{
-  position:sticky;top:0;z-index:50;
+  position:sticky;top:0;z-index:1000;
   background:var(--nav);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -630,12 +630,21 @@ h3{margin:0 0 10px;font-size:var(--h3)}
 
 /* Footer spacing & visual structure */
 .site-footer {
-  padding: 28px 0 36px;
-  border-top: 1px solid rgba(255,255,255,0.14);
+  background: var(--nav);
+  padding: 22px 0 26px;
+  border-top: 1px solid var(--line2);
 }
 .site-footer .footer-grid { gap: 18px; }
-.site-footer .footer-bottom { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.10); }
-.site-footer a { text-decoration: underline; text-underline-offset: 3px; }
+.site-footer .footer-bottom { 
+  margin-top: 14px; padding-top: 12px; 
+  border-top: 1px solid var(--line2);
+}
+.site-footer a { 
+  text-decoration: none; 
+  color: var(--muted2);
+  font-weight: 600;
+}
+.site-footer a:hover{ color: var(--ink); }
 
 /* Pilot / FAQ / Contact: reduce “crammed” feel */
 .page .card { padding: 18px; }
@@ -767,6 +776,9 @@ details:last-child { margin-bottom: 0; }
 
 /* StockX category bar */
 .catbar{
+  position:sticky; top:64px; z-index:999;
+  background: var(--nav);
+
   background: rgba(255,255,255,.75);
   border-bottom: 1px solid var(--line2);
 }
@@ -796,12 +808,12 @@ details:last-child { margin-bottom: 0; }
 /* Header search */
 .searchbar{
   flex: 1;
-  max-width: 520px;
+  max-width: 680px;
   margin: 0 18px;
 }
 .searchbar input{
   width:100%;
-  height:40px;
+  height:44px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background:#fff;
