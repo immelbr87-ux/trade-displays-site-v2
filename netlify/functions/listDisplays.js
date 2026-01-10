@@ -102,6 +102,11 @@ function mapRecord(rec) {
     // optional extras if you have them:
     location: f.location || f.Location || "",
     showroom_name: f.showroom_name || f.Showroom || "",
+
+    // StockX-style status badges (optional fields in Airtable)
+    status: f.status || f.Status || "In Stock",
+    verified: f.verified || f.Verified || f["Verified Pickup"] || false,
+    ready_for_transit: f.ready_for_transit || f.ReadyForTransit || f["Ready for Transit"] || false,
   };
 }
 
