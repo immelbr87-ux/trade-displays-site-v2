@@ -159,21 +159,18 @@
         const title = safeText(x.title || "Floor Model Listing");
         const price = (x.price != null && x.price !== "") ? `$${Number(x.price).toLocaleString()}` : "";
         const grade = String(x.condition_grade || "").trim().toUpperCase() || "?";
+        const status = safeText(x.status || "In Stock");
+        const verified = truthy(x.verified ?? x.is_verified ?? x.pickup_verified ?? x.verified_pickup);
+        const readyForTransit = truthy(x.ready_for_transit ?? x.readyForTransit);
         const finish = safeText(x.finish_family || "Specs-first listing");
         const dimensions = safeText(x.dimensions || "");
         const keySpec = safeText(x.key_spec || "");
         const pickupText = pickupWindowText(x.pickup_window_start, x.pickup_window_end);
-        const locationText = safeText(x.location_text || "");
-
-        // Status system (StockX-like, logistics first)
-        const statusRaw = String(x.status || "").toLowerCase();
-        const isInStock = /in\s*stock|available|active/.test(statusRaw);
-        const isVerified = /verified/.test(statusRaw) || true; // pilot default = verified pickup flow
 
         const thumb = safeAttr(x.thumbnail_url || "");
         const thumbStyle = thumb
           ? `background-image:url('${thumb}')`
-          : `background-image:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.28))`;
+          : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
 
         const gradeBubble = gradeTooltipHtml(grade);
         const pickupBubble = pickupTooltipHtml();
@@ -183,12 +180,10 @@
           <div class="listing">
             <div class="thumb" style="${thumbStyle}">
               <div class="thumb-badges">
-                <span class="pilltag ok">VERIFIED</span>
-                ${isInStock ? `<span class="pilltag ok">IN STOCK</span>` : ``}
-                <span class="pilltag soft">PICKUP ONLY</span>
-                <span class="pilltag soft">READY FOR TRANSIT</span>
-                <span class="pilltag">GRADE ${safeText(grade)} ${gradeBubble}</span>
-                <span class="pilltag">${safeText(pickupText)} ${pickupBubble}</span>
+                ${verified ? `<span class=\"pilltag verified\">Verified</span>` : ``}
+                <span class="pilltag instock">${safeText(status)}</span>
+                <span class="pilltag">Pickup only</span>
+                ${readyForTransit ? `<span class=\"pilltag ready\">Ready for transit</span>` : ``}
               </div>
             </div>
 
@@ -199,12 +194,16 @@
               </div>
 
               <div class="meta">
-                <div><strong>Finish</strong> <span class="muted">${finish}</span></div>
-                <div><strong>Pickup</strong> <span class="muted">Local pickup</span></div>
-                <div><strong>Window</strong> <span class="muted">${safeText(pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end))}</span></div>
-                <div><strong>Location</strong> <span class="muted">${locationText || "Shared after reserve"}</span></div>
-                <div><strong>Specs</strong> <span class="muted">${dimensions || keySpec || "Specs disclosed"}</span></div>
-                <div><strong>Settlement</strong> <span class="muted">Escrow releases at pickup acceptance</span></div>
+                <div>${finish}</div>
+                <div>${dimensions || keySpec || "Specs disclosed"}</div>
+                <div>${safeText(pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end))}</div>
+                <div>
+                  Grade ${safeText(grade)}
+                  ${gradeBubble}
+                  <span class="muted2" style="margin-left:8px;">•</span>
+                  <span class="muted2" style="margin-left:8px;">${safeText(pickupText)}</span>
+                  ${pickupBubble}
+                </div>
               </div>
 
               <div class="divider"></div>
@@ -216,7 +215,7 @@
 
               <!-- YOU ASKED: Add same legal line to the Market card subnote -->
               <div class="subnote">
-                <strong>Verified Pickup:</strong> funds held in escrow until buyer accepts at pickup.
+                Funds held in escrow. Inspect at pickup. Final after acceptance.
                 <span class="inline-tip">As-is ${asIsBubble}</span>
                 <div class="legal-mini">${legalLineHtml(grade)}</div>
               </div>
@@ -312,6 +311,13 @@
 
       function safeAttr(str) {
         return String(str || "").replaceAll("'", "%27").replaceAll('"', "%22");
+      }
+
+      function truthy(v){
+        if (v === true) return true;
+        if (v === false) return false;
+        const s = String(v || "").trim().toLowerCase();
+        return s === "true" || s === "yes" || s === "y" || s === "1" || s === "verified";
       }
 
       function setActiveNav(){

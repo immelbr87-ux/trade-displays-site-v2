@@ -33,6 +33,7 @@
       <!-- LEFT -->
       <div class="panel">
         <div class="muted small" id="metaLine">Loading…</div>
+        <div class="statusbar" id="statusbar" aria-label="Listing status"></div>
         <div style="height:10px"></div>
 
         <div class="grid3" style="margin-top:10px;">
@@ -189,6 +190,10 @@
         const grade = safeText(x.condition_grade || "—");
         const price = (x.price != null && x.price !== "") ? "$" + Number(x.price).toLocaleString() : "—";
 
+        const status = safeText(x.status || "In Stock");
+        const verified = truthy(x.verified ?? x.is_verified ?? x.pickup_verified ?? x.verified_pickup);
+        const readyForTransit = truthy(x.ready_for_transit ?? x.readyForTransit);
+
         document.getElementById("title").textContent = title;
         document.getElementById("lede").textContent =
           "Installed showroom floor model scheduled for removal. Specs-first listing with pickup window and grade definitions.";
@@ -200,6 +205,8 @@
         document.getElementById("metaLine").textContent =
           (x.category ? (x.category + " • ") : "") +
           "Local pickup • Final sale • Funds held until pickup confirmation";
+
+        document.getElementById("statusbar").innerHTML = renderStatusbar({ status, verified, readyForTransit });
 
         const specs = [];
         if (x.dimensions) specs.push("Dimensions: " + x.dimensions);
@@ -222,6 +229,7 @@
         document.getElementById("title").textContent = "Display Listing (pilot stub)";
         document.getElementById("lede").textContent = msg || "This is a placeholder details page for pilot credibility.";
         document.getElementById("metaLine").textContent = "Local pickup • Final sale • Funds held until pickup confirmation";
+        document.getElementById("statusbar").innerHTML = renderStatusbar({ status: "In Stock", verified: true, readyForTransit: true });
         document.getElementById("price").textContent = "$—";
         document.getElementById("grade").textContent = "Grade A";
         document.getElementById("window").textContent = "Pickup window set after reserve";
@@ -230,6 +238,15 @@
           "<li>Finish family: White / Chrome (example)</li>" +
           "<li>Notes: Installed display; cosmetic wear possible</li>";
         document.getElementById("gradeLegal").innerHTML = gradeLegalHtml("A");
+      }
+
+      function renderStatusbar({ status, verified, readyForTransit }){
+        return [
+          verified ? '<span class="pilltag verified">Verified pickup</span>' : '',
+          '<span class="pilltag instock">' + safeText(status || "In Stock") + '</span>',
+          '<span class="pilltag">Pickup only</span>',
+          readyForTransit ? '<span class="pilltag ready">Ready for transit</span>' : ''
+        ].filter(Boolean).join('');
       }
 
       // Contract-safe Grade language (cosmetic only, as-is)
@@ -275,6 +292,13 @@
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#039;");
+      }
+
+      function truthy(v){
+        if (v === true) return true;
+        if (v === false) return false;
+        const s = String(v || "").trim().toLowerCase();
+        return s === "true" || s === "yes" || s === "y" || s === "1" || s === "verified";
       }
 
       function setActiveNav(){
