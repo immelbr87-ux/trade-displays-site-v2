@@ -163,11 +163,17 @@
         const dimensions = safeText(x.dimensions || "");
         const keySpec = safeText(x.key_spec || "");
         const pickupText = pickupWindowText(x.pickup_window_start, x.pickup_window_end);
+        const locationText = safeText(x.location_text || "");
+
+        // Status system (StockX-like, logistics first)
+        const statusRaw = String(x.status || "").toLowerCase();
+        const isInStock = /in\s*stock|available|active/.test(statusRaw);
+        const isVerified = /verified/.test(statusRaw) || true; // pilot default = verified pickup flow
 
         const thumb = safeAttr(x.thumbnail_url || "");
         const thumbStyle = thumb
           ? `background-image:url('${thumb}')`
-          : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
+          : `background-image:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.28))`;
 
         const gradeBubble = gradeTooltipHtml(grade);
         const pickupBubble = pickupTooltipHtml();
@@ -177,15 +183,12 @@
           <div class="listing">
             <div class="thumb" style="${thumbStyle}">
               <div class="thumb-badges">
-                <span class="pilltag ok">
-                  Grade ${safeText(grade)}
-                  ${gradeBubble}
-                </span>
-
-                <span class="pilltag soft">
-                  ${safeText(pickupText)}
-                  ${pickupBubble}
-                </span>
+                <span class="pilltag ok">VERIFIED</span>
+                ${isInStock ? `<span class="pilltag ok">IN STOCK</span>` : ``}
+                <span class="pilltag soft">PICKUP ONLY</span>
+                <span class="pilltag soft">READY FOR TRANSIT</span>
+                <span class="pilltag">GRADE ${safeText(grade)} ${gradeBubble}</span>
+                <span class="pilltag">${safeText(pickupText)} ${pickupBubble}</span>
               </div>
             </div>
 
@@ -196,10 +199,12 @@
               </div>
 
               <div class="meta">
-                <div>🏷️ ${finish}</div>
-                <div>📍 Local pickup</div>
-                <div>🗓️ ${safeText(pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end))}</div>
-                <div>📏 ${dimensions || keySpec || "Specs disclosed"}</div>
+                <div><strong>Finish</strong> <span class="muted">${finish}</span></div>
+                <div><strong>Pickup</strong> <span class="muted">Local pickup</span></div>
+                <div><strong>Window</strong> <span class="muted">${safeText(pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end))}</span></div>
+                <div><strong>Location</strong> <span class="muted">${locationText || "Shared after reserve"}</span></div>
+                <div><strong>Specs</strong> <span class="muted">${dimensions || keySpec || "Specs disclosed"}</span></div>
+                <div><strong>Settlement</strong> <span class="muted">Escrow releases at pickup acceptance</span></div>
               </div>
 
               <div class="divider"></div>
@@ -211,7 +216,7 @@
 
               <!-- YOU ASKED: Add same legal line to the Market card subnote -->
               <div class="subnote">
-                Funds held in escrow. Inspect at pickup. Final after acceptance.
+                <strong>Verified Pickup:</strong> funds held in escrow until buyer accepts at pickup.
                 <span class="inline-tip">As-is ${asIsBubble}</span>
                 <div class="legal-mini">${legalLineHtml(grade)}</div>
               </div>
