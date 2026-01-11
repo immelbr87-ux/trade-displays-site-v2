@@ -3,344 +3,228 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Browse Floor Models — Trade Displays by Bargain Bond</title>
-  <meta name="description" content="Browse upcoming showroom floor model removals. Trade-only, fixed pricing, local pickup. Funds held until pickup confirmation." />
-  <link rel="stylesheet" href="/app.css" />
+  <title>Market — Trade Displays</title>
+  <meta name="description" content="Browse verified pickup-only showroom floor models. Square grid. Condition clarity. Escrow until acceptance at pickup." />
+  <link rel="stylesheet" href="app.css" />
 </head>
 <body>
-
   <div id="bb-header"></div>
-<div class="container pagewrap">
-    <div class="page-hero">
-      <div class="page-hero-inner">
-        <div>
-          <div class="kicker"><span class="dot"></span> Local pickup • fixed price • buyer inspection at pickup</div>
-          <h1>Browse available showroom floor models</h1>
-          <p class="lede">
-            These are showroom floor model removals offered for local pickup. Listings are specs‑first (dimensions, rough‑in, finish family, grade) so buyers can evaluate quickly. Items are sold as‑is and confirmed at pickup before funds are released.</p>
-        </div>
 
-        <div class="page-hero-actions">
-          <a class="btn btn-pill btn-primary" href="/how-it-works">How it works</a>
-          <a class="btn btn-pill" href="/for-showrooms">List upcoming removals</a>
-        </div>
+  <div class="container section">
+    <div class="section-title" style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+      <div>
+        <h1 class="h2" style="margin:0;">Market</h1>
+        <p class="muted" style="margin:8px 0 0; max-width: 780px;">Verified pickup-only floor models. Acceptance happens on-site. Funds remain in escrow until the buyer confirms at pickup.</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <a class="btn btn-pill" href="/list-a-display">List a Floor Model</a>
+        <a class="btn btn-primary btn-pill" href="/pilot">Start a Pilot</a>
       </div>
     </div>
 
-    <div style="height:18px"></div>
-
-    <div class="market-shell">
-      <!-- LEFT: listings -->
-      <div>
-        <div class="chiprow" aria-label="Active filters">
-          <span class="chip">Local pickup</span>
-          <span class="chip">Fixed price</span>
-          <span class="chip">Final sale</span>
-          <span class="chip">Funds held until pickup</span>
+    <div class="panel" style="margin-top:16px;">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <span class="pilltag">Pickup only</span>
+          <span class="pilltag verified">Verified</span>
+          <span class="pilltag instock">In Stock</span>
+          <span class="pilltag ready">Ready for transit</span>
         </div>
+        <div class="muted small">Safety Green is reserved for Verified / In Stock signals.</div>
+      </div>
 
-        <div style="height:14px"></div>
+      <div style="height:12px;"></div>
 
-        <!-- Live listings render here -->
-        <div class="listings" id="listings" aria-label="Listings">
-          <div class="muted">Loading listings…</div>
+      <div class="grid" style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:12px;">
+        <div>
+          <label class="small muted2" for="q">Search</label>
+          <input id="q" class="input" type="search" placeholder="Try: faucet, vanity, Kohler, Brizo…" autocomplete="off" />
+        </div>
+        <div>
+          <label class="small muted2" for="grade">Grade</label>
+          <select id="grade" class="input">
+            <option value="">All grades</option>
+            <option value="A">Grade A</option>
+            <option value="B">Grade B</option>
+          </select>
+        </div>
+        <div>
+          <label class="small muted2" for="sort">Sort</label>
+          <select id="sort" class="input">
+            <option value="new">Newest</option>
+            <option value="priceAsc">Price: Low → High</option>
+            <option value="priceDesc">Price: High → Low</option>
+          </select>
         </div>
       </div>
 
-      <!-- RIGHT: filter panel -->
-      <aside class="panel" aria-label="Filters">
-        <h3>Filters (pilot)</h3>
-        <div class="muted small">These filters are placeholders for the MVP. The goal is credibility + clarity, not a full marketplace yet.</div>
+      <div class="small muted" style="margin-top:10px;">Tip: press <strong>Enter</strong> to search. Listings are square for catalog consistency.</div>
+    </div>
 
-        <div class="formrow" style="margin-top:14px;">
-          <div>
-            <div class="label">Category</div>
-            <select class="select" aria-label="Category">
-              <option>All</option>
-              <option>Vanities</option>
-              <option>Faucets</option>
-              <option>Sinks</option>
-              <option>Showers</option>
-              <option>Toilets</option>
-            </select>
-          </div>
+    <div style="height:14px;"></div>
 
-          <div>
-            <div class="label">Condition grade</div>
-            <select class="select" aria-label="Grade">
-              <option>All</option>
-              <option>Grade A</option>
-              <option>Grade B</option>
-            </select>
-          </div>
+    <div class="listings" id="marketGrid"><div class="muted">Loading market…</div></div>
 
-          <div>
-            <div class="label">Pickup timing</div>
-            <select class="select" aria-label="Pickup timing">
-              <option>Any</option>
-              <option>Within 2 weeks</option>
-              <option>Within 4 weeks</option>
-              <option>4–8 weeks</option>
-            </select>
-          </div>
-
-          <div>
-            <div class="label">Location</div>
-            <input class="input" placeholder="City or ZIP (e.g., 53226)" aria-label="Location" />
-          </div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <a class="btn btn-dark btn-full btn-pill" href="#apply">Apply (stub)</a>
-
-        <div class="callout" style="margin-top:14px;">
-          <strong>Trade-only access</strong>
-          <div class="small muted">
-            Buyers are verified (contractors, builders, remodelers, designers sourcing installs, property managers).
-          </div>
-        </div>
-
-        <div class="chiprow">
-          <span class="chip">No bidding</span>
-          <span class="chip">Final sale</span>
-          <span class="chip">Pickup confirmed</span>
-        </div>
-
-        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
-          Want to list upcoming removals? Showrooms use a specs-first template to reduce brand exposure.
-          <a href="for-showrooms.html" style="text-decoration:underline;">See how it works</a>.
-        </div>
-      </aside>
+    <div class="panel" style="margin-top:18px;">
+      <h2 style="margin:0 0 6px;">What you're buying</h2>
+      <p class="muted" style="margin:0; max-width: 900px;">
+        These are showroom floor models sold <strong>as-is</strong>. The buyer inspects on-site at pickup.
+        If the item matches the listing (grade, completeness, photos), the buyer confirms acceptance and escrow releases.
+      </p>
+      <div style="height:10px;"></div>
+      <a class="btn btn-pill" href="/trust">See condition standards</a>
     </div>
   </div>
 
-  <!-- LIVE AIRTABLE LISTINGS -->
+  <div id="bb-footer"></div>
+  <script src="shared/include.js"></script>
+
   <script>
-    (async function () {
-      setActiveNav();
+  (function(){
+    const grid = document.getElementById('marketGrid');
+    const qEl = document.getElementById('q');
+    const gradeEl = document.getElementById('grade');
+    const sortEl = document.getElementById('sort');
 
-      const root = document.getElementById("listings");
-      if (!root) return;
+    const url = new URL(location.href);
+    const preset = url.searchParams.get('q') || '';
+    if(preset) qEl.value = preset;
 
-      root.innerHTML = '<div class="muted">Loading listings…</div>';
+    let cache = [];
 
-      try {
-        // NOTE: your function name must match your deployed Netlify function file.
-        // If your file is netlify/functions/listDisplays.js -> URL is /.netlify/functions/listDisplays
-        const r = await fetch("/.netlify/functions/listDisplays?pageSize=12", { cache: "no-store" });
-        const data = await r.json();
+    function safeText(v){
+      return String(v ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c] || c));
+    }
+    function money(v){
+      const n = Number(String(v||'').replace(/[^0-9.]/g,''));
+      if(!isFinite(n)) return safeText(v||'');
+      return '$' + n.toLocaleString(undefined,{maximumFractionDigits:0});
+    }
+    function pickupWindow(start,end){
+      if(!start && !end) return 'Pickup window disclosed';
+      const s = start ? new Date(start) : null;
+      const e = end ? new Date(end) : null;
+      const fmt = d => d.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+      if(s && e) return `Pickup ${fmt(s)}–${fmt(e)}`;
+      return `Pickup ${fmt(s||e)}`;
+    }
 
-        if (!r.ok) throw new Error(data?.error || "Failed to load listings.");
+    function renderCard(x){
+      const id = x.id || x.recordId || x.airtableId || '';
+      const title = safeText(x.title || x.name || x.product || 'Showroom floor model');
+      const brand = safeText(x.brand || x.manufacturer || '');
+      const category = safeText(x.category || x.product_category || '');
+      const price = money(x.price || x.list_price || x.ask || '');
+      const grade = safeText((x.grade || x.condition_grade || '').toUpperCase() || '—');
+      const verified = !!(x.verified || x.is_verified || x.verification === 'Verified');
+      const status = safeText(x.status || 'In Stock');
+      const ready = !!(x.ready_for_transit || x.readyForTransit);
+      const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : '');
+      const thumbStyle = img ? `background-image:url('${String(img).replace(/'/g,"%27")}')` : '';
 
-        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
-        if (!listings.length) {
-          root.innerHTML = '<div class="muted">No active listings yet.</div>';
-          return;
-        }
+      const sub = [brand, category].filter(Boolean).join(' • ');
 
-        root.innerHTML = listings.map(renderListingCard).join("");
-
-      } catch (err) {
-        console.error(err);
-        root.innerHTML = `
-          <div class="muted">
-            Could not load listings.
-            <div class="small muted2" style="margin-top:8px;line-height:1.55;">
-              Check: Netlify env vars (AIRTABLE_TOKEN/PAT, BASE_ID, TABLE, VIEW), and that your function URL exists.
+      return `
+        <div class="listing">
+          <div class="thumb" style="${thumbStyle}">
+            <div class="thumb-badges">
+              ${verified ? `<span class="pilltag verified">Verified</span>` : ``}
+              <span class="pilltag instock">${status || 'In Stock'}</span>
+              <span class="pilltag">Pickup only</span>
+              ${ready ? `<span class="pilltag ready">Ready for transit</span>` : ``}
             </div>
           </div>
-        `;
-      }
-
-      // ---------- YOU ASKED: UPDATE MARKET CARD HTML (JS render) ----------
-      function renderListingCard(x) {
-        const id = x.id || x.recordId || x.airtableId || x.record_id || "";
-        const title = safeText(x.title || "Floor Model Listing");
-        const price = (x.price != null && x.price !== "") ? `$${Number(x.price).toLocaleString()}` : "";
-        const grade = String(x.condition_grade || "").trim().toUpperCase() || "?";
-        const status = safeText(x.status || "In Stock");
-        const verified = truthy(x.verified ?? x.is_verified ?? x.pickup_verified ?? x.verified_pickup);
-        const readyForTransit = truthy(x.ready_for_transit ?? x.readyForTransit);
-        const finish = safeText(x.finish_family || "Specs-first listing");
-        const dimensions = safeText(x.dimensions || "");
-        const keySpec = safeText(x.key_spec || "");
-        const pickupText = pickupWindowText(x.pickup_window_start, x.pickup_window_end);
-
-        const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
-        const thumb = safeAttr(img || "");
-        const thumbStyle = thumb
-          ? `background-image:url('${thumb}')`
-          : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
-
-        const gradeBubble = gradeTooltipHtml(grade);
-        const pickupBubble = pickupTooltipHtml();
-        const asIsBubble = asIsTooltipHtml();
-
-        const reserveHref = id ? `/reserve-confirmation.html?id=${encodeURIComponent(id)}` : `/pilot`;
-        const detailsHref = id ? `/listing-details.html?id=${encodeURIComponent(id)}` : `/example-listing`;
-
-        return `
-          <div class="listing">
-            <div class="thumb" style="${thumbStyle}">
-              <div class="thumb-badges">
-                ${verified ? `<span class=\"pilltag verified\">Verified</span>` : ``}
-                <span class="pilltag instock">${safeText(status)}</span>
-                <span class="pilltag">Pickup only</span>
-                ${readyForTransit ? `<span class=\"pilltag ready\">Ready for transit</span>` : ``}
-              </div>
+          <div class="listing-body">
+            <div class="title">
+              <h3>${title}</h3>
+              <div class="price">${price}</div>
             </div>
-
-            <div class="listing-body">
-              <div class="title">
-                <h3>${title}</h3>
-                <div class="price">${safeText(price)}</div>
-              </div>
-
-              <div class="meta">
-                <div>${finish}</div>
-                <div>${dimensions || keySpec || "Specs disclosed"}</div>
-                <div>${safeText(pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end))}</div>
-                <div>
-                  Grade ${safeText(grade)}
-                  ${gradeBubble}
-                  <span class="muted2" style="margin-left:8px;">•</span>
-                  <span class="muted2" style="margin-left:8px;">${safeText(pickupText)}</span>
-                  ${pickupBubble}
-                </div>
-              </div>
-
-              <div class="divider"></div>
-
-              <div class="actions">
-                ${id
-                  ? `<a class="btn btn-primary btn-pill" href="${reserveHref}">Reserve</a>`
-                  : `<a class="btn btn-primary btn-pill disabled" href="${reserveHref}" aria-disabled="true">Reserve</a>`
-                }
-                ${id
-                  ? `<a class="btn btn-pill" href="${detailsHref}">View details</a>`
-                  : `<a class="btn btn-pill disabled" href="${detailsHref}" aria-disabled="true">View details</a>`
-                }
-              </div>
-
-              <!-- YOU ASKED: Add same legal line to the Market card subnote -->
-              <div class="subnote">
-                Funds held in escrow. Inspect at pickup. Final after acceptance.
-                <span class="inline-tip">As-is ${asIsBubble}</span>
-                <div class="legal-mini">${legalLineHtml(grade)}</div>
-              </div>
+            ${sub ? `<div class="small muted" style="margin-top:2px;">${sub}</div>` : ``}
+            <div class="meta">
+              <div>Grade ${grade}</div>
+              <div>${safeText(pickupWindow(x.pickup_window_start, x.pickup_window_end))}</div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-primary btn-pill" href="/reserve-confirmation?id=${encodeURIComponent(id)}">Reserve</a>
+              <a class="btn btn-pill" href="/listing-details?id=${encodeURIComponent(id)}">View details</a>
             </div>
           </div>
-        `;
-      }
+        </div>`;
+    }
 
-      // ---------- YOU ASKED: ADD THIS HELPER FUNCTION (ONCE) ----------
-      function legalLineHtml(grade) {
-        const g = String(grade || "").trim().toUpperCase();
-        if (g === "A") return "Grade A = minimal cosmetic wear consistent with prior installation and handling. Minor marks may be present.";
-        if (g === "B") return "Grade B = noticeable cosmetic wear (scratches/scuffs/finish variation). Cosmetic condition may be apparent at normal viewing distance.";
-        return "Condition grades describe cosmetic wear only. Floor models are installed items and sold as-is.";
-      }
+    function getPrice(x){
+      const n = Number(String(x.price || x.list_price || x.ask || '').replace(/[^0-9.]/g,''));
+      return isFinite(n) ? n : NaN;
+    }
 
-      // Tooltip builders (no libraries)
-      function gradeTooltipHtml(grade){
-        return `
-          <span class="tip">
-            <button type="button" aria-label="Grade ${safeText(grade)} info">i</button>
-            <span class="tip-bubble">
-              <strong>Grade ${safeText(grade)} (cosmetic only)</strong>
-              ${safeText(legalLineHtml(grade))}
-              <div style="margin-top:6px;opacity:.9;">Installed showroom floor models are sold as-is; inspect at pickup before release.</div>
-            </span>
-          </span>
-        `;
-      }
+    function apply(){
+      const q = (qEl.value || '').trim().toLowerCase();
+      const g = (gradeEl.value || '').trim().toUpperCase();
+      const s = sortEl.value;
 
-      function pickupTooltipHtml(){
-        return `
-          <span class="tip">
-            <button type="button" aria-label="Pickup window info">i</button>
-            <span class="tip-bubble">
-              <strong>Pickup window</strong>
-              The timeframe the showroom can release the display. Buyer must coordinate pickup within this window.
-            </span>
-          </span>
-        `;
-      }
+      let rows = cache.slice();
 
-      function asIsTooltipHtml(){
-        return `
-          <span class="tip">
-            <button type="button" aria-label="As-is info">i</button>
-            <span class="tip-bubble">
-              <strong>As-is / final sale</strong>
-              Sold in its current condition with no warranties (express or implied), unless expressly stated in writing.
-              Buyer should inspect at pickup before escrow release.
-            </span>
-          </span>
-        `;
-      }
-
-      function pickupWindowText(start, end) {
-        const s = parseDate(start);
-        const e = parseDate(end);
-        if (!s || !e) return "Pickup window set";
-        const now = new Date();
-        const d1 = Math.max(0, Math.round((s - now) / 86400000));
-        const d2 = Math.max(0, Math.round((e - now) / 86400000));
-        const a = Math.min(d1, d2);
-        const b = Math.max(d1, d2);
-        if (a === b) return `Pickup in ~${a} days`;
-        return `Pickup in ${a}–${b} days`;
-      }
-
-      function pickupWindowDateLine(start, end) {
-        const s = parseDate(start);
-        const e = parseDate(end);
-        if (!s || !e) return "Window: shown after reserve";
-        return `Window: ${fmtShort(s)}–${fmtShort(e)}`;
-      }
-
-      function parseDate(v) {
-        const d = new Date(v);
-        return isNaN(d) ? null : d;
-      }
-
-      function fmtShort(d) {
-        return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-      }
-
-      function safeText(str) {
-        return String(str || "")
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-
-      function safeAttr(str) {
-        return String(str || "").replaceAll("'", "%27").replaceAll('"', "%22");
-      }
-
-      function truthy(v){
-        if (v === true) return true;
-        if (v === false) return false;
-        const s = String(v || "").trim().toLowerCase();
-        return s === "true" || s === "yes" || s === "y" || s === "1" || s === "verified";
-      }
-
-      function setActiveNav(){
-        const path = location.pathname.replace(/\/$/, "") || "/";
-        document.querySelectorAll(".navlinks a").forEach(a => {
-          const href = (a.getAttribute("href") || "").replace(/\/$/, "") || "/";
-          if (href === path) a.classList.add("active");
+      if(q){
+        rows = rows.filter(x => {
+          const hay = [x.title,x.name,x.product,x.brand,x.manufacturer,x.category,x.product_category,x.sku,x.model].filter(Boolean).join(' ').toLowerCase();
+          return hay.includes(q);
         });
       }
-    })();
-  </script>
+      if(g){
+        rows = rows.filter(x => String(x.grade || x.condition_grade || '').toUpperCase() === g);
+      }
 
-<div id="bb-footer"></div>
-<script src="shared/include.js"></script>
+      if(s === 'priceAsc'){
+        rows.sort((a,b)=> (getPrice(a) - getPrice(b)));
+      } else if(s === 'priceDesc'){
+        rows.sort((a,b)=> (getPrice(b) - getPrice(a)));
+      } else {
+        // default: newest — try created_at, otherwise stable
+        rows.sort((a,b)=>{
+          const da = a.created_at || a.createdAt || a.date || a.created || 0;
+          const db = b.created_at || b.createdAt || b.date || b.created || 0;
+          return String(db).localeCompare(String(da));
+        });
+      }
+
+      if(!rows.length){
+        grid.innerHTML = `<div class="panel"><div class="muted">No listings match your filters.</div></div>`;
+        return;
+      }
+      grid.innerHTML = rows.map(renderCard).join('');
+    }
+
+    async function load(){
+      try{
+        const r = await fetch('/.netlify/functions/listDisplays?pageSize=60', { cache: 'no-store' });
+        const data = await r.json().catch(()=> ({}));
+        if(!r.ok) throw new Error(data?.error || 'Failed to load market.');
+        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
+        cache = listings;
+        apply();
+      }catch(e){
+        // graceful fallback
+        grid.innerHTML = `
+          <div class="panel">
+            <h3 style="margin:0 0 6px;">Market unavailable</h3>
+            <p class="muted" style="margin:0 0 12px; max-width: 820px;">We couldn't load listings (network or function missing). The page is still brand-correct and error-safe.</p>
+            <a class="btn btn-pill" href="/example-listing">View an example listing format</a>
+          </div>`;
+      }
+    }
+
+    qEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') apply(); });
+    gradeEl.addEventListener('change', apply);
+    sortEl.addEventListener('change', apply);
+
+    window.addEventListener('bb:search', (ev)=>{
+      const q = (ev.detail && ev.detail.q) ? String(ev.detail.q) : '';
+      qEl.value = q;
+      apply();
+    });
+
+    load();
+  })();
+  </script>
 </body>
 </html>

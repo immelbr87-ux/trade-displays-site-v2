@@ -3,234 +3,144 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reserve Confirmation — Trade Displays by Bargain Bond</title>
-  <meta name="description" content="Reserve a showroom floor model. Confirm pickup window, final sale terms, and re-list option." />
-  <link rel="stylesheet" href="/app.css" />
+  <title>Reserve — Trade Displays</title>
+  <meta name="description" content="Reserve a showroom floor model for verified pickup. Escrow until acceptance at pickup." />
+  <link rel="stylesheet" href="app.css" />
 </head>
 <body>
-
   <div id="bb-header"></div>
-<div class="container pagewrap">
 
-    <div class="page-hero">
-      <div class="page-hero-inner">
-        <div>
-          <div class="kicker"><span class="dot"></span> Reserve • confirm pickup • funds held until pickup</div>
-          <h1>Reserve this display</h1>
-          <p class="lede">
-            This is a pilot reservation screen for credibility. It explains the commitment, pickup window, and the re-list option if plans change.
-          </p>
-        </div>
-
-        <div class="page-hero-actions">
-          <a class="btn btn-pill" id="detailsLink" href="/listing-details">Back to details</a>
-          <a class="btn btn-pill btn-primary" href="/market.html">Browse more</a>
-        </div>
+  <div class="container section">
+    <div class="section-title" style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+      <div>
+        <div class="kicker">RESERVE FOR PICKUP</div>
+        <h1 class="h2" style="margin:8px 0 0;">Reserve confirmation</h1>
+        <p class="muted" style="margin:8px 0 0; max-width:820px;">This is a pickup-only transaction. Payment is held in escrow until the buyer confirms acceptance on-site at pickup.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a class="btn btn-pill" href="/market">Back to market</a>
       </div>
     </div>
 
-    <div style="height:18px"></div>
+    <div class="panel" style="margin-top:16px;">
+      <div id="summary" class="muted">Loading listing…</div>
+    </div>
 
-    <div class="market-shell">
-      <!-- LEFT -->
+    <div class="two-col" style="display:grid;grid-template-columns: 1.1fr .9fr; gap:16px; margin-top:16px;">
       <div class="panel">
-        <h3 style="margin-top:0;">Reservation summary</h3>
-        <div class="muted small" id="summaryLine">Loading…</div>
+        <h2 style="margin-top:0;">Pickup details</h2>
+        <p class="muted">We’ll confirm your pickup window and provide the seller’s pickup instructions once the reservation is acknowledged.</p>
 
-        <div style="height:12px"></div>
+        <form id="reserveForm" class="form" style="margin-top:12px;">
+          <label class="label">Company / Buyer name</label>
+          <input class="input" name="buyer" required placeholder="Acme Plumbing" />
 
-        <div class="grid3">
-          <div class="kv">
-            <div class="k">Price</div>
-            <div class="v" id="price">$—</div>
-          </div>
-          <div class="kv">
-            <div class="k">Condition</div>
-            <div class="v" id="grade">Grade —</div>
-          </div>
-          <div class="kv">
-            <div class="k">Pickup window</div>
-            <div class="v" id="window">—</div>
-          </div>
-        </div>
+          <label class="label" style="margin-top:12px;">Email</label>
+          <input class="input" name="email" type="email" required placeholder="name@company.com" />
 
-        <div style="height:14px"></div>
+          <label class="label" style="margin-top:12px;">Phone (for pickup coordination)</label>
+          <input class="input" name="phone" required placeholder="(555) 555-5555" />
 
-        <div class="callout">
-          <strong>Escrow trigger moment (pilot)</strong>
-          <div class="small muted" style="line-height:1.55;">
-            Escrow is created when you click <strong>Confirm reservation</strong> below. Funds are held until pickup confirmation (staff QR + buyer acknowledgment).
-          </div>
-        </div>
+          <label class="label" style="margin-top:12px;">Notes (optional)</label>
+          <textarea class="input" name="notes" rows="3" placeholder="Forklift on site, box truck ETA, preferred pickup day…"></textarea>
 
-        <div style="height:14px"></div>
+          <div style="height:12px;"></div>
+          <button class="btn btn-primary btn-pill btn-full" type="submit">Request reservation</button>
 
-        <h2 style="margin-top:0;">Required acknowledgements</h2>
-
-        <div class="formrow" style="gap:10px;">
-          <label class="pill" style="align-items:center;gap:10px;">
-            <input type="checkbox" id="c1" />
-            <span>
-              <strong>Installed showroom floor model.</strong>
-              <span>May show cosmetic wear from installation/handling.</span>
-            </span>
-          </label>
-
-          <label class="pill" style="align-items:center;gap:10px;">
-            <input type="checkbox" id="c2" />
-            <span>
-              <strong>As-is / final sale.</strong>
-              <span>No returns. No warranties unless stated in writing.</span>
-            </span>
-          </label>
-
-          <label class="pill" style="align-items:center;gap:10px;">
-            <input type="checkbox" id="c3" />
-            <span>
-              <strong>Pickup window commitment.</strong>
-              <span>I will coordinate pickup within the stated window.</span>
-            </span>
-          </label>
-
-          <label class="pill" style="align-items:center;gap:10px;">
-            <input type="checkbox" id="c4" />
-            <span>
-              <strong>Condition verified at pickup.</strong>
-              <span>If materially different from posted grade, it must be documented with photos <em>before</em> escrow release.</span>
-            </span>
-          </label>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <button class="btn btn-primary btn-pill btn-full" id="confirmBtn" disabled>
-          Confirm reservation (pilot)
-        </button>
-
-        <div class="small muted2" style="margin-top:10px;line-height:1.55;">
-          This is a pilot flow screen. In production, this button would create escrow and lock the pickup window.
-        </div>
+          <p class="small muted" style="margin-top:10px;">
+            By submitting, you acknowledge this is <strong>pickup-only</strong>, <strong>as-is</strong>, and acceptance is confirmed <strong>on-site at pickup</strong>.
+          </p>
+        </form>
       </div>
 
-      <!-- RIGHT -->
-      <aside class="panel">
-        <h3 style="margin-top:0;">If plans change</h3>
-        <div class="muted small" style="line-height:1.55;">
-          For the pilot, the replacement mechanism is <strong>re-listing</strong> (not matching). You can re-list the display back to the market rather than waiting until the last minute.
+      <div class="panel">
+        <h2 style="margin-top:0;">What happens next</h2>
+        <ol class="muted" style="margin-top:10px; padding-left:18px; line-height:1.75;">
+          <li>We hold your payment in escrow (pilot flow may be manual while we finalize rails).</li>
+          <li>Seller confirms pickup window + provides access instructions.</li>
+          <li>You inspect the floor model on-site at pickup.</li>
+          <li>If it matches the listing, you confirm acceptance and escrow releases.</li>
+        </ol>
+
+        <div class="hr"></div>
+        <div class="small muted">
+          Need to understand grades? See <a href="/trust"><strong>Condition Standards</strong></a>.
         </div>
-
-        <div style="height:12px"></div>
-
-        <div class="callout">
-          <strong>Re-list option</strong>
-          <div class="small muted" style="line-height:1.55;">
-            If you re-list and another trade buyer reserves, you’re released from the pickup obligation.
-            A small re-list fee may apply (pilot policy).
-          </div>
-        </div>
-
-        <div style="height:12px"></div>
-
-        <a class="btn btn-dark btn-pill btn-full" href="/market.html">Return to Browse</a>
-
-        <div style="height:12px"></div>
-
-        <div class="chiprow">
-          <span class="chip">Final sale</span>
-          <span class="chip">Local pickup</span>
-          <span class="chip">Re-list supported</span>
-        </div>
-      </aside>
+      </div>
     </div>
+
+    <div id="result" style="margin-top:16px;"></div>
   </div>
 
+  <div id="bb-footer"></div>
+  <script src="shared/include.js"></script>
+
   <script>
-    (async function(){
-      setActiveNav();
+  (function(){
+    const url = new URL(location.href);
+    const id = url.searchParams.get('id') || '';
+    const summary = document.getElementById('summary');
+    const form = document.getElementById('reserveForm');
+    const result = document.getElementById('result');
 
-      const params = new URLSearchParams(location.search);
-      const id = params.get("id") || "";
-      document.getElementById("detailsLink").href = "/listing-details.html?id=" + encodeURIComponent(id);
+    function esc(s){ return String(s ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c] || c)); }
 
-      // Checkbox gating
-      const checks = ["c1","c2","c3","c4"].map(id => document.getElementById(id));
-      const btn = document.getElementById("confirmBtn");
-      function updateBtn(){
-        btn.disabled = !checks.every(c => c.checked);
-      }
-      checks.forEach(c => c.addEventListener("change", updateBtn));
-      updateBtn();
-
-      // Load listing (optional) for credibility
-      if (!id) {
-        hydrateStub();
+    async function load(){
+      if(!id){
+        summary.innerHTML = '<div class="muted">No listing id provided. Return to <a href="/market"><strong>Market</strong></a>.</div>';
         return;
       }
-
-      try {
-        const r = await fetch("/.netlify/functions/listDisplays?id=" + encodeURIComponent(id), { cache: "no-store" });
+      try{
+        const r = await fetch(`/.netlify/functions/getDisplay?id=${encodeURIComponent(id)}`, { cache: 'no-store' });
         const data = await r.json();
-        if (!r.ok) throw new Error(data?.error || "Failed");
-
-        const x = data.listing || null;
-        if (!x) { hydrateStub(); return; }
-
-        document.getElementById("summaryLine").textContent =
-          safeText(x.title || "Display Listing") + " • Local pickup • Pilot reservation";
-
-        document.getElementById("price").textContent =
-          (x.price != null && x.price !== "") ? "$" + Number(x.price).toLocaleString() : "$—";
-
-        const g = String(x.condition_grade || "—").trim().toUpperCase();
-        document.getElementById("grade").textContent = "Grade " + g;
-
-        document.getElementById("window").textContent =
-          pickupWindowDateLine(x.pickup_window_start, x.pickup_window_end);
-
+        const x = data.listing || data.item || data || {};
+        const title = esc(x.title || x.name || 'Showroom floor model');
+        const price = esc(x.price ? ('$' + Number(String(x.price).replace(/[^0-9.]/g,'')).toLocaleString(undefined,{maximumFractionDigits:0})) : (x.price || ''));
+        const grade = esc((x.grade || x.condition_grade || '').toUpperCase() || '—');
+        summary.innerHTML = `
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+            <div>
+              <div style="font-weight:850; font-size:16px;">${title}</div>
+              <div class="small muted" style="margin-top:4px;">Grade ${grade} • Pickup-only • Acceptance on-site</div>
+            </div>
+            <div style="font-weight:900; font-size:18px;">${price}</div>
+          </div>`;
       } catch(e){
-        console.error(e);
-        hydrateStub();
+        summary.innerHTML = `
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+            <div>
+              <div style="font-weight:850; font-size:16px;">Listing ${esc(id)}</div>
+              <div class="small muted" style="margin-top:4px;">(Preview mode) • Pickup-only • Acceptance on-site</div>
+            </div>
+            <div style="font-weight:900; font-size:18px;">—</div>
+          </div>`;
       }
+    }
 
-      btn.addEventListener("click", () => {
-        btn.textContent = "Reservation confirmed (pilot)";
-        btn.disabled = true;
-      });
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      payload.listingId = id;
 
-      function hydrateStub(){
-        document.getElementById("summaryLine").textContent =
-          "Display Listing (pilot stub) • Local pickup • Pilot reservation";
-        document.getElementById("price").textContent = "$—";
-        document.getElementById("grade").textContent = "Grade A";
-        document.getElementById("window").textContent = "Pickup window set after reserve";
-      }
-
-      function pickupWindowDateLine(start, end) {
-        const s = parseDate(start);
-        const e = parseDate(end);
-        if (!s || !e) return "Pickup window: shown after reserve";
-        return `Window: ${fmtShort(s)}–${fmtShort(e)}`;
-      }
-      function parseDate(v){ const d = new Date(v); return isNaN(d) ? null : d; }
-      function fmtShort(d){ return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
-
-      function safeText(str){
-        return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-      }
-
-      function setActiveNav(){
-        const path = location.pathname.replace(/\/$/,"") || "/";
-        document.querySelectorAll(".navlinks a").forEach(a=>{
-          const href = (a.getAttribute("href")||"").replace(/\/$/,"") || "/";
-          if (href === path) a.classList.add("active");
+      // Pilot-safe: attempt Netlify function; fallback to client confirmation.
+      try{
+        const r = await fetch('/.netlify/functions/reserveDisplay', {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
         });
+        const data = await r.json();
+        if(!r.ok) throw new Error(data?.error || 'Unable to submit.');
+        result.innerHTML = `<div class="panel"><h3 style="margin-top:0;">Reservation requested</h3><p class="muted" style="margin:0;">We received your request. You’ll get pickup instructions once the seller confirms the window.</p></div>`;
+        form.reset();
+      }catch(err){
+        result.innerHTML = `<div class="panel"><h3 style="margin-top:0;">Saved (preview mode)</h3><p class="muted" style="margin:0;">Your request can’t be submitted from this static preview. In production, this posts to the reservation endpoint. Details captured locally:</p><pre style="white-space:pre-wrap; margin:12px 0 0; background:#0b0b0f; color:#fff; padding:12px; border-radius:12px; overflow:auto;">${esc(JSON.stringify(payload, null, 2))}</pre></div>`;
       }
-    })();
-  </script>
+    });
 
-<div id="bb-footer"></div>
-<script src="shared/include.js"></script>
+    load();
+  })();
+  </script>
 </body>
 </html>
-
-

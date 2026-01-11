@@ -259,7 +259,7 @@ button{font-family:inherit}
 .badge-verified, .badge-stock{
   background: rgba(0, 150, 80, .10);
   border-color: rgba(0, 150, 80, .25);
-  color: var(--safe);
+  color: var(--safety-ink);
 }
 
 
