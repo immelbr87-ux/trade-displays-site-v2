@@ -24,7 +24,7 @@
 
         <div class="page-hero-actions">
           <a class="btn btn-pill" id="detailsLink" href="/listing-details">Back to details</a>
-          <a class="btn btn-pill btn-primary" href="/market">Browse more</a>
+          <a class="btn btn-pill btn-primary" href="/market.html">Browse more</a>
         </div>
       </div>
     </div>
@@ -131,7 +131,7 @@
 
         <div style="height:12px"></div>
 
-        <a class="btn btn-dark btn-pill btn-full" href="/market">Return to Browse</a>
+        <a class="btn btn-dark btn-pill btn-full" href="/market.html">Return to Browse</a>
 
         <div style="height:12px"></div>
 
@@ -150,7 +150,7 @@
 
       const params = new URLSearchParams(location.search);
       const id = params.get("id") || "";
-      document.getElementById("detailsLink").href = "/listing-details?id=" + encodeURIComponent(id);
+      document.getElementById("detailsLink").href = "/listing-details.html?id=" + encodeURIComponent(id);
 
       // Checkbox gating
       const checks = ["c1","c2","c3","c4"].map(id => document.getElementById(id));

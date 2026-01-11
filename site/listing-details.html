@@ -161,8 +161,8 @@
       const params = new URLSearchParams(location.search);
       const id = params.get("id") || "";
 
-      document.getElementById("reserveBtn").href = "/reserve-confirmation?id=" + encodeURIComponent(id);
-      document.getElementById("reserveBtn2").href = "/reserve-confirmation?id=" + encodeURIComponent(id);
+      document.getElementById("reserveBtn").href = "/reserve-confirmation.html?id=" + encodeURIComponent(id);
+      document.getElementById("reserveBtn2").href = "/reserve-confirmation.html?id=" + encodeURIComponent(id);
       document.getElementById("pickupLink").href = "/pickup-confirmation?id=" + encodeURIComponent(id);
 
       if (!id) {

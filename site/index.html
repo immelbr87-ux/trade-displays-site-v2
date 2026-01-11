@@ -22,7 +22,7 @@
             Funds stay in escrow until the buyer accepts at pickup.
           </p>
           <div class="actions">
-            <a class="btn btn-pill" href="/market">Browse floor models</a>
+            <a class="btn btn-pill" href="/market.html">Browse floor models</a>
             <a class="btn btn-primary btn-pill" href="/list-a-display.html">List a Floor Model</a>
           </div>
           <div class="small muted" style="margin-top:10px;">
@@ -74,15 +74,87 @@
       <p class="muted">Curated examples — browse the live market for current availability.</p>
     </div>
 
-    <div class="home-listings" style="margin-top:12px;">
-      
-    </div>
+    <div class="home-listings featured-grid"><div class="listings" id="featuredListings"><div class="muted">Loading featured listings…</div></div></div>
 
     <div style="height:12px;"></div>
-    <a class="btn btn-ghost btn-pill" href="/market">View the market</a>
+    <a class="btn btn-ghost btn-pill" href="/market.html">View the market</a>
   </div>
 
   <div id="bb-footer"></div>
   <script src="shared/include.js"></script>
+
+<script>
+(async function(){
+  const root = document.getElementById("featuredListings");
+  if(!root) return;
+  try{
+    const r = await fetch("/.netlify/functions/listDisplays?pageSize=8", { cache: "no-store" });
+    const data = await r.json();
+    if(!r.ok) throw new Error(data?.error || "Failed to load featured listings.");
+    const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
+    if(!listings.length){
+      root.innerHTML = '<div class="muted">No featured listings yet.</div>';
+      return;
+    }
+    root.innerHTML = listings.slice(0,8).map(renderCard).join("");
+  }catch(e){
+    root.innerHTML = '<div class="muted">Unable to load featured listings.</div>';
+  }
+
+  function safeText(v){
+    return String(v ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+  function money(v){
+    const n = Number(String(v||"").replace(/[^0-9.]/g,""));
+    if(!isFinite(n)) return safeText(v||"");
+    return "$" + n.toLocaleString(undefined,{maximumFractionDigits:0});
+  }
+  function pickupWindow(start,end){
+    if(!start && !end) return "Pickup window disclosed";
+    const s = start ? new Date(start) : null;
+    const e = end ? new Date(end) : null;
+    const fmt = d => d.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+    if(s && e) return `Pickup ${fmt(s)}–${fmt(e)}`;
+    return `Pickup ${fmt(s||e)}`;
+  }
+  function renderCard(x){
+    const id = x.id || x.recordId || x.airtableId || "";
+    const title = safeText(x.title || x.name || x.product || "Showroom floor model");
+    const price = money(x.price || x.list_price || x.ask || "");
+    const grade = safeText((x.grade || x.condition_grade || "").toUpperCase() || "—");
+    const verified = !!(x.verified || x.is_verified || x.verification === "Verified");
+    const status = safeText(x.status || "In Stock");
+    const ready = !!(x.ready_for_transit || x.readyForTransit);
+    const img = x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
+    const thumbStyle = img ? `background-image:url('${String(img).replace(/'/g,"%27")}')` : "";
+    return `
+      <div class="listing">
+        <div class="thumb" style="${thumbStyle}">
+          <div class="thumb-badges">
+            ${verified ? `<span class="pilltag verified">Verified</span>` : ``}
+            <span class="pilltag instock">${status || "In Stock"}</span>
+            <span class="pilltag">Pickup only</span>
+            ${ready ? `<span class="pilltag ready">Ready for transit</span>` : ``}
+          </div>
+        </div>
+        <div class="listing-body">
+          <div class="title">
+            <h3>${title}</h3>
+            <div class="price">${price}</div>
+          </div>
+          <div class="meta">
+            <div>Grade ${grade}</div>
+            <div>${safeText(pickupWindow(x.pickup_window_start, x.pickup_window_end))}</div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary btn-pill" href="/reserve-confirmation.html?id=${encodeURIComponent(id)}">Reserve</a>
+            <a class="btn btn-pill" href="/listing-details.html?id=${encodeURIComponent(id)}">View details</a>
+          </div>
+        </div>
+      </div>`;
+  }
+})();
+</script>
+
 </body>
 </html>

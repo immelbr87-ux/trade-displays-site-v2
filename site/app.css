@@ -414,3 +414,171 @@ html{ scroll-padding-top: calc(var(--topbar-h) + var(--catbar-h) + 12px); }
   .topnav{ display:none; }
   .search{ max-width: none; }
 }
+
+
+/* ---------- Institutional Market Cards ---------- */
+.market-shell{
+  display:grid;
+  grid-template-columns: 1fr 320px;
+  gap: 22px;
+  align-items:start;
+}
+@media (max-width: 980px){
+  .market-shell{ grid-template-columns: 1fr; }
+}
+
+.chiprow{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.7);
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  color: var(--muted);
+}
+
+.listings{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:16px;
+}
+@media (max-width: 1180px){ .listings{ grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 860px){ .listings{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px){ .listings{ grid-template-columns: 1fr; } }
+
+.listing{
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  overflow:hidden;
+  box-shadow: 0 10px 30px rgba(11,11,15,.06);
+  display:flex;
+  flex-direction:column;
+  min-height: 360px;
+}
+
+.thumb{
+  position:relative;
+  width:100%;
+  aspect-ratio: 1 / 1; /* strict 1:1 */
+  background: #eef1f3;
+  background-size: cover;
+  background-position: center;
+}
+.thumb-badges{
+  position:absolute;
+  top:10px; left:10px; right:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.pilltag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  line-height:1;
+  border:1px solid rgba(255,255,255,.35);
+  background: rgba(11,11,15,.65);
+  color: #fff;
+  backdrop-filter: blur(6px);
+}
+.pilltag.verified{
+  background: rgba(46, 213, 115, .92);
+  border-color: rgba(46, 213, 115, .90);
+  color: #06210f;
+  font-weight:700;
+}
+.pilltag.instock{
+  background: rgba(46, 213, 115, .16);
+  border-color: rgba(46, 213, 115, .35);
+  color: rgba(6,33,15,.92);
+}
+.pilltag.ready{
+  background: rgba(255,255,255,.88);
+  border-color: rgba(255,255,255,.70);
+  color: var(--ink);
+}
+
+.listing-body{
+  padding: 12px 12px 14px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.listing-title{
+  font-size: 14px;
+  font-weight: 700;
+  line-height:1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.listing-sub{
+  font-size: 12px;
+  color: var(--muted);
+  margin-top:-6px;
+}
+
+.price-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+}
+.price{
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.meta{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.listing-actions{
+  margin-top:auto;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.btn-sm{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 10px;
+  border-radius: 10px;
+  border:1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-weight:600;
+  font-size:12px;
+  text-decoration:none;
+}
+.btn-sm.primary{
+  background: var(--ink);
+  color:#fff;
+  border-color: rgba(11,11,15,.9);
+}
+
+/* Home featured grid */
+.featured-grid{ margin-top: 18px; }
+.featured-grid .listings{ grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 980px){ .featured-grid .listings{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px){ .featured-grid .listings{ grid-template-columns: 1fr; } }
+
+
+
+/* Market card internal structure (existing markup) */
+.listing .title{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.listing .title h3{ margin:0; font-size:14px; line-height:1.25; font-weight:800; letter-spacing:-0.01em; }
+.listing .title .price{ font-size:18px; font-weight:900; letter-spacing:-0.02em; color:var(--ink); white-space:nowrap; }
+.listing .meta{ font-size:12px; color:var(--muted); display:grid; gap:4px; }
+.listing .divider{ height:1px; background: var(--line2); margin:4px 0; }
+.listing .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.listing .actions .btn{ padding:8px 10px; border-radius:10px; font-size:12px; }
+.listing .legal-mini{ font-size:11px; color:var(--muted2); margin-top:6px; line-height:1.35; }
+
