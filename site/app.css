@@ -112,6 +112,7 @@ button{font-family:inherit}
 }
 .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 .btn:active{transform:translateY(0px);box-shadow:none}
+.btn.disabled{opacity:.55;pointer-events:none;filter:saturate(.6)}
 .btn-primary{
   background: var(--ink);
   border-color: var(--ink);
@@ -566,9 +567,10 @@ html{ scroll-padding-top: calc(var(--topbar-h) + var(--catbar-h) + 12px); }
 
 /* Home featured grid */
 .featured-grid{ margin-top: 18px; }
-.featured-grid .listings{ grid-template-columns: repeat(4, 1fr); }
-@media (max-width: 980px){ .featured-grid .listings{ grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px){ .featured-grid .listings{ grid-template-columns: 1fr; } }
+/* When the featured grid is the listings container itself (index.html), apply the same responsive columns */
+.listings.featured-grid{ grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 980px){ .listings.featured-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px){ .listings.featured-grid{ grid-template-columns: 1fr; } }
 
 
 
@@ -582,3 +584,10 @@ html{ scroll-padding-top: calc(var(--topbar-h) + var(--catbar-h) + 12px); }
 .listing .actions .btn{ padding:8px 10px; border-radius:10px; font-size:12px; }
 .listing .legal-mini{ font-size:11px; color:var(--muted2); margin-top:6px; line-height:1.35; }
 
+
+
+/* Utility layouts */
+.grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; align-items:start; }
+@media (max-width: 920px){ .grid-2{ grid-template-columns: 1fr; } }
+.bullets{ margin:10px 0 0 18px; color: var(--muted); }
+.bullets li{ margin:6px 0; }

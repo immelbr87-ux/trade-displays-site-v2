@@ -2,114 +2,211 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>How it works — Trade Displays</title>
+  <meta name="description" content="How Trade Displays works for showrooms: pickup-only transactions, buyer inspection, escrow until acceptance, and clean internal reporting." />
   <link rel="stylesheet" href="app.css" />
+  <style>
+    .navlinks a.active{background:rgba(15,23,42,.06);color:var(--ink)}
+    .footer-nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .footer-nav a{padding:6px 10px;border-radius:12px;border:1px solid var(--line2);background:#fff}
+    .footer-nav a:hover{background:rgba(15,23,42,.04)}
+
+    /* Replace “non-link pills” with true badges */
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      background:rgba(15,23,42,.05);color:var(--muted);font-size:12px;font-weight:750}
+    .badge .dot{width:8px;height:8px;border-radius:99px;background:var(--accent)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .section{margin-top:18px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:900px){.two{grid-template-columns:1fr}}
+    .mini{font-size:13px;color:var(--muted)}
+  </style>
 </head>
 <body>
-  <div data-include="shared/header.html"></div>
-  <main>
-<section class="hero">
-  <div class="container">
-    <div class="kicker"><b>How it works</b> • Built for showroom teams.</div>
-    <h1>From floor model to pickup — in a simple, repeatable flow.</h1>
-    <p class="lead">One page that combines “For Showrooms” + “How it works” so it’s easier to understand and easier to sell internally.</p>
 
-    <div class="cta-row">
-      <a class="btn primary" href="pilot.html">Request a 30‑Day Pilot</a>
-      <a class="btn" href="listings.html">Browse Current Listings</a>
-      <a class="btn good" href="create-example-listing.html">Create Example Listing</a>
-    </div>
+  <div id="bb-header"></div>
+<div class="container pagewrap">
+    <div class="page">
 
-    <div class="section">
-      <h2>End‑to‑end flow</h2>
-      <p class="sub">Four steps. No scrolling maze.</p>
+      <div class="badge"><span class="dot"></span> Showroom-first • pickup-only • buyer confirmation</div>
+      <h1 style="margin-top:10px;">How Trade Displays works</h1>
+      <p class="lede" style="margin:10px 0 0;">
+        Trade Displays helps showroom teams move floor models without the usual headache —
+        with clear condition disclosure, scheduled pickup windows, and funds released only after buyer acceptance at pickup.
+      </p>
 
-      <div class="grid cards-4">
+      <div class="cta-row">
+        <a class="btn btn-primary btn-pill" href="pilot-program.html">Request a pilot</a>
+        <a class="btn btn-pill" href="list-a-display.html">List a Floor Model</a>
+        <a class="btn btn-pill" href="market.html">Browse Current Floor Models</a>
+      </div>
+
+      <div class="hr"></div>
+
+      <h2 style="margin:6px 0 10px;">The flow (end-to-end)</h2>
+      <div class="cards cards-4">
         <div class="card">
-          <h3>1) List a Floor Model</h3>
-          <p>Use the template: condition grade, photos, what’s included, known issues, and pickup window.</p>
-          <div class="meta"><span class="pill">10–15 minutes</span></div>
+          <div class="icon">1</div>
+          <h3>List</h3>
+          <p class="muted">Create a listing in under a minute using a showroom-friendly template (category, dimensions, condition, pickup window).</p>
         </div>
         <div class="card">
-          <h3>2) Buyers self‑select</h3>
-          <p>Clear fields reduce “is this complete?” messages and filter out bad‑fit buyers early.</p>
-          <div class="meta"><span class="pill">Fewer surprises</span></div>
+          <div class="icon">2</div>
+          <h3>Reserve</h3>
+          <p class="muted">A buyer commits at a fixed price. Funds are held in escrow while the pickup is scheduled.</p>
         </div>
         <div class="card">
-          <h3>3) Confirm &amp; coordinate</h3>
-          <p>Confirm payment terms and pickup timing. Optional: buyer verification during pilot.</p>
-          <div class="meta"><span class="pill">Simple coordination</span></div>
+          <div class="icon">3</div>
+          <h3>Pickup + inspection</h3>
+          <p class="muted">Buyer inspects at pickup. If the item matches the listing, they accept on-site.</p>
         </div>
         <div class="card">
-          <h3>4) Pickup &amp; closeout</h3>
-          <p>Buyer arrives in agreed window. Handoff occurs. Listing is marked complete.</p>
-          <div class="meta"><span class="pill">Clean finish</span></div>
+          <div class="icon">4</div>
+          <h3>Confirm + release</h3>
+          <p class="muted">Once accepted, funds are released automatically. The sale is recorded in a simple internal summary.</p>
         </div>
       </div>
-    </div>
 
-    <div class="hr"></div>
-
-    <div class="section">
-      <h2>What showrooms get</h2>
-      <p class="sub">Operational clarity (not “another marketplace”).</p>
-
-      <div class="grid cards-3">
-        <div class="card">
-          <h3>Standard listing format</h3>
-          <p>Everyone lists the same way: less training, less guessing, better buyer expectations.</p>
-        </div>
-        <div class="card">
-          <h3>Condition grading that buyers understand</h3>
-          <p>Grade A / Grade B definitions plus a “missing parts” disclosure so buyers know what they’re buying.</p>
-        </div>
-        <div class="card">
-          <h3>Brand‑safe guardrails</h3>
-          <p>Simple rules on claims and representation so listings don’t create brand risk.</p>
-        </div>
+      <div class="callout" style="margin-top:12px;">
+        <b>Finality at pickup:</b> No delivery, no returns after acceptance, and no post-pickup disputes. Once the buyer accepts on site, the sale is final and liability transfers to the buyer.
       </div>
-    </div>
 
-    <div class="hr"></div>
 
-    <div class="section">
-      <h2>Scope &amp; expectations</h2>
-      <p class="sub">A quick framing header above “What’s included / not included,” as requested.</p>
+<div class="hr"></div>
 
-      <div class="grid cards-2">
-        <div class="card">
-          <h3>What’s included</h3>
-          <ul class="list">
-            <li>Showroom Floor Model listing template + consistent fields</li>
-            <li>Condition grading guidance and buyer-facing language</li>
-            <li>Pickup window structure (avoid “anytime this week” ambiguity)</li>
-            <li>Basic Trust &amp; Brand Safety rules (see full page)</li>
+<h2 style="margin:6px 0 10px;">For Sellers (Showrooms)</h2>
+<p class="muted" style="max-width:860px;margin-top:0;">
+  Showrooms constantly struggle with stale inventory that takes up valuable floor space. Trade Displays digitizes a
+  pickup-only liquidation workflow so teams can move floor models quickly, with cleaner protection and less admin.
+</p>
+
+<div class="two">
+  <div class="box" style="box-shadow:var(--shadow-sm);">
+    <h3 style="margin-top:0;">Why showrooms would be interested (the “push”)</h3>
+    <ul class="bullets">
+      <li><b>The shipping headache:</b> Heavy, unboxed floor models often require custom crating and expensive freight, and damage claims are common. Pickup-only removes the biggest logistics pain point.</li>
+      <li><b>Cash flow &amp; space:</b> Showrooms need to cycle new collections in. Email blasts and warehouse sales are administratively heavy. “List in 1 minute” is attractive if it actually brings a buyer.</li>
+      <li><b>Protection:</b> Escrow protects sellers from post-pickup disputes. Once the buyer accepts at pickup, the deal is done.</li>
+    </ul>
+  </div>
+
+  <div class="box" style="box-shadow:var(--shadow-sm);">
+    <h3 style="margin-top:0;">What sellers get operationally</h3>
+    <ul class="bullets">
+      <li>Specs-first listings with clear condition grades</li>
+      <li>Scheduled pickup windows with dock notes</li>
+      <li>Fixed pricing (no haggling)</li>
+      <li>On-site acceptance → sales final after acceptance</li>
+    </ul>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<h2 style="margin:6px 0 10px;">For Buyers (Trade)</h2>
+<p class="muted" style="max-width:860px;margin-top:0;">
+  Interior designers, stagers, and architects often need high-end items fast and under budget. Floor models can be
+  available today — and inspection at pickup makes “as-is” purchases far less risky.
+</p>
+
+<div class="two">
+  <div class="box" style="box-shadow:var(--shadow-sm);">
+    <h3 style="margin-top:0;">Why trade buyers would be interested (the “pull”)</h3>
+    <ul class="bullets">
+      <li><b>Instant gratification:</b> Lead times for new high-end product can be 12–20+ weeks. A floor model is available now — crucial for tight project timelines.</li>
+      <li><b>Risk mitigation:</b> The #1 fear with “as-is” online is receiving more damage than expected. Inspect-at-pickup lets a buyer reserve confidently and refuse only if the condition is materially worse than described.</li>
+      <li><b>Margin:</b> Floor models can sell for 50–70% off, enabling savings for clients or healthier trade margin.</li>
+    </ul>
+  </div>
+
+  <div class="box" style="box-shadow:var(--shadow-sm);">
+    <h3 style="margin-top:0;">The gap this fills</h3>
+    <p class="muted" style="margin-top:0;">Today this is manual:</p>
+    <ol class="bullets" style="padding-left:18px;">
+      <li>Call a rep.</li>
+      <li>Ask: “Do you have any floor models of X?”</li>
+      <li>Drive to the showroom to see it.</li>
+      <li>Haggle.</li>
+    </ol>
+    <p class="muted" style="margin:10px 0 0;">
+      Trade Displays digitizes this specific <b>local liquidation</b> workflow — reserve, inspect, accept, and release funds.
+    </p>
+  </div>
+</div>
+
+      <div class="two">
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h3 style="margin-top:0;">What’s included</h3>
+          <ul class="bullets">
+            <li>Pickup-only transactions (no shipping)</li>
+            <li>Buyer inspection before acceptance</li>
+            <li>Funds held until buyer acceptance</li>
+            <li>Clear condition standards and category templates</li>
+            <li>Simple sales summary for leadership visibility</li>
           </ul>
         </div>
-        <div class="card">
-          <h3>What’s not included (by default)</h3>
-          <ul class="list">
-            <li>White-glove logistics or freight coordination</li>
-            <li>Warehousing, storage, or item refurbishment</li>
-            <li>Warranty creation (floor models are typically sold as‑is)</li>
-            <li>Price guarantees (pricing guidance can be provided during pilot)</li>
+        <div class="box" id="not-included" style="box-shadow:var(--shadow-sm);">
+          <h3 style="margin-top:0;">What’s not included</h3>
+          <ul class="bullets">
+            <li>No manufacturer warranty language</li>
+            <li>No “new” status claims</li>
+            <li>No delivery, shipping, or install coordination</li>
+            <li>No buyer negotiations or back-and-forth</li>
+            <li>No system integrations required for a pilot</li>
           </ul>
         </div>
       </div>
-    </div>
 
-    <div class="hr"></div>
+      <div class="hr"></div>
 
-    <div class="cta-row">
-      <a class="btn primary" href="pilot.html">Request a 30‑Day Pilot</a>
-      <a class="btn" href="listings.html">Browse Current Listings</a>
-      <a class="btn good" href="create-example-listing.html">Create Example Listing</a>
+      <h2 style="margin:6px 0 10px;">Transaction safeguards</h2>
+      <div class="two">
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h3 style="margin-top:0;">Buyer expectations</h3>
+          <ul class="bullets">
+            <li>Items are sold as-is, as described</li>
+            <li>Bring a vehicle and materials needed for transport</li>
+            <li>Inspect at pickup before accepting</li>
+          </ul>
+        </div>
+        <div class="box" style="box-shadow:var(--shadow-sm);">
+          <h3 style="margin-top:0;">Disputes (edge cases)</h3>
+          <ul class="bullets">
+            <li>Disputes are limited to material misrepresentation vs the listing</li>
+            <li>Normal wear consistent with Grade A/B is not a dispute</li>
+            <li>After acceptance at pickup, sales are final</li>
+          </ul>
+          <p class="muted" style="margin:8px 0 0;">
+            For the full standard, see <a href="condition-standards.html">Trust &amp; Brand Safety</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary btn-pill" href="pilot-program.html">Request a pilot</a>
+        <a class="btn btn-pill" href="for-showrooms.html">For Sellers (Showrooms)</a>
+        <a class="btn btn-pill" href="condition-standards.html">Trust &amp; Brand Safety</a>
+      </div>
+
     </div>
   </div>
-</section>
-  </main>
-  <div data-include="shared/footer.html"></div>
-  <script src="shared/include.js"></script>
+  </div>
+
+  <script>
+    (function(){
+      const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      document.querySelectorAll('.navlinks a').forEach(a=>{
+        const href = (a.getAttribute('href')||'').toLowerCase();
+        if(!href) return;
+        if(path === href || (path === '' && href === 'index.html')) a.classList.add('active');
+        if(path.replace('.html','') === href.replace('.html','')) a.classList.add('active');
+      });
+    })();
+  </script>
+<div id="bb-footer"></div>
+<script src="shared/include.js"></script>
 </body>
 </html>

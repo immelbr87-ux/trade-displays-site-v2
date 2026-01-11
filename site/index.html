@@ -22,8 +22,8 @@
             Funds stay in escrow until the buyer accepts at pickup.
           </p>
           <div class="actions">
-            <a class="btn btn-pill" href="/market.html">Browse floor models</a>
-            <a class="btn btn-primary btn-pill" href="/list-a-display.html">List a Floor Model</a>
+            <a class="btn btn-pill" href="/market">Browse floor models</a>
+            <a class="btn btn-primary btn-pill" href="/pilot">Start a 30-Day Pilot</a>
           </div>
           <div class="small muted" style="margin-top:10px;">
             Safety Green is reserved for <strong>Verified</strong> and <strong>In Stock</strong> signals.
@@ -74,10 +74,11 @@
       <p class="muted">Curated examples — browse the live market for current availability.</p>
     </div>
 
-    <div class="home-listings featured-grid"><div class="listings" id="featuredListings"><div class="muted">Loading featured listings…</div></div></div>
+    <!-- Featured listings: use the same grid system as /market to avoid nested grids (which can collapse width). -->
+    <div class="listings featured-grid" id="featuredListings"><div class="muted">Loading featured listings…</div></div>
 
     <div style="height:12px;"></div>
-    <a class="btn btn-ghost btn-pill" href="/market.html">View the market</a>
+    <a class="btn btn-ghost btn-pill" href="/market">View the market</a>
   </div>
 
   <div id="bb-footer"></div>
@@ -125,7 +126,7 @@
     const verified = !!(x.verified || x.is_verified || x.verification === "Verified");
     const status = safeText(x.status || "In Stock");
     const ready = !!(x.ready_for_transit || x.readyForTransit);
-    const img = x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
+    const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
     const thumbStyle = img ? `background-image:url('${String(img).replace(/'/g,"%27")}')` : "";
     return `
       <div class="listing">

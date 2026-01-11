@@ -21,8 +21,8 @@
         </div>
 
         <div class="page-hero-actions">
-          <a class="btn btn-pill btn-primary" href="what.html">How it works</a>
-          <a class="btn btn-pill" href="for-showrooms.html">List upcoming removals</a>
+          <a class="btn btn-pill btn-primary" href="/how-it-works">How it works</a>
+          <a class="btn btn-pill" href="/for-showrooms">List upcoming removals</a>
         </div>
       </div>
     </div>
@@ -155,7 +155,7 @@
 
       // ---------- YOU ASKED: UPDATE MARKET CARD HTML (JS render) ----------
       function renderListingCard(x) {
-        const id = x.id || "";
+        const id = x.id || x.recordId || x.airtableId || x.record_id || "";
         const title = safeText(x.title || "Floor Model Listing");
         const price = (x.price != null && x.price !== "") ? `$${Number(x.price).toLocaleString()}` : "";
         const grade = String(x.condition_grade || "").trim().toUpperCase() || "?";
@@ -167,7 +167,8 @@
         const keySpec = safeText(x.key_spec || "");
         const pickupText = pickupWindowText(x.pickup_window_start, x.pickup_window_end);
 
-        const thumb = safeAttr(x.thumbnail_url || "");
+        const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
+        const thumb = safeAttr(img || "");
         const thumbStyle = thumb
           ? `background-image:url('${thumb}')`
           : `background-image:linear-gradient(180deg, rgba(11,18,32,.15), rgba(11,18,32,.35))`;
@@ -175,6 +176,9 @@
         const gradeBubble = gradeTooltipHtml(grade);
         const pickupBubble = pickupTooltipHtml();
         const asIsBubble = asIsTooltipHtml();
+
+        const reserveHref = id ? `/reserve-confirmation.html?id=${encodeURIComponent(id)}` : `/pilot`;
+        const detailsHref = id ? `/listing-details.html?id=${encodeURIComponent(id)}` : `/example-listing`;
 
         return `
           <div class="listing">
@@ -209,8 +213,14 @@
               <div class="divider"></div>
 
               <div class="actions">
-                <a class="btn btn-primary btn-pill" href="/reserve-confirmation.html?id=${encodeURIComponent(id)}">Reserve</a>
-                <a class="btn btn-pill" href="/listing-details.html?id=${encodeURIComponent(id)}">View details</a>
+                ${id
+                  ? `<a class="btn btn-primary btn-pill" href="${reserveHref}">Reserve</a>`
+                  : `<a class="btn btn-primary btn-pill disabled" href="${reserveHref}" aria-disabled="true">Reserve</a>`
+                }
+                ${id
+                  ? `<a class="btn btn-pill" href="${detailsHref}">View details</a>`
+                  : `<a class="btn btn-pill disabled" href="${detailsHref}" aria-disabled="true">View details</a>`
+                }
               </div>
 
               <!-- YOU ASKED: Add same legal line to the Market card subnote -->

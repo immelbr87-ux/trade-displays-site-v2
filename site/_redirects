@@ -19,6 +19,11 @@
 /brand-compliance    /brand-compliance.html     200
 /kohler-compliance   /kohler-compliance.html    200
 
+/about               /about.html                200
+/help                /help.html                 200
+/news                /news.html                 200
+/sell                /sell.html                 200
+
 /who                 /faq.html#who-can-buy      301
 /who-can-buy         /faq.html#who-can-buy      301
 /trade-displays      /trade-displays.html       200
