@@ -1,161 +1,266 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Trade Displays by Bargain Bond</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trade Displays by Bargain Bond - Verified Showroom Marketplace</title>
   <meta name="description" content="Verified pickup-only marketplace for showroom floor models. Transparent pricing. Escrow held until acceptance at pickup." />
   <link rel="stylesheet" href="app.css" />
 </head>
 <body>
-
   <div id="bb-header"></div>
 
-  <div class="container section">
-    <div class="hero">
-      <div class="hero-inner">
-        <div class="hero-copy" style="max-width:760px;">
-          <div class="kicker">VERIFIED PICKUP • READY FOR TRANSIT</div>
-          <h1 class="h1">The marketplace for verified showroom floor models.</h1>
-          <p class="lead">
-            A pickup-only exchange designed for logistics, inspection, and clean releases.
-            Funds stay in escrow until the buyer accepts at pickup.
-          </p>
-          <div class="actions">
-            <a class="btn btn-pill" href="/market">Browse floor models</a>
-            <a class="btn btn-primary btn-pill" href="/pilot">Start a 30-Day Pilot</a>
-          </div>
-          <div class="small muted" style="margin-top:10px;">
-            Safety Green is reserved for <strong>Verified</strong> and <strong>In Stock</strong> signals.
-          </div>
-        </div>
+  <main>
+    <section class="hero">
+      <div class="hero-badge">Verified Marketplace</div>
+      <h1>The marketplace for verified showroom floor models</h1>
+      <p class="hero-subtitle">
+        A pickup-only exchange for floor models and display items. Transparent pricing, escrow protection, and on-site inspection. Funds release automatically upon product acceptance.
+      </p>
+      <div class="hero-cta">
+        <a href="/pilot" class="btn btn-primary btn-pill">Start 30-Day Pilot</a>
+        <a href="/market" class="btn btn-secondary btn-pill">Browse Listings</a>
+      </div>
+    </section>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Verified Listings</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">$0</span>
+        <span class="stat-label">Freight Disputes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">24/7</span>
+        <span class="stat-label">Escrow Protection</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">1<small style="font-size: 18px; font-weight: 600;">min</small></span>
+        <span class="stat-label">Avg. Listing Setup Time</span>
       </div>
     </div>
 
-    <div class="feature-section" style="margin-top:18px;">
+    <div class="ticker-section">
+      <div class="ticker-wrapper">
+        <a href="/market?cat=kitchen-islands" class="ticker-item">Designer Kitchen Islands <span>Grade A+</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=bathroom-vanities" class="ticker-item">Luxury Bathroom Vanities <span>In Stock</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=cabinetry" class="ticker-item">Premium Cabinetry Sets <span>Ready for Transit</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=shower-systems" class="ticker-item">Spa Shower Systems <span>Grade A</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=fixtures" class="ticker-item">Contemporary Fixtures <span>Available Now</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=appliances" class="ticker-item">High-End Appliances <span>Grade A+</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=faucets" class="ticker-item">Designer Faucets <span>In Stock</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=countertops" class="ticker-item">Marble Countertops <span>Grade A</span></a>
+        <div class="ticker-dot"></div>
+        <!-- Duplicate for seamless loop -->
+        <a href="/market?cat=kitchen-islands" class="ticker-item">Designer Kitchen Islands <span>Grade A+</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=bathroom-vanities" class="ticker-item">Luxury Bathroom Vanities <span>In Stock</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=cabinetry" class="ticker-item">Premium Cabinetry Sets <span>Ready for Transit</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=shower-systems" class="ticker-item">Spa Shower Systems <span>Grade A</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=fixtures" class="ticker-item">Contemporary Fixtures <span>Available Now</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=appliances" class="ticker-item">High-End Appliances <span>Grade A+</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=faucets" class="ticker-item">Designer Faucets <span>In Stock</span></a>
+        <div class="ticker-dot"></div>
+        <a href="/market?cat=countertops" class="ticker-item">Marble Countertops <span>Grade A</span></a>
+        <div class="ticker-dot"></div>
+      </div>
+    </div>
+
+    <section class="section how-it-works">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Simple, secure transactions from listing to pickup</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>List or Discover</h3>
+          <p>Sellers create verified listings with detailed condition grading. Buyers browse in-stock inventory with transparent pricing.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Reserve with Escrow</h3>
+          <p>Payment is held securely in escrow. Funds don't release until acceptance at pickup.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Schedule & Inspect</h3>
+          <p>Coordinate pickup timing and location. Inspect in person to verify condition matches the listing.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Accept & Complete</h3>
+          <p>Accept on-site, release funds, and arrange transport. No freight claims or post-pickup disputes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Why Trade Displays</h2>
+        <p>The secure way to buy and sell showroom inventory</p>
+      </div>
       <div class="feature-grid">
-        <div class="feature">
-          <div class="ficon"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M8 12l2.5 2.5L16 9'/></svg></div>
-          <h3>Shop With Confidence</h3>
-          <p>Every listing is structured for condition clarity and pickup inspection — built to reduce surprises.</p>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3>Verified Listings Only</h3>
+          <p>Every item is verified in-stock with detailed condition reports. No phantom inventory or surprises.</p>
         </div>
-        <div class="feature">
-          <div class="ficon"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 3v18h18'/><path d='M7 14l3-3 3 2 5-6'/></svg></div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h3>Escrow Protected</h3>
+          <p>Funds held securely until acceptance at pickup. Clear rules protect everyone involved.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+          </div>
+          <h3>Pickup Only</h3>
+          <p>Inspect in person before accepting. No freight nightmares or post-delivery disputes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+            </svg>
+          </div>
           <h3>Transparent Pricing</h3>
-          <p>Clear, fixed pricing for floor models — with market guidance and simple comps where available.</p>
+          <p>Fixed pricing with market context. See exactly what you're paying and why.</p>
         </div>
-        <div class="feature">
-          <div class="ficon"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M2 12h20'/><path d='M12 2a15 15 0 0 1 0 20'/><path d='M12 2a15 15 0 0 0 0 20'/></svg></div>
-          <h3>Global Access</h3>
-          <p>Trade buyers can secure hard-to-find models while sellers move inventory without the usual headache.</p>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+          </div>
+          <h3>Global Marketplace</h3>
+          <p>Connect with verified sellers and buyers. Access inventory that's hard to find elsewhere.</p>
         </div>
-        <div class="feature">
-          <div class="ficon"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l9 4.5v9L12 21 3 16.5v-9L12 3z'/><path d='M9 12l2 2 4-4'/></svg></div>
-          <h3>No BS</h3>
-          <p>Pickup-only. No freight claims. No post-pickup disputes. Acceptance happens on-site.</p>
-        </div>
-        <div class="feature">
-          <div class="ficon"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='11' width='16' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg></div>
-          <h3>Secure</h3>
-          <p>Escrow holds payment until acceptance. Identity confirmation and clear mismatch rules.</p>
-        </div>
-        <div class="feature">
-          <div class="ficon"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 13v-2a8 8 0 0 1 16 0v2'/><path d='M18 13a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1'/><path d='M6 13a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1'/><path d='M12 19a2 2 0 0 0 2-2v-1'/></svg></div>
-          <h3>Here For You</h3>
-          <p>Support and issue resolution designed around real-world pickup workflows and showroom constraints.</p>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <h3>Professional Support</h3>
+          <p>Support designed for pickup workflows, not generic e-commerce policies.</p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div style="height:18px;"></div>
+    <section class="section featured-section" id="browse">
+      <div class="section-header">
+        <h2>Featured Listings</h2>
+        <p>Verified floor models available now</p>
+        <a href="/market" class="btn btn-secondary" style="margin-top: 16px;">Browse All Listings</a>
+      </div>
+      <div class="product-grid" id="featuredListings">
+        <div class="muted">Loading featured listings…</div>
+      </div>
+    </section>
 
-    <div class="section-title">
-      <h2>Featured floor models</h2>
-      <p class="muted">Curated examples — browse the live market for current availability.</p>
-    </div>
-
-    <!-- Featured listings: use the same grid system as /market to avoid nested grids (which can collapse width). -->
-    <div class="listings featured-grid" id="featuredListings"><div class="muted">Loading featured listings…</div></div>
-
-    <div style="height:12px;"></div>
-    <a class="btn btn-ghost btn-pill" href="/market">View the market</a>
-  </div>
+    <section class="cta-section">
+      <h2>Ready to get started?</h2>
+      <p>Join the marketplace for verified showroom inventory</p>
+      <a href="/pilot" class="btn">Start Your 30-Day Pilot</a>
+    </section>
+  </main>
 
   <div id="bb-footer"></div>
   <script src="shared/include.js"></script>
 
-<script>
-(async function(){
-  const root = document.getElementById("featuredListings");
-  if(!root) return;
-  try{
-    const r = await fetch("/.netlify/functions/listDisplays?pageSize=8", { cache: "no-store" });
-    const data = await r.json();
-    if(!r.ok) throw new Error(data?.error || "Failed to load featured listings.");
-    const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
-    if(!listings.length){
-      root.innerHTML = '<div class="muted">No featured listings yet.</div>';
-      return;
+  <script>
+  (async function(){
+    const root = document.getElementById("featuredListings");
+    if(!root) return;
+    try{
+      const r = await fetch("/.netlify/functions/listDisplays?pageSize=8", { cache: "no-store" });
+      const data = await r.json();
+      if(!r.ok) throw new Error(data?.error || "Failed to load featured listings.");
+      const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
+      if(!listings.length){
+        root.innerHTML = '<div class="muted">No featured listings yet.</div>';
+        return;
+      }
+      root.innerHTML = listings.slice(0,8).map(renderCard).join("");
+    }catch(e){
+      root.innerHTML = '<div class="muted">Unable to load featured listings.</div>';
     }
-    root.innerHTML = listings.slice(0,8).map(renderCard).join("");
-  }catch(e){
-    root.innerHTML = '<div class="muted">Unable to load featured listings.</div>';
-  }
 
-  function safeText(v){
-    return String(v ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  }
-  function money(v){
-    const n = Number(String(v||"").replace(/[^0-9.]/g,""));
-    if(!isFinite(n)) return safeText(v||"");
-    return "$" + n.toLocaleString(undefined,{maximumFractionDigits:0});
-  }
-  function pickupWindow(start,end){
-    if(!start && !end) return "Pickup window disclosed";
-    const s = start ? new Date(start) : null;
-    const e = end ? new Date(end) : null;
-    const fmt = d => d.toLocaleDateString(undefined,{month:'short', day:'numeric'});
-    if(s && e) return `Pickup ${fmt(s)}–${fmt(e)}`;
-    return `Pickup ${fmt(s||e)}`;
-  }
-  function renderCard(x){
-    const id = x.id || x.recordId || x.airtableId || "";
-    const title = safeText(x.title || x.name || x.product || "Showroom floor model");
-    const price = money(x.price || x.list_price || x.ask || "");
-    const grade = safeText((x.grade || x.condition_grade || "").toUpperCase() || "—");
-    const verified = !!(x.verified || x.is_verified || x.verification === "Verified");
-    const status = safeText(x.status || "In Stock");
-    const ready = !!(x.ready_for_transit || x.readyForTransit);
-    const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
-    const thumbStyle = img ? `background-image:url('${String(img).replace(/'/g,"%27")}')` : "";
-    return `
-      <div class="listing">
-        <div class="thumb" style="${thumbStyle}">
-          <div class="thumb-badges">
-            ${verified ? `<span class="pilltag verified">Verified</span>` : ``}
-            <span class="pilltag instock">${status || "In Stock"}</span>
-            <span class="pilltag">Pickup only</span>
-            ${ready ? `<span class="pilltag ready">Ready for transit</span>` : ``}
+    function safeText(v){
+      return String(v ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    }
+    function money(v){
+      const n = Number(String(v||"").replace(/[^0-9.]/g,""));
+      if(!isFinite(n)) return safeText(v||"");
+      return "$" + n.toLocaleString(undefined,{maximumFractionDigits:0});
+    }
+    function pickupWindow(start,end){
+      if(!start && !end) return "Pickup window disclosed";
+      const s = start ? new Date(start) : null;
+      const e = end ? new Date(end) : null;
+      const fmt = d => d.toLocaleDateString(undefined,{month:'short', day:'numeric'});
+      if(s && e) return `Pickup ${fmt(s)}–${fmt(e)}`;
+      return `Pickup ${fmt(s||e)}`;
+    }
+    function renderCard(x){
+      const id = x.id || x.recordId || x.airtableId || "";
+      const title = safeText(x.title || x.name || x.product || "Showroom floor model");
+      const price = money(x.price || x.list_price || x.ask || "");
+      const grade = safeText((x.grade || x.condition_grade || "").toUpperCase() || "—");
+      const ready = !!(x.ready_for_transit || x.readyForTransit);
+      const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : "");
+      const thumbStyle = img ? `background-image:url('${String(img).replace(/'/g,"%27")}')` : "";
+      const thumbClass = !img ? (x.category && x.category.toLowerCase().includes('kitchen') ? 'kitchen-island' : 
+                                  x.category && x.category.toLowerCase().includes('bath') ? 'bathroom-vanity' : 
+                                  x.category && x.category.toLowerCase().includes('cabinet') ? 'kitchen-cabinetry' : 
+                                  'spa-bathroom') : '';
+      
+      return `
+        <div class="product-card">
+          <div class="product-image ${thumbClass}" style="${thumbStyle}">
+            <div class="product-badges">
+              <span class="badge badge-grade">Grade ${grade}</span>
+              <span class="badge badge-pickup">${ready ? 'Ready for Transit' : pickupWindow(x.pickup_window_start, x.pickup_window_end)}</span>
+            </div>
           </div>
-        </div>
-        <div class="listing-body">
-          <div class="title">
-            <h3>${title}</h3>
-            <div class="price">${price}</div>
+          <div class="product-info">
+            <div class="product-name">${title}</div>
+            <div class="product-condition">Grade ${grade}${ready ? ' • Ready for Transit' : ''}</div>
+            <div class="product-price">${price}</div>
+            <div class="product-actions">
+              <a href="/reserve-confirmation?id=${encodeURIComponent(id)}" class="btn btn-primary btn-small">Reserve</a>
+              <a href="/listing-details?id=${encodeURIComponent(id)}" class="btn btn-secondary btn-small">Details</a>
+            </div>
           </div>
-          <div class="meta">
-            <div>Grade ${grade}</div>
-            <div>${safeText(pickupWindow(x.pickup_window_start, x.pickup_window_end))}</div>
-          </div>
-          <div class="actions">
-            <a class="btn btn-primary btn-pill" href="/reserve-confirmation.html?id=${encodeURIComponent(id)}">Reserve</a>
-            <a class="btn btn-pill" href="/listing-details.html?id=${encodeURIComponent(id)}">View details</a>
-          </div>
-        </div>
-      </div>`;
-  }
-})();
-</script>
+        </div>`;
+    }
+  })();
+  </script>
 
 </body>
 </html>
