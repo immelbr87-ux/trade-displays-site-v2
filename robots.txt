@@ -1,0 +1,48 @@
+# robots.txt for SHOWROOM MARKET
+
+# Allow all good bots
+User-agent: *
+Allow: /
+
+# Block bad bots and scrapers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+# Disallow access to admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /.netlify/
+
+# Disallow access to files
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+
+# Allow Google and Bing images
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Crawl delay for aggressive crawlers
+User-agent: *
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://showroommarket.com/sitemap.xml
