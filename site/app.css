@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* Trade Displays â€” Premium StockX-inspired Design System */
+/* Trade Displays — Premium StockX-inspired Design System */
 
 :root {
   --bg: #fafafa;
@@ -328,7 +328,7 @@ nav a:hover::after {
 }
 
 .search-box::before {
-  content: 'ðŸ”';
+  content: '🔍';
   position: absolute;
   left: 1rem;
   top: 50%;
