@@ -3,237 +3,290 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - Trade Displays</title>
-  <meta name="description" content="Get in touch with Trade Displays. We're here to help with any questions about buying, renting, or selling trade show displays.">
+  <title>Contact Us - SHOWROOM MARKET | Kitchen & Bath Floor Models</title>
+  <meta name="description" content="Contact SHOWROOM MARKET for kitchen and bath showroom liquidation. Questions about listing, buying, or our B2B marketplace? We're here to help.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Contact SHOWROOM MARKET">
+  <meta property="og:description" content="Get in touch with our team about showroom liquidation">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://showroommarket.com/contact">
+  
   <link rel="stylesheet" href="app.css">
+  
+  <!-- reCAPTCHA v3 (Invisible) -->
+  <!-- Replace YOUR_RECAPTCHA_SITE_KEY with your actual site key -->
+  <script src="https://www.google.com/recaptcha/api.js?render=YOUR_RECAPTCHA_SITE_KEY"></script>
 </head>
 <body>
   
   <!-- Header inserted via include.js -->
   
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Get in Touch</h1>
-      <p>Have questions? We're here to help. Reach out and we'll get back to you within 24 hours.</p>
-    </div>
-  </section>
-
-  <!-- Contact Options & Form -->
-  <section class="container" style="padding: 4rem 0;">
-    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem;">
-      <!-- Contact Info -->
-      <div>
-        <h2 style="margin-bottom: 2rem;">Contact Information</h2>
-        
-        <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
-          <div style="font-size: 2rem; margin-bottom: 1rem;">📧</div>
-          <h4 style="margin-bottom: 0.5rem;">Email Us</h4>
-          <p style="color: var(--text-muted); margin-bottom: 0.5rem;">For general inquiries</p>
-          <a href="mailto:hello@tradedisplays.com" style="color: var(--accent); font-weight: 600;">hello@tradedisplays.com</a>
-        </div>
-        
-        <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
-          <div style="font-size: 2rem; margin-bottom: 1rem;">💬</div>
-          <h4 style="margin-bottom: 0.5rem;">Live Chat</h4>
-          <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Available Monday-Friday</p>
-          <p style="font-weight: 600;">9:00 AM - 6:00 PM EST</p>
-        </div>
-        
-        <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
-          <div style="font-size: 2rem; margin-bottom: 1rem;">📞</div>
-          <h4 style="margin-bottom: 0.5rem;">Call Us</h4>
-          <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Speak with our team</p>
-          <a href="tel:+1234567890" style="color: var(--accent); font-weight: 600; font-size: 1.25rem;">(123) 456-7890</a>
-        </div>
-        
-        <div class="card" style="padding: 2rem;">
-          <div style="font-size: 2rem; margin-bottom: 1rem;">🏢</div>
-          <h4 style="margin-bottom: 0.5rem;">Office</h4>
-          <p style="color: var(--text-muted);">
-            123 Trade Show Lane<br>
-            Chicago, IL 60601<br>
-            United States
-          </p>
-        </div>
+  <section class="container" style="padding: 6rem 0;">
+    <div style="max-width: 600px; margin: 0 auto;">
+      <h1 style="margin-bottom: 1rem;">Contact Us</h1>
+      <p style="color: var(--text-muted); margin-bottom: 3rem;">Have questions about listing your showroom inventory or buying premium K&B products? We're here to help.</p>
+      
+      <!-- Success Message (hidden by default) -->
+      <div id="successMessage" class="alert alert-success" style="display: none; margin-bottom: 2rem; padding: 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; color: #166534;">
+        <strong>✓ Message sent!</strong> We'll respond within 24 hours.
       </div>
       
-      <!-- Contact Form -->
-      <div>
-        <div class="card" style="padding: 3rem;">
-          <h2 style="margin-bottom: 1.5rem;">Send Us a Message</h2>
-          
-          <form id="contactForm">
-            <div class="alert alert-warning" style="margin-bottom: 2rem;">
-              <strong>Note:</strong> This is a demo form. Messages will not be sent.
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-              <div class="form-group">
-                <label class="form-label">First Name *</label>
-                <input type="text" class="form-input" id="firstName" required>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">Last Name *</label>
-                <input type="text" class="form-input" id="lastName" required>
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Email *</label>
-              <input type="email" class="form-input" id="email" required>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Phone</label>
-              <input type="tel" class="form-input" id="phone">
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Company</label>
-              <input type="text" class="form-input" id="company">
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">I'm interested in: *</label>
-              <select class="form-select" id="interest" required>
-                <option value="">Select an option</option>
-                <option value="buying">Buying a display</option>
-                <option value="renting">Renting a display</option>
-                <option value="selling">Selling displays</option>
-                <option value="pilot">Joining pilot program</option>
-                <option value="partnership">Partnership opportunities</option>
-                <option value="support">Customer support</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Message *</label>
-              <textarea class="form-textarea" id="message" required placeholder="Tell us how we can help..."></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-primary w-full" style="padding: 1.25rem; font-size: 1.125rem;">
-              Send Message
-            </button>
-          </form>
-          
-          <div id="successMessage" class="hidden alert alert-success" style="margin-top: 1.5rem;">
-            <strong>Success!</strong> Your message has been sent. We'll get back to you within 24 hours.
+      <!-- Error Message (hidden by default) -->
+      <div id="errorMessage" class="alert alert-error" style="display: none; margin-bottom: 2rem; padding: 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b;">
+        <strong>✗ Error:</strong> <span id="errorText">Please try again.</span>
+      </div>
+      
+      <form id="contactForm" class="form">
+        <!-- CSRF Token -->
+        <input type="hidden" name="csrf_token" id="csrfToken">
+        
+        <!-- Timestamp (detect bot speed) -->
+        <input type="hidden" name="form_start_time" id="formStartTime">
+        
+        <!-- Honeypot Field (hidden from humans, bots will fill) -->
+        <input type="text" 
+               name="website" 
+               id="website"
+               style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+               tabindex="-1" 
+               autocomplete="off"
+               aria-hidden="true">
+        
+        <div class="form-group">
+          <label for="name">Name *</label>
+          <input type="text" 
+                 id="name" 
+                 name="name" 
+                 required 
+                 maxlength="100"
+                 autocomplete="name">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" 
+                 id="email" 
+                 name="email" 
+                 required
+                 maxlength="100"
+                 autocomplete="email">
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone (optional)</label>
+          <input type="tel" 
+                 id="phone" 
+                 name="phone"
+                 maxlength="20"
+                 autocomplete="tel">
+        </div>
+        
+        <div class="form-group">
+          <label for="inquiry_type">Inquiry Type</label>
+          <select id="inquiry_type" name="inquiry_type" required>
+            <option value="">Select one...</option>
+            <option value="selling">Listing Showroom Inventory (Seller)</option>
+            <option value="buying">Buying Products (Trade Buyer)</option>
+            <option value="general">General Question</option>
+            <option value="support">Technical Support</option>
+            <option value="partnership">Partnership Opportunity</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Subject *</label>
+          <input type="text" 
+                 id="subject" 
+                 name="subject" 
+                 required
+                 maxlength="200">
+        </div>
+        
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea id="message" 
+                    name="message" 
+                    rows="6" 
+                    required
+                    maxlength="2000"></textarea>
+          <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+            <span id="charCount">0</span> / 2000 characters
+          </small>
+        </div>
+        
+        <!-- reCAPTCHA Token (hidden) -->
+        <input type="hidden" id="recaptchaToken" name="recaptcha_token">
+        
+        <!-- Privacy Notice -->
+        <div style="margin: 1.5rem 0; padding: 1rem; background: #fafafa; border-radius: 8px; font-size: 0.875rem; color: var(--text-muted);">
+          <label style="display: flex; align-items: start; cursor: pointer;">
+            <input type="checkbox" 
+                   id="privacy_consent" 
+                   name="privacy_consent" 
+                   required
+                   style="margin-top: 0.25rem; margin-right: 0.5rem;">
+            <span>I agree to the <a href="/privacy" target="_blank" style="color: var(--accent);">Privacy Policy</a> and consent to SHOWROOM MARKET storing my information to respond to this inquiry.</span>
+          </label>
+        </div>
+        
+        <button type="submit" 
+                id="submitBtn"
+                class="btn btn-primary w-full"
+                style="position: relative;">
+          <span id="btnText">Send Message</span>
+          <span id="btnLoading" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle;">
+              <circle cx="12" cy="12" r="10" stroke-width="3" stroke-opacity="0.25"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            Sending...
+          </span>
+        </button>
+        
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.875rem; margin-top: 1rem;">
+          This site is protected by reCAPTCHA and the Google
+          <a href="https://policies.google.com/privacy" target="_blank" style="color: var(--accent);">Privacy Policy</a> and
+          <a href="https://policies.google.com/terms" target="_blank" style="color: var(--accent);">Terms of Service</a> apply.
+        </p>
+      </form>
+      
+      <!-- Alternative Contact Methods -->
+      <div style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border);">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Other Ways to Reach Us</h2>
+        <div style="display: grid; gap: 1.5rem;">
+          <div>
+            <strong style="display: block; margin-bottom: 0.5rem;">Email</strong>
+            <a href="/cdn-cgi/l/email-protection#8fe7eae3e3e0cffce7e0f8fde0e0e2e2eefde4eafba1ece0e2" style="color: var(--accent);"><span class="__cf_email__" data-cfemail="83ebe6efefecc3f0ebecf4f1ececeeeee2f1e8e6f7ade0ecee">[email&#160;protected]</span></a>
+          </div>
+          <div>
+            <strong style="display: block; margin-bottom: 0.5rem;">For Sellers</strong>
+            <a href="/cdn-cgi/l/email-protection#44282d37302d2a233704372c2b33362b2b292925362f21306a272b29" style="color: var(--accent);"><span class="__cf_email__" data-cfemail="99f5f0eaedf0f7feead9eaf1f6eeebf6f6f4f4f8ebf2fcedb7faf6f4">[email&#160;protected]</span></a>
+          </div>
+          <div>
+            <strong style="display: block; margin-bottom: 0.5rem;">Support</strong>
+            <a href="/cdn-cgi/l/email-protection#1a696f6a6a75686e5a6972756d68757577777b68717f6e34797577" style="color: var(--accent);"><span class="__cf_email__" data-cfemail="e0939590908f9294a093888f97928f8f8d8d81928b8594ce838f8d">[email&#160;protected]</span></a>
+          </div>
+          <div>
+            <strong style="display: block; margin-bottom: 0.5rem;">Response Time</strong>
+            <span style="color: var(--text-muted);">We typically respond within 24 hours during business days.</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section -->
-  <section class="container" style="padding: 4rem 0;">
-    <div style="max-width: 900px; margin: 0 auto;">
-      <h2 style="text-align: center; margin-bottom: 3rem;">Frequently Asked Questions</h2>
-      
-      <div class="grid grid-2">
-        <div class="card" style="padding: 1.5rem;">
-          <h4 style="margin-bottom: 0.75rem;">How quickly do you respond?</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">We aim to respond to all inquiries within 24 hours during business days.</p>
-        </div>
-        
-        <div class="card" style="padding: 1.5rem;">
-          <h4 style="margin-bottom: 0.75rem;">Do you offer phone support?</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Yes! Call us Monday-Friday, 9 AM - 6 PM EST for immediate assistance.</p>
-        </div>
-        
-        <div class="card" style="padding: 1.5rem;">
-          <h4 style="margin-bottom: 0.75rem;">Can I schedule a demo?</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Absolutely! Use the form to request a personalized platform demo.</p>
-        </div>
-        
-        <div class="card" style="padding: 1.5rem;">
-          <h4 style="margin-bottom: 0.75rem;">Where can I find help articles?</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Visit our <a href="how-it-works.html" style="color: var(--accent);">How It Works</a> page for detailed guides.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Support Topics -->
-  <section class="features">
-    <div class="container">
-      <h2 style="text-align: center; margin-bottom: 3rem;">How Can We Help?</h2>
-      
-      <div class="grid grid-4">
-        <a href="how-it-works.html" class="card" style="padding: 2rem; text-align: center; text-decoration: none; color: inherit;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
-          <h4>Getting Started</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Learn how the platform works</p>
-        </a>
-        
-        <a href="market.html" class="card" style="padding: 2rem; text-align: center; text-decoration: none; color: inherit;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-          <h4>Browse Displays</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Find your perfect display</p>
-        </a>
-        
-        <a href="pilot-program.html" class="card" style="padding: 2rem; text-align: center; text-decoration: none; color: inherit;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-          <h4>Become a Seller</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Join our pilot program</p>
-        </a>
-        
-        <a href="#" class="card" style="padding: 2rem; text-align: center; text-decoration: none; color: inherit;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">💼</div>
-          <h4>Partnerships</h4>
-          <p style="color: var(--text-muted); font-size: 0.938rem;">Explore opportunities</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
   <!-- Footer inserted via include.js -->
   
-  <script src="shared/include.js"></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared/include.js"></script>
+  
+  <style>
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  
   <script>
-    document.getElementById('contactForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // Initialize form security
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('contactForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnLoading = document.getElementById('btnLoading');
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+      const errorText = document.getElementById('errorText');
       
-      // Collect form data
-      const formData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        company: document.getElementById('company').value,
-        interest: document.getElementById('interest').value,
-        message: document.getElementById('message').value,
-        timestamp: new Date().toISOString()
-      };
+      // Generate CSRF token
+      document.getElementById('csrfToken').value = 
+        Math.random().toString(36).substring(2) + Date.now().toString(36);
       
-      // Show loading state
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
+      // Record form load time
+      document.getElementById('formStartTime').value = Date.now();
       
-      try {
-        // Simulate API call (in production, this would call your Netlify Function)
-        await new Promise(resolve => setTimeout(resolve, 1500));
+      // Character counter
+      const messageField = document.getElementById('message');
+      const charCount = document.getElementById('charCount');
+      messageField.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+      });
+      
+      // Form submission
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
         
-        // Show success message
-        document.getElementById('successMessage').classList.remove('hidden');
-        e.target.reset();
+        // Hide previous messages
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
         
-        // Hide success message after 5 seconds
-        setTimeout(() => {
-          document.getElementById('successMessage').classList.add('hidden');
-        }, 5000);
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('There was an error sending your message. Please try again or email us directly.');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }
-    });
-  </script>
-</body>
-</html>
+        // Security checks
+        
+        // 1. Honeypot check
+        if (document.getElementById('website').value !== '') {
+          console.log('Bot detected: Honeypot filled');
+          showError('Invalid submission. Please try again.');
+          return false;
+        }
+        
+        // 2. Time check (must spend at least 3 seconds)
+        const startTime = parseInt(document.getElementById('formStartTime').value);
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 3000) {
+          showError('Please take your time filling out the form.');
+          return false;
+        }
+        
+        // 3. Privacy consent check
+        if (!document.getElementById('privacy_consent').checked) {
+          showError('Please agree to the Privacy Policy to continue.');
+          return false;
+        }
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline';
+        
+        // Get reCAPTCHA token
+        try {
+          const token = await new Promise((resolve, reject) => {
+            grecaptcha.ready(function() {
+              // Replace YOUR_RECAPTCHA_SITE_KEY with your actual site key
+              grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'contact'})
+                .then(resolve)
+                .catch(reject);
+            });
+          });
+          
+          document.getElementById('recaptchaToken').value = token;
+          
+          // Collect form data
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          
+          // Submit to Netlify Function (when created)
+          const response = await fetch('/.netlify/functions/contact', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+          
+          if (response.ok) {
+            // Success
+            form.reset();
+            successMsg.style.display = 'block';
+            document.getElementById('formStartTime').value = Date.now();
+            charCount.textContent = '0';
+            
+            // Scroll to success message
+            successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            const error = await response.json();
+            showError(error.message || 'Unable to send message. Please try again.');
+          }
+          
+        } catch (error) {
+          console.error('Form submission error:',
