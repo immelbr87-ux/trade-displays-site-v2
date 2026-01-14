@@ -3,7 +3,7 @@
 // Header HTML
 const headerHTML = `
 <header>
-  <div class="header-container">
+  <nav style="max-width: 1400px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; justify-content: space-between; align-items: center;">
     <a href="index.html" class="logo">TRADE <span style="color: var(--accent);">DISPLAYS</span></a>
     
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
@@ -12,62 +12,67 @@ const headerHTML = `
       <span></span>
     </button>
     
-    <nav id="mainNav">
-      <a href="market.html">Browse Displays</a>
+    <div class="nav-links" style="display: flex; gap: 32px; align-items: center;">
+      <a href="market.html">Browse</a>
       <a href="how-it-works.html">How It Works</a>
-      <a href="pilot-program.html">Sell Your Display</a>
-      <a href="contact.html">Contact</a>
-      <a href="pilot-program.html" class="nav-cta">Join Pilot Program</a>
-    </nav>
-  </div>
+      <a href="pilot-program.html">List Items</a>
+    </div>
+    
+    <div class="nav-cta" style="display: flex; gap: 12px; align-items: center;">
+      <a href="#signin" class="btn btn-secondary">Sign In</a>
+      <a href="#signup" class="btn btn-secondary">Create Account</a>
+      <a href="pilot-program.html" class="btn btn-primary">Start 30-Day Pilot</a>
+    </div>
+  </nav>
 </header>
 `;
 
 // Footer HTML
 const footerHTML = `
-<footer>
+<footer style="background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 60px 32px 40px;">
   <div class="container">
     <div class="footer-content">
-      <div class="footer-section">
-        <h4>TRADE DISPLAYS</h4>
-        <p style="color: rgba(255, 255, 255, 0.7); margin-top: 1rem;">
-          The premier marketplace for renting and selling trade show displays. 
-          Buy, sell, and rent with confidence.
-        </p>
+      <div>
+        <div class="footer-brand">TRADE DISPLAYS</div>
+        <p class="footer-tagline">The verified marketplace for showroom floor models. Pickup-only. Escrow protected. Built for clean trades.</p>
       </div>
       
-      <div class="footer-section">
+      <div class="footer-column">
         <h4>Marketplace</h4>
         <ul class="footer-links">
-          <li><a href="market.html">Browse Displays</a></li>
-          <li><a href="market.html?filter=buy">Buy Displays</a></li>
-          <li><a href="market.html?filter=rent">Rent Displays</a></li>
-          <li><a href="pilot-program.html">Sell Your Display</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h4>Learn More</h4>
-        <ul class="footer-links">
+          <li><a href="market.html">Browse Listings</a></li>
+          <li><a href="pilot-program.html">List an Item</a></li>
           <li><a href="how-it-works.html">How It Works</a></li>
-          <li><a href="pilot-program.html">Pilot Program</a></li>
-          <li><a href="contact.html">Contact Us</a></li>
-          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="pilot-program.html">Pricing</a></li>
         </ul>
       </div>
       
-      <div class="footer-section">
-        <h4>Legal</h4>
+      <div class="footer-column">
+        <h4>Company</h4>
         <ul class="footer-links">
-          <li><a href="terms.html">Terms of Service</a></li>
-          <li><a href="brand-compliance.html">Brand Compliance</a></li>
-          <li><a href="condition-standards.html">Condition Standards</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h4>Support</h4>
+        <ul class="footer-links">
+          <li><a href="help.html">Help Center</a></li>
+          <li><a href="brand-compliance.html">Guidelines</a></li>
+          <li><a href="trust-brand-safety.html">Trust & Safety</a></li>
+          <li><a href="faq.html">FAQ</a></li>
         </ul>
       </div>
     </div>
     
     <div class="footer-bottom">
-      <p>&copy; ${new Date().getFullYear()} Trade Displays. All rights reserved.</p>
+      <div>© ${new Date().getFullYear()} Trade Displays by Bargain Bond. All rights reserved.</div>
+      <div class="footer-legal">
+        <a href="terms.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="terms.html">Cookies</a>
+      </div>
     </div>
   </div>
 </footer>
