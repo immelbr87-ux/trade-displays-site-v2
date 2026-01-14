@@ -3,150 +3,349 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reserve — Trade Displays</title>
-  <meta name="description" content="Reserve a showroom floor model for verified pickup. Escrow until acceptance at pickup." />
-  <link rel="stylesheet" href="app.css" />
+  <title>Confirm Reservation - Trade Displays</title>
+  <meta name="description" content="Complete your display reservation with secure checkout.">
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
-  <div id="bb-header"></div>
-
-  <div class="container section">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px;">
-      <div>
-        <div class="kicker">RESERVE FOR PICKUP</div>
-        <h1 class="h2" style="margin:8px 0 0;">Reserve confirmation</h1>
-        <p class="muted" style="margin:8px 0 0; max-width:820px;">This is a pickup-only transaction. Payment is held in escrow until you confirm acceptance on-site at pickup.</p>
-      </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <a class="btn btn-secondary btn-pill" href="/market">Back to market</a>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-bottom:24px;">
-      <div id="summary" class="muted">Loading listing…</div>
-    </div>
-
-    <div style="display:grid;grid-template-columns: 1.1fr 0.9fr; gap:24px; align-items:start;">
-      <div class="panel">
-        <h2 style="margin-top:0;">Pickup details</h2>
-        <p class="muted" style="margin-bottom:20px;">We'll confirm your pickup window and provide the seller's pickup instructions once the reservation is acknowledged.</p>
-
-        <form id="reserveForm" style="display:grid;gap:16px;">
+  
+  <!-- Header inserted via include.js -->
+  
+  <section class="container" style="padding: 3rem 0;">
+    <div style="max-width: 900px; margin: 0 auto;">
+      <h1 style="margin-bottom: 0.5rem;">Confirm Your Reservation</h1>
+      <p style="color: var(--text-muted); margin-bottom: 3rem;">Complete your information to reserve this display.</p>
+      
+      <div id="confirmationForm">
+        <!-- Loading/Error States -->
+        <div id="loadingState" class="loading">
+          <div class="spinner"></div>
+          <p>Loading reservation details...</p>
+        </div>
+        
+        <div id="errorState" class="hidden alert alert-error">
+          <strong>Error:</strong> No reservation data found. Please <a href="market.html" style="color: inherit; text-decoration: underline;">browse displays</a> and try again.
+        </div>
+        
+        <!-- Main Form (hidden initially) -->
+        <div id="mainForm" class="hidden" style="display: grid; grid-template-columns: 1fr 400px; gap: 3rem;">
+          <!-- Left Column - Form -->
           <div>
-            <label class="label">Company / Buyer name</label>
-            <input class="input" name="buyer" required placeholder="Acme Plumbing" />
+            <!-- Contact Information -->
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+              <h3 style="margin-bottom: 1.5rem;">Contact Information</h3>
+              
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-input" id="fullName" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Email *</label>
+                  <input type="email" class="form-input" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Phone *</label>
+                  <input type="tel" class="form-input" id="phone" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Company Name *</label>
+                <input type="text" class="form-input" id="company" required>
+              </div>
+            </div>
+            
+            <!-- Event/Delivery Details -->
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+              <h3 style="margin-bottom: 1.5rem;" id="deliveryTitle">Event Details</h3>
+              
+              <div class="form-group" id="eventNameGroup">
+                <label class="form-label">Event Name *</label>
+                <input type="text" class="form-input" id="eventName" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" id="eventDatesGroup">
+                <div class="form-group">
+                  <label class="form-label">Start Date *</label>
+                  <input type="date" class="form-input" id="startDate" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">End Date *</label>
+                  <input type="date" class="form-input" id="endDate" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Delivery Address *</label>
+                <input type="text" class="form-input" id="address" placeholder="Street Address" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">City *</label>
+                  <input type="text" class="form-input" id="city" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">State *</label>
+                  <input type="text" class="form-input" id="state" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">ZIP *</label>
+                  <input type="text" class="form-input" id="zip" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Special Instructions</label>
+                <textarea class="form-textarea" id="instructions" placeholder="Loading dock access, contact person, etc."></textarea>
+              </div>
+            </div>
+            
+            <!-- Payment Information (Mock) -->
+            <div class="card" style="padding: 2rem;">
+              <h3 style="margin-bottom: 1.5rem;">Payment Information</h3>
+              
+              <div class="alert alert-warning" style="margin-bottom: 1.5rem;">
+                <strong>Note:</strong> This is a demo. No real payment will be processed.
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Card Number *</label>
+                <input type="text" class="form-input" placeholder="1234 5678 9012 3456" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Exp. Month *</label>
+                  <input type="text" class="form-input" placeholder="MM" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Exp. Year *</label>
+                  <input type="text" class="form-input" placeholder="YY" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">CVV *</label>
+                  <input type="text" class="form-input" placeholder="123" required>
+                </div>
+              </div>
+            </div>
           </div>
-
+          
+          <!-- Right Column - Order Summary -->
           <div>
-            <label class="label">Email</label>
-            <input class="input" name="email" type="email" required placeholder="name@company.com" />
+            <div class="card" style="padding: 2rem; position: sticky; top: 100px;">
+              <h3 style="margin-bottom: 1.5rem;">Order Summary</h3>
+              
+              <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);">
+                <div style="width: 100%; aspect-ratio: 1; background: var(--bg); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden;">
+                  <img id="summaryImage" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <h4 id="summaryName" style="margin-bottom: 0.5rem;">-</h4>
+                <p id="summarySKU" style="color: var(--text-muted); font-size: 0.875rem;">-</p>
+              </div>
+              
+              <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span id="priceLabel">Price</span>
+                  <span id="priceValue">$0</span>
+                </div>
+                <div id="durationRow" class="hidden" style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span>Duration</span>
+                  <span id="durationValue">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-muted);">
+                  <span>Shipping</span>
+                  <span>Calculated at checkout</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-muted);">
+                  <span>Processing Fee</span>
+                  <span id="processingFee">$0</span>
+                </div>
+              </div>
+              
+              <div style="padding-top: 1.5rem; border-top: 2px solid var(--border); margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.25rem; font-weight: 700;">Total</span>
+                  <span id="totalPrice" style="font-size: 1.75rem; font-weight: 900; color: var(--accent);">$0</span>
+                </div>
+              </div>
+              
+              <button id="submitBtn" class="btn btn-primary w-full" style="padding: 1.25rem; font-size: 1.125rem;">
+                Complete Reservation
+              </button>
+              
+              <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
+                By completing this reservation, you agree to our Terms of Service and Privacy Policy.
+              </p>
+            </div>
           </div>
-
-          <div>
-            <label class="label">Phone (for pickup coordination)</label>
-            <input class="input" name="phone" required placeholder="(555) 555-5555" />
-          </div>
-
-          <div>
-            <label class="label">Notes (optional)</label>
-            <textarea class="input" name="notes" rows="3" placeholder="Forklift on site, box truck ETA, preferred pickup day…"></textarea>
-          </div>
-
-          <button class="btn btn-primary btn-pill btn-full" type="submit">Request reservation</button>
-
-          <p class="small muted" style="margin-top:4px;">
-            By submitting, you acknowledge this is <strong>pickup-only</strong>, <strong>as-is</strong>, and acceptance is confirmed <strong>on-site at pickup</strong>.
-          </p>
-        </form>
-      </div>
-
-      <div class="panel">
-        <h2 style="margin-top:0;">What happens next</h2>
-        <ol class="muted" style="padding-left:24px; line-height:1.8; margin:16px 0;">
-          <li>We hold your payment in escrow (pilot flow may be manual while we finalize rails).</li>
-          <li>Seller confirms pickup window + provides access instructions.</li>
-          <li>You inspect the floor model on-site at pickup.</li>
-          <li>If it matches the listing, you confirm acceptance and escrow releases.</li>
-        </ol>
-
-        <div class="hr"></div>
-        <div class="small muted">
-          Need to understand grades? See <a href="/trust" style="font-weight:600;">Condition Standards</a>.
         </div>
       </div>
     </div>
+  </section>
 
-    <div id="result" style="margin-top:24px;"></div>
-  </div>
-
-  <div id="bb-footer"></div>
+  <!-- Footer inserted via include.js -->
+  
   <script src="shared/include.js"></script>
-
   <script>
-  (function(){
-    const url = new URL(location.href);
-    const id = url.searchParams.get('id') || '';
-    const summary = document.getElementById('summary');
-    const form = document.getElementById('reserveForm');
-    const result = document.getElementById('result');
+    let reservationData = null;
 
-    function esc(s){ return String(s ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c] || c)); }
-
-    async function load(){
-      if(!id){
-        summary.innerHTML = '<div class="muted">No listing id provided. Return to <a href="/market" style="font-weight:600;">Market</a>.</div>';
+    // Load reservation data
+    function loadReservationData() {
+      const data = sessionStorage.getItem('reservationData');
+      
+      if (!data) {
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('errorState').classList.remove('hidden');
         return;
       }
-      try{
-        const r = await fetch(`/.netlify/functions/listDisplays?id=${encodeURIComponent(id)}`, { cache: 'no-store' });
-        const data = await r.json();
-        const x = data.listing || data.item || data || {};
-        const title = esc(x.title || x.name || 'Showroom floor model');
-        const price = esc(x.price ? ('$' + Number(String(x.price).replace(/[^0-9.]/g,'')).toLocaleString(undefined,{maximumFractionDigits:0})) : (x.price || ''));
-        const grade = esc((x.grade || x.condition_grade || '').toUpperCase() || 'A');
-        summary.innerHTML = `
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-            <div>
-              <div style="font-weight:700; font-size:18px; margin-bottom:6px;">${title}</div>
-              <div class="small muted">Grade ${grade} • Pickup-only • Acceptance on-site</div>
-            </div>
-            <div style="font-weight:800; font-size:24px; letter-spacing:-0.5px;">${price}</div>
-          </div>`;
-      } catch(e){
-        summary.innerHTML = `
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-            <div>
-              <div style="font-weight:700; font-size:18px; margin-bottom:6px;">Listing ${esc(id)}</div>
-              <div class="small muted">(Preview mode) • Pickup-only • Acceptance on-site</div>
-            </div>
-            <div style="font-weight:800; font-size:24px;">—</div>
-          </div>`;
+      
+      reservationData = JSON.parse(data);
+      
+      // Update UI for purchase vs rental
+      if (reservationData.listingType === 'buy') {
+        document.getElementById('deliveryTitle').textContent = 'Delivery Details';
+        document.getElementById('eventNameGroup').classList.add('hidden');
+        document.getElementById('eventDatesGroup').classList.add('hidden');
       }
+      
+      // Populate order summary
+      populateOrderSummary();
+      
+      // Show form
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('mainForm').classList.remove('hidden');
     }
 
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const fd = new FormData(form);
-      const payload = Object.fromEntries(fd.entries());
-      payload.listingId = id;
-
-      try{
-        const r = await fetch('/.netlify/functions/reserveDisplay', {
-          method: 'POST',
-          headers: { 'Content-Type':'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await r.json();
-        if(!r.ok) throw new Error(data?.error || 'Unable to submit.');
-        result.innerHTML = `<div class="panel"><h3 style="margin-top:0;">Reservation requested</h3><p class="muted" style="margin:0;">We received your request. You'll get pickup instructions once the seller confirms the window.</p></div>`;
-        form.reset();
-      }catch(err){
-        result.innerHTML = `<div class="panel"><h3 style="margin-top:0;">Saved (preview mode)</h3><p class="muted" style="margin:0 0 12px;">Your request can't be submitted from this static preview. In production, this posts to the reservation endpoint. Details captured locally:</p><pre style="white-space:pre-wrap; background:#1a1a1a; color:#fff; padding:16px; border-radius:8px; overflow:auto; font-size:13px;">${esc(JSON.stringify(payload, null, 2))}</pre></div>`;
+    // Populate order summary
+    function populateOrderSummary() {
+      document.getElementById('summaryName').textContent = reservationData.displayName;
+      document.getElementById('summarySKU').textContent = `SKU: ${reservationData.displayId}`;
+      document.getElementById('summaryImage').src = 'https://via.placeholder.com/400';
+      
+      if (reservationData.listingType === 'rent') {
+        document.getElementById('priceLabel').textContent = 'Weekly Rate';
+        document.getElementById('priceValue').textContent = `$${reservationData.price.toLocaleString()}`;
+        document.getElementById('durationRow').classList.remove('hidden');
+        document.getElementById('durationValue').textContent = `${reservationData.duration} ${reservationData.duration === 1 ? 'week' : 'weeks'}`;
+      } else {
+        document.getElementById('priceLabel').textContent = 'Purchase Price';
+        document.getElementById('priceValue').textContent = `$${reservationData.price.toLocaleString()}`;
       }
-    });
+      
+      const processingFee = Math.round(reservationData.totalPrice * 0.03);
+      document.getElementById('processingFee').textContent = `$${processingFee.toLocaleString()}`;
+      document.getElementById('totalPrice').textContent = `$${(reservationData.totalPrice + processingFee).toLocaleString()}`;
+    }
 
-    load();
-  })();
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', () => {
+      loadReservationData();
+      
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      const startDateInput = document.getElementById('startDate');
+      const endDateInput = document.getElementById('endDate');
+      
+      if (startDateInput) startDateInput.min = today;
+      if (endDateInput) endDateInput.min = today;
+      
+      // Validate end date is after start date
+      if (startDateInput) {
+        startDateInput.addEventListener('change', () => {
+          if (endDateInput) endDateInput.min = startDateInput.value;
+        });
+      }
+      
+      // Form submission
+      document.getElementById('submitBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        // Basic validation
+        const requiredFields = document.querySelectorAll('#mainForm [required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            isValid = false;
+            field.style.borderColor = 'var(--error)';
+          } else {
+            field.style.borderColor = 'var(--border)';
+          }
+        });
+        
+        if (!isValid) {
+          alert('Please fill in all required fields');
+          return;
+        }
+        
+        // Prepare submission data
+        const submissionData = {
+          display: reservationData,
+          contact: {
+            name: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            company: document.getElementById('company').value
+          },
+          delivery: {
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            zip: document.getElementById('zip').value,
+            instructions: document.getElementById('instructions').value
+          }
+        };
+        
+        if (reservationData.listingType === 'rent') {
+          submissionData.event = {
+            name: document.getElementById('eventName').value,
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value
+          };
+        }
+        
+        // Show loading state
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+        
+        try {
+          // Call Netlify Function to create display/reservation
+          const response = await fetch('/.netlify/functions/createDisplay', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            // Clear session storage
+            sessionStorage.removeItem('reservationData');
+            
+            // Show success and redirect
+            alert('Reservation confirmed! You will receive a confirmation email shortly.');
+            window.location.href = 'index.html';
+          } else {
+            throw new Error(result.error || 'Reservation failed');
+          }
+        } catch (error) {
+          console.error('Error submitting reservation:', error);
+          alert('There was an error processing your reservation. Please try again.');
+          btn.disabled = false;
+          btn.textContent = 'Complete Reservation';
+        }
+      });
+    });
   </script>
 </body>
 </html>
