@@ -1,9 +1,14 @@
 {
-  "name": "trade-displays-site",
+  "name": "showroom-market",
   "version": "1.0.0",
   "private": true,
   "type": "commonjs",
+  "description": "B2B marketplace for kitchen & bath showroom liquidation",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'"
+  },
   "dependencies": {
-    "airtable": "^0.12.2"
+    "@anthropic-ai/sdk": "^0.30.0"
   }
 }
