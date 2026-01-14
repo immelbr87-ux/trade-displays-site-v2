@@ -4,7 +4,7 @@
 const headerHTML = `
 <header>
   <div class="header-container">
-    <a href="index.html" class="logo">TRADE DISPLAYS</a>
+    <a href="index.html" class="logo">TRADE <span style="color: var(--accent);">DISPLAYS</span></a>
     
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
       <span></span>
