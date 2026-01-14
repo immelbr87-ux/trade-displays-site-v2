@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List a Product - SHOWROOM MARKET</title>
+  <meta name="description" content="List your showroom floor model or display inventory on SHOWROOM MARKET. SKU auto-fill makes listing fast and easy.">
+  <link rel="stylesheet" href="app.css">
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .form-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-header p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+    }
+
+    .form-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .form-group label .required {
+      color: #dc2626;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 184, 92, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-group .help-text {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .sku-lookup {
+      display: flex;
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .sku-lookup > div {
+      flex: 1;
+    }
+
+    .btn-fetch {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-fetch:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-fetch:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+      background: #fafafa;
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+
+    .loading-state.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e5e7eb;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .success-banner {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+
+    .error-banner {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      background: #fafafa;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .spec-item {
+      font-size: 0.875rem;
+    }
+
+    .spec-item strong {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .price-suggestion {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .price-suggestion strong {
+      color: #92400e;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 184, 92, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text);
+      padding: 1rem 2rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text);
+    }
+
+    #productDetails {
+      display: none;
+    }
+
+    #productDetails.active {
+      display: block;
+    }
+
+    .readonly-field {
+      background: #fafafa;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .sku-lookup {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .specs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header inserted via include.js -->
+  
+  <div class="container">
+    
+    <div class="form-header">
+      <h1>List a Product</h1>
+      <p>Enter the SKU and we'll automatically fill in product details</p>
+    </div>
+
+    <form id="listProductForm">
+      
+      <!-- Step 1: SKU Lookup -->
+      <div class="form-section">
+        <h2>🔍 Product Lookup</h2>
+        
+        <div class="sku-lookup">
+          <div class="form-group" style="margin: 0;">
+            <label>Brand <span class="required">*</span></label>
+            <select id="brand" required>
+              <option value="">Select Brand</option>
+              <option value="kohler">Kohler</option>
+              <option value="moen">Moen</option>
+              <option value="delta">Delta Faucet</option>
+              <option value="american standard">American Standard</option>
+              <option value="subzero">Sub-Zero</option>
+              <option value="wolf">Wolf</option>
+              <option value="thermador">Thermador</option>
+              <option value="kitchenaid">KitchenAid</option>
+              <option value="hansgrohe">Hansgrohe</option>
+              <option value="brizo">Brizo</option>
+              <option value="rohl">Rohl</option>
+              <option value="waterworks">Waterworks</option>
+              <option value="toto">TOTO</option>
+              <option value="duravit">Duravit</option>
+              <option value="grohe">Grohe</option>
+              <option value="viking">Viking</option>
+              <option value="jenn-air">Jenn-Air</option>
+              <option value="ge">GE Appliances</option>
+              <option value="bosch">Bosch</option>
+              <option value="dacor">Dacor</option>
+            </select>
+          </div>
+          
+          <div class="form-group" style="margin: 0;">
+            <label>SKU / Model Number <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="sku" 
+              placeholder="e.g., K-72574-VS"
+              required
+            >
+          </div>
+          
+          <button 
+            type="button" 
+            id="fetchButton"
+            class="btn-fetch"
+            onclick="fetchProductDetails()"
+          >
+            ✨ Fetch Details
+          </button>
+        </div>
+        
+        <p class="help-text" style="margin-top: 1rem;">
+          Enter the manufacturer's SKU or model number and we'll automatically look up product details, specifications, and retail pricing.
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading-state">
+        <div class="spinner"></div>
+        <h3>Fetching product details...</h3>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">
+          This usually takes 3-5 seconds
+        </p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorMessage" style="display: none;"></div>
+
+      <!-- Step 2: Product Details (Auto-Filled) -->
+      <div id="productDetails">
+        
+        <div class="success-banner">
+          <span style="font-size: 1.5rem;">✅</span>
+          <span>Product details loaded! Review and edit as needed, then add your listing details below.</span>
+        </div>
+
+        <!-- Product Information -->
+        <div class="form-section">
+          <h2>📦 Product Information</h2>
+          
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="productName" class="readonly-field" readonly>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="category" class="readonly-field" readonly>
+            </div>
+            
+            <div class="form-group">
+              <label>Subcategory</label>
+              <input type="text" id="subcategory" class="readonly-field" readonly>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="description" rows="4" class="readonly-field" readonly></textarea>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Retail Price</label>
+              <input type="text" id="retailPrice" class="readonly-field" readonly>
+            </div>
+            
+            <div class="form-group">
+              <label>Finish / Color</label>
+              <input type="text" id="finish" class="readonly-field" readonly>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Specifications</label>
+            <div id="specifications" class="specs-grid"></div>
+          </div>
+        </div>
+
+        <!-- Your Listing Details -->
+        <div class="form-section">
+          <h2>✏️ Your Listing Details</h2>
+          
+          <div class="form-group">
+            <label>Condition Grade <span class="required">*</span></label>
+            <select id="conditionGrade" required>
+              <option value="">Select condition...</option>
+              <option value="A+">A+ - Like New (No visible wear)</option>
+              <option value="A">A - Excellent (Minimal wear)</option>
+              <option value="B+">B+ - Good (Light wear)</option>
+              <option value="B">B - Fair (Moderate wear)</option>
+            </select>
+            <p class="help-text">Be honest about condition. Buyers will inspect before accepting.</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Your Price <span class="required">*</span></label>
+            <input 
+              type="number" 
+              id="yourPrice" 
+              placeholder="0.00" 
+              step="0.01"
+              required
+            >
+            <div id="priceSuggestion" class="price-suggestion" style="display: none;"></div>
+          </div>
+          
+          <div class="form-group">
+            <label>Condition Notes</label>
+            <textarea 
+              id="conditionNotes" 
+              rows="3"
+              placeholder="Describe the item's condition, any imperfections, and what makes it a great deal..."
+            ></textarea>
+            <p class="help-text">The more detailed, the better. Mention any scratches, dents, or missing parts.</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Photos <span class="required">*</span></label>
+            <input 
+              type="file" 
+              id="photos" 
+              multiple 
+              accept="image/jpeg,image/png,image/webp"
+              required
+            >
+            <p class="help-text">Upload 3-10 high-quality photos. Include all angles and any imperfections.</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Pickup Window <span class="required">*</span></label>
+            <div class="form-grid">
+              <div>
+                <label style="font-weight: 400; font-size: 0.875rem;">Start Date</label>
+                <input type="date" id="pickupStart" required>
+              </div>
+              <div>
+                <label style="font-weight: 400; font-size: 0.875rem;">End Date</label>
+                <input type="date" id="pickupEnd" required>
+              </div>
+            </div>
+            <p class="help-text">When is this item available for pickup? (24-48 hour window recommended)</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Pickup Instructions</label>
+            <textarea 
+              id="pickupInstructions" 
+              rows="3"
+              placeholder="Loading dock hours, parking instructions, contact person, etc..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div style="display: flex; gap: 1rem;">
+          <button type="button" class="btn-secondary" onclick="resetForm()">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary">
+            Publish Listing
+          </button>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- Footer inserted via include.js -->
+  
+  <script src="shared/include.js"></script>
+  <script>
+    // Fetch product details from SKU
+    async function fetchProductDetails() {
+      const sku = document.getElementById('sku').value.trim();
+      const brand = document.getElementById('brand').value;
+      
+      // Validate input
+      if (!sku) {
+        alert('Please enter a SKU / Model Number');
+        document.getElementById('sku').focus();
+        return;
+      }
+      
+      if (!brand) {
+        alert('Please select a brand');
+        document.getElementById('brand').focus();
+        return;
+      }
+      
+      // Show loading state
+      document.getElementById('loading').classList.add('active');
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('productDetails').classList.remove('active');
+      document.getElementById('fetchButton').disabled = true;
+      
+      try {
+        const response = await fetch('/.netlify/functions/fetch-product-details', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ sku, brand })
+        });
+        
+        const data = await response.json();
+        
+        if (data.found) {
+          // Success! Fill in the form
+          populateProductDetails(data);
+          
+          // Hide loading, show form
+          document.getElementById('loading').classList.remove('active');
+          document.getElementById('productDetails').classList.add('active');
+          
+          // Scroll to product details
+          document.getElementById('productDetails').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+          
+        } else {
+          // Product not found
+          showError(
+            data.message || 'Product not found',
+            data.suggestion || 'Please double-check the SKU or try entering details manually.'
+          );
+        }
+        
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        showError(
+          'Unable to fetch product details',
+          'There was an error connecting to the product database. Please try again or enter details manually.'
+        );
+      } finally {
+        document.getElementById('fetchButton').disabled = false;
+      }
+    }
+
+    // Populate form with product data
+    function populateProductDetails(data) {
+      // Basic info
+      document.getElementById('productName').value = data.product_name || '';
+      document.getElementById('category').value = data.category || '';
+      document.getElementById('subcategory').value = data.subcategory || '';
+      document.getElementById('description').value = data.description || '';
+      document.getElementById('finish').value = data.finish || data.color || '';
+      
+      // Pricing
+      if (data.retail_price) {
+        document.getElementById('retailPrice').value = '$' + data.retail_price.toLocaleString();
+        
+        // Set suggested price
+        if (data.suggested_price) {
+          document.getElementById('yourPrice').value = data.suggested_price;
+        }
+        
+        // Show price suggestion
+        if (data.suggested_range) {
+          const suggestion = document.getElementById('priceSuggestion');
+          suggestion.style.display = 'block';
+          suggestion.innerHTML = `
+            <strong>💡 Pricing Suggestion:</strong><br>
+            Retail: $${data.retail_price.toLocaleString()} | 
+            Suggested Range: $${data.suggested_range.min.toLocaleString()} - $${data.suggested_range.max.toLocaleString()} 
+            (${data.savings_percentage}% off retail)
+          `;
+        }
+      }
+      
+      // Specifications
+      if (data.specifications && Object.keys(data.specifications).length > 0) {
+        const specsDiv = document.getElementById('specifications');
+        specsDiv.innerHTML = '';
+        
+        for (const [key, value] of Object.entries(data.specifications)) {
+          const specItem = document.createElement('div');
+          specItem.className = 'spec-item';
+          specItem.innerHTML = `
+            <strong>${key}</strong>
+            <span>${value}</span>
+          `;
+          specsDiv.appendChild(specItem);
+        }
+      }
+      
+      // Add dimensions to specs if available
+      if (data.dimensions) {
+        const dims = data.dimensions;
+        if (dims.width || dims.depth || dims.height) {
+          const specsDiv = document.getElementById('specifications');
+          const dimItem = document.createElement('div');
+          dimItem.className = 'spec-item';
+          dimItem.innerHTML = `
+            <strong>Dimensions</strong>
+            <span>${dims.width || '?'}" W × ${dims.depth || '?'}" D × ${dims.height || '?'}" H</span>
+          `;
+          specsDiv.appendChild(dimItem);
+        }
+      }
+    }
+
+    // Show error message
+    function showError(title, message) {
+      document.getElementById('loading').classList.remove('active');
+      
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.className = 'error-banner';
+      errorDiv.style.display = 'flex';
+      errorDiv.innerHTML = `
+        <span style="font-size: 1.5rem;">⚠️</span>
+        <div>
+          <strong>${title}</strong><br>
+          <span style="font-weight: 400;">${message}</span>
+        </div>
+      `;
+      
+      errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Reset form
+    function resetForm() {
+      if (confirm('Are you sure? This will clear all entered data.')) {
+        document.getElementById('listProductForm').reset();
+        document.getElementById('productDetails').classList.remove('active');
+        document.getElementById('errorMessage').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('listProductForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Validate photos
+      const photos = document.getElementById('photos').files;
+      if (photos.length < 3) {
+        alert('Please upload at least 3 photos');
+        return;
+      }
+      
+      if (photos.length > 10) {
+        alert('Maximum 10 photos allowed');
+        return;
+      }
+      
+      // Validate pickup dates
+      const startDate = new Date(document.getElementById('pickupStart').value);
+      const endDate = new Date(document.getElementById('pickupEnd').value);
+      
+      if (endDate < startDate) {
+        alert('End date must be after start date');
+        return;
+      }
+      
+      // Here you would normally submit to your backend
+      // For now, just show success message
+      alert('✅ Listing created successfully! (This is a demo - actual submission would happen here)');
+      
+      // Reset form
+      resetForm();
+    });
+
+    // Set minimum pickup date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('pickupStart').min = today;
+    document.getElementById('pickupEnd').min = today;
+
+    // Update end date minimum when start date changes
+    document.getElementById('pickupStart').addEventListener('change', function() {
+      document.getElementById('pickupEnd').min = this.value;
+    });
+  </script>
+
+</body>
+</html>
