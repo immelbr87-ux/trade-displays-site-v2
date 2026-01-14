@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browse Displays - Trade Displays Marketplace</title>
-  <meta name="description" content="Browse hundreds of trade show displays available for rent or purchase. Filter by size, type, and price.">
+  <title>Browse Products - SHOWROOM MARKET | Kitchen & Bath Floor Models</title>
+  <meta name="description" content="Browse premium kitchen and bath showroom floor models. Cabinetry, vanities, appliances, fixtures from top brands. Wholesale prices for trade professionals.">
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -12,27 +12,27 @@
   <!-- Header inserted via include.js -->
   
   <section class="container" style="padding: 3rem 0;">
-    <h1 style="margin-bottom: 1rem;">Browse Displays</h1>
-    <p style="color: var(--text-muted); margin-bottom: 2rem;">Find the perfect display for your next trade show or event.</p>
+    <h1 style="margin-bottom: 1rem;">Browse Premium Products</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Kitchen and bath floor models from top showrooms nationwide.</p>
     
     <!-- Filters -->
     <div class="filters">
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search displays...">
+        <input type="text" id="searchInput" placeholder="Search kitchen & bath products...">
       </div>
       
       <div class="filter-group">
         <label style="font-weight: 600; margin-right: 0.5rem;">Category:</label>
         <select class="form-select" id="categoryFilter" style="width: auto; padding: 0.625rem 1rem;">
           <option value="all">All Categories</option>
-          <option value="10x10">10x10 Displays</option>
-          <option value="20x20">20x20 Island Booths</option>
-          <option value="inline">Inline Displays</option>
-          <option value="custom">Custom Exhibits</option>
-          <option value="portable">Portable Pop-Ups</option>
-          <option value="tension">Tension Fabric</option>
-          <option value="kiosk">Kiosks & Counters</option>
-          <option value="accessories">Accessories</option>
+          <option value="cabinetry">Kitchen Cabinetry</option>
+          <option value="vanities">Bathroom Vanities</option>
+          <option value="faucets">Luxury Faucets</option>
+          <option value="sinks">Kitchen Sinks</option>
+          <option value="appliances">High-End Appliances</option>
+          <option value="shower-tub">Shower & Tub Systems</option>
+          <option value="countertops">Countertops & Surfaces</option>
+          <option value="hardware">Hardware & Fixtures</option>
         </select>
       </div>
       
@@ -74,14 +74,14 @@
     <div id="displaysGrid" class="product-grid">
       <div class="loading">
         <div class="spinner"></div>
-        <p>Loading displays...</p>
+        <p>Loading products...</p>
       </div>
     </div>
     
     <!-- Empty State -->
     <div id="emptyState" class="hidden" style="text-align: center; padding: 4rem 2rem;">
       <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
-      <h3>No displays found</h3>
+      <h3>No products found</h3>
       <p style="color: var(--text-muted); margin-top: 0.5rem;">Try adjusting your filters or search criteria.</p>
       <button onclick="resetFilters()" class="btn btn-outline" style="margin-top: 1.5rem;">Reset Filters</button>
     </div>
@@ -110,7 +110,7 @@
         console.error('Error loading displays:', error);
         document.getElementById('displaysGrid').innerHTML = `
           <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
-            <p style="color: var(--error);">Unable to load displays. Please try again later.</p>
+            <p style="color: var(--error);">Unable to load products. Please try again later.</p>
           </div>
         `;
       }
@@ -229,7 +229,7 @@
     // Update results count
     function updateResultsCount(count) {
       document.getElementById('resultsCount').textContent = 
-        `Showing ${count} ${count === 1 ? 'display' : 'displays'}`;
+        `Showing ${count} ${count === 1 ? 'product' : 'products'}`;
     }
 
     // Reset filters
