@@ -4,7 +4,7 @@
 const headerHTML = `
 <header>
   <nav style="max-width: 1400px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; justify-content: space-between; align-items: center;">
-    <a href="index.html" class="logo">TRADE <span style="color: var(--accent);">DISPLAYS</span></a>
+    <a href="index.html" class="logo">SHOWROOM <span style="color: var(--accent);">MARKET</span></a>
     
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
       <span></span>
@@ -33,8 +33,8 @@ const footerHTML = `
   <div class="container">
     <div class="footer-content">
       <div>
-        <div class="footer-brand">TRADE DISPLAYS</div>
-        <p class="footer-tagline">The verified marketplace for showroom floor models. Pickup-only. Escrow protected. Built for clean trades.</p>
+        <div class="footer-brand">SHOWROOM MARKET</div>
+        <p class="footer-tagline">Premium Kitchen & Bath Floor Models. Powered by Bargain Bond. B2B marketplace connecting showroom managers with verified trade buyers.</p>
       </div>
       
       <div class="footer-column">
@@ -67,7 +67,7 @@ const footerHTML = `
     </div>
     
     <div class="footer-bottom">
-      <div>© ${new Date().getFullYear()} Trade Displays by Bargain Bond. All rights reserved.</div>
+      <div>© ${new Date().getFullYear()} SHOWROOM MARKET. Powered by Bargain Bond. All rights reserved.</div>
       <div class="footer-legal">
         <a href="terms.html">Privacy</a>
         <a href="terms.html">Terms</a>
