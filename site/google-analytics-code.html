@@ -1,0 +1,181 @@
+<!-- Google Analytics 4 - Add this to ALL pages just before </head> tag -->
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24K6Q1ZWM4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Configure with your settings
+  gtag('config', 'G-24K6Q1ZWM4', {
+    'anonymize_ip': true,  // GDPR compliance
+    'cookie_flags': 'SameSite=None;Secure',  // Cookie security
+    'send_page_view': true
+  });
+  
+  // Custom events for tracking
+  
+  // Track product views
+  function trackProductView(productId, productName, price) {
+    gtag('event', 'view_item', {
+      'event_category': 'Product',
+      'event_label': productName,
+      'value': price,
+      'currency': 'USD',
+      'items': [{
+        'item_id': productId,
+        'item_name': productName,
+        'price': price
+      }]
+    });
+  }
+  
+  // Track reservations
+  function trackReservation(productId, productName, price) {
+    gtag('event', 'begin_checkout', {
+      'event_category': 'Transaction',
+      'event_label': productName,
+      'value': price,
+      'currency': 'USD',
+      'items': [{
+        'item_id': productId,
+        'item_name': productName,
+        'price': price
+      }]
+    });
+  }
+  
+  // Track completed purchases
+  function trackPurchase(transactionId, productName, price) {
+    gtag('event', 'purchase', {
+      'transaction_id': transactionId,
+      'value': price,
+      'currency': 'USD',
+      'items': [{
+        'item_name': productName,
+        'price': price
+      }]
+    });
+  }
+  
+  // Track contact form submissions
+  function trackContactForm() {
+    gtag('event', 'contact_form_submit', {
+      'event_category': 'Engagement',
+      'event_label': 'Contact Form'
+    });
+  }
+  
+  // Track pilot program signups
+  function trackPilotSignup() {
+    gtag('event', 'pilot_signup', {
+      'event_category': 'Conversion',
+      'event_label': 'Pilot Program'
+    });
+  }
+  
+  // Track category views
+  function trackCategoryView(category) {
+    gtag('event', 'view_item_list', {
+      'event_category': 'Browse',
+      'event_label': category,
+      'item_list_name': category
+    });
+  }
+  
+  // Track search
+  function trackSearch(searchTerm) {
+    gtag('event', 'search', {
+      'search_term': searchTerm
+    });
+  }
+  
+  // Track outbound links
+  document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && e.target.href.indexOf(location.hostname) === -1) {
+      gtag('event', 'click', {
+        'event_category': 'Outbound Link',
+        'event_label': e.target.href
+      });
+    }
+  });
+  
+  // Track scroll depth
+  let scrollTracked = false;
+  window.addEventListener('scroll', function() {
+    const scrollPercent = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100;
+    
+    if (scrollPercent > 75 && !scrollTracked) {
+      gtag('event', 'scroll_depth', {
+        'event_category': 'Engagement',
+        'event_label': '75% Scrolled'
+      });
+      scrollTracked = true;
+    }
+  });
+</script>
+
+<!-- 
+INSTALLATION INSTRUCTIONS:
+
+1. Copy this entire code block
+2. Paste it in the <head> section of EVERY page, just before </head>
+3. Pages that need it:
+   - index.html
+   - market.html
+   - about.html
+   - how-it-works.html
+   - pilot-program.html
+   - contact.html
+   - faq.html
+   - listing-details.html
+   - reserve-confirmation.html
+   - privacy.html
+   - cookies.html
+   - terms.html
+   - All other pages
+
+4. The tracking code will automatically:
+   ✅ Track page views
+   ✅ Track user behavior
+   ✅ Anonymize IPs (GDPR)
+   ✅ Respect cookie consent
+   ✅ Track custom events
+
+5. IMPORTANT: Update cookie banner
+   - The cookie banner needs to load GA4 only after consent
+   - See updated cookie-banner-code.html
+
+USAGE EXAMPLES:
+
+When user views a product:
+<script>
+  trackProductView('prod_123', 'Kohler Kitchen Island', 8450);
+</script>
+
+When user clicks Reserve:
+<script>
+  trackReservation('prod_123', 'Kohler Kitchen Island', 8450);
+</script>
+
+When purchase complete:
+<script>
+  trackPurchase('txn_789', 'Kohler Kitchen Island', 8450);
+</script>
+
+When contact form submitted:
+<script>
+  trackContactForm();
+</script>
+
+CONVERSIONS TO SET UP IN GA4:
+1. Pilot Program Signup
+2. Product Reservation
+3. Purchase Complete
+4. Contact Form Submit
+5. Category Browse
+
+Go to GA4 Dashboard → Admin → Events → Create Conversion
+Mark these events as conversions to track in reports.
+-->
