@@ -1,98 +1,286 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FAQ — Trade Displays</title>
-  <meta name="description" content="Trade Displays by Bargain Bond — pickup-only showroom transactions with buyer inspection and internal reporting." />
-  <link rel="stylesheet" href="app.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Frequently Asked Questions | Trade Displays</title>
+  <meta name="description" content="Find answers to common questions about buying, selling, and renting trade show displays on Trade Displays.">
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
-  <div id="bb-header"></div>
-
-  <div class="container pagewrap">
-    <div class="pagehead">
-      <h1 style="margin-top:10px;">FAQ</h1>
-      <p class="lede" style="max-width:860px;">Clear answers to the most common questions from showroom teams and trade buyers.</p>
+  
+  <!-- Header inserted via include.js -->
+  
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>Frequently Asked Questions</h1>
+      <p>Find answers to common questions about Trade Displays.</p>
     </div>
+  </section>
 
-    
-<section class="panel">
-  <h2>Basics</h2>
-  <details open>
-    <summary><b>What is Trade Displays?</b></summary>
-    <p>Trade Displays is a pickup-only listing and transaction flow designed for showrooms to move floor models and clearance items with clear buyer expectations. Buyers inspect at pickup and confirm acceptance before funds are released.</p>
-  </details>
-  <details>
-    <summary><b>Is this a marketplace with delivery?</b></summary>
-    <p>No. Trade Displays is pickup-only. We do not coordinate shipping or delivery.</p>
-  </details>
-  <details>
-    <summary><b>Who can buy?</b></summary>
-    <p>Trade Displays is designed for vetted trade buyers — interior designers, stagers, architects, builders, and other trade professionals. Buyers inspect at pickup before acceptance.</p>
-  </details>
-  <details>
-    <summary><b>What if a buyer doesn’t show up?</b></summary>
-    <p>If a buyer misses the pickup window, the reservation can be forfeited and the item may be relisted. (Pilot details can be customized per showroom.)</p>
-  </details>
-  <details>
-    <summary><b>Who is it for?</b></summary>
-    <p>Showroom teams that occasionally remove or replace displays (vanities, faucets, toilets, fixtures) and want a clean, documented way to sell them as-is without post-pickup disputes.</p>
-  </details>
-</section>
+  <!-- FAQ Categories -->
+  <section class="container" style="padding: 3rem 0 1rem;">
+    <div class="tab-nav" style="justify-content: center;">
+      <button class="tab-btn active" onclick="showCategory(0)">General</button>
+      <button class="tab-btn" onclick="showCategory(1)">Buying</button>
+      <button class="tab-btn" onclick="showCategory(2)">Renting</button>
+      <button class="tab-btn" onclick="showCategory(3)">Selling</button>
+    </div>
+  </section>
 
-<section class="panel">
-  <h2>Pickup, inspection, and payment</h2>
-  <details open>
-    <summary><b>When does the buyer pay?</b></summary>
-    <p>At reservation. Funds are held until pickup is completed and the buyer confirms the item matches the listing.</p>
-  </details>
-  <details>
-    <summary><b>What happens at pickup?</b></summary>
-    <p>The buyer inspects the item on-site. If it matches the listing, the buyer confirms acceptance and funds are released.</p>
-  </details>
-  <details>
-    <summary><b>What if the item doesn’t match the listing?</b></summary>
-    <p>The buyer can decline acceptance at pickup. In that case, the transaction is cancelled and funds are not released.</p>
-  </details>
-</section>
-
-<section class="panel">
-  <h2>Condition and disputes</h2>
-  <details open>
-    <summary><b>What do Grade A and Grade B mean?</b></summary>
-    <p><b>Grade A</b> is showroom-ready with only minor wear (light scuffs, normal display handling). <b>Grade B</b> has noticeable cosmetic wear or missing non-critical items that are clearly disclosed. Full definitions are on the <a href="/trust">Trust &amp; Brand Safety</a> page.</p>
-  </details>
-  <details>
-    <summary><b>Are returns allowed?</b></summary>
-    <p>After the buyer accepts at pickup, the sale is final. Items are sold as-is.</p>
-  </details>
-  <details>
-    <summary><b>What disputes are allowed?</b></summary>
-    <p>Disputes are limited to <b>material misrepresentation</b> (e.g., incorrect model, undisclosed major damage, missing critical components when the listing said “complete”). Normal wear consistent with the grade is not dispute-eligible.</p>
-  </details>
-</section>
-
-<section class="panel">
-  <h2>Using this with leadership / compliance</h2>
-  <details open>
-    <summary><b>How do we summarize results internally?</b></summary>
-    <p>Completed sales can be summarized with a lightweight scorecard: <ul><li><b>Sale price</b> and <b>net proceeds</b> after the success fee</li><li><b>Days to clearance</b> (time from listing → pickup)</li><li><b>Space recovered</b> (e.g., vignette removed / bays freed)</li><li><b>Zero-shipping avoided</b> (no crating, no freight claims)</li></ul>This is designed to be easily forwardable to leadership.</p>
-  </details>
-  <details>
-    <summary><b>Does this change showroom warranty policy?</b></summary>
-    <p>No. These are as-is sales of floor model/clearance items. Any manufacturer warranty policies remain unchanged and should be communicated consistently in the listing.</p>
-  </details>
-</section>
-
-<section class="panel">
-  <h2>Next step</h2>
-  <p>If you’re a showroom and want to test with 2–3 items, start with the <a href="/pilot">Pilot</a> page or go directly to <a href="/list-a-display.html">List a Floor Model</a>.</p>
-</section>
-
+  <!-- General FAQs -->
+  <div id="category0" class="tab-content active">
+    <section class="container" style="padding: 2rem 0 4rem;">
+      <div style="max-width: 900px; margin: 0 auto;">
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">What is Trade Displays?</h3>
+          <p style="color: var(--text-muted);">
+            Trade Displays is a dedicated marketplace for buying, selling, and renting trade show displays. 
+            We connect exhibitors with verified sellers, providing a secure platform for transactions with 
+            transparent pricing and professional support.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How does Trade Displays work?</h3>
+          <p style="color: var(--text-muted);">
+            Buyers browse our marketplace, select displays, and complete secure transactions. Sellers list 
+            their inventory with photos and specifications. We handle payment processing, buyer protection, 
+            and provide support throughout the entire process.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Is Trade Displays free to use?</h3>
+          <p style="color: var(--text-muted);">
+            Browsing and buying is completely free for buyers. Sellers pay a small commission (5%) only 
+            on completed sales. Our pilot program offers 0% commission for the first 6 months.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Are all sellers verified?</h3>
+          <p style="color: var(--text-muted);">
+            Yes! Every seller goes through a verification process where we check business credentials, 
+            contact information, and references. We only approve legitimate businesses with proven track records.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">What if I have a problem with my order?</h3>
+          <p style="color: var(--text-muted);">
+            Contact our support team immediately at hello@tradedisplays.com or call (123) 456-7890. 
+            We offer dispute resolution services and work to ensure fair outcomes for both parties.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem;">
+          <h3 style="margin-bottom: 1rem;">How do I contact customer support?</h3>
+          <p style="color: var(--text-muted);">
+            Email us at hello@tradedisplays.com, call (123) 456-7890 during business hours (M-F, 9am-6pm EST), 
+            or use our <a href="contact.html" style="color: var(--accent);">contact form</a>. We typically 
+            respond within 24 hours.
+          </p>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <div id="bb-footer"></div>
+  <!-- Buying FAQs -->
+  <div id="category1" class="tab-content">
+    <section class="container" style="padding: 2rem 0 4rem;">
+      <div style="max-width: 900px; margin: 0 auto;">
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How do I purchase a display?</h3>
+          <p style="color: var(--text-muted);">
+            Browse displays, select one you like, and click "Make Offer" or accept the listed price. 
+            Complete the checkout process with your payment and shipping information. The display ships 
+            once payment is confirmed.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Are payments secure?</h3>
+          <p style="color: var(--text-muted);">
+            Yes! All payments are processed through our secure escrow system. Your money is held until 
+            you confirm receipt of the display. Sellers only receive payment after successful delivery.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">What if the display isn't as described?</h3>
+          <p style="color: var(--text-muted);">
+            You have 7 days to inspect the display upon delivery. If it doesn't match the description, 
+            contact us immediately. We'll arrange a return and full refund through our buyer protection program.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Can I negotiate the price?</h3>
+          <p style="color: var(--text-muted);">
+            Yes! Most sellers accept offers. Click "Make Offer" on any listing to submit your proposal. 
+            Sellers can accept, decline, or counter your offer.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How much does shipping cost?</h3>
+          <p style="color: var(--text-muted);">
+            Shipping costs vary based on display size, weight, and destination. You'll see the exact 
+            shipping cost during checkout before completing your purchase.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem;">
+          <h3 style="margin-bottom: 1rem;">Do you ship internationally?</h3>
+          <p style="color: var(--text-muted);">
+            Currently we only ship within the United States. International shipping is planned for 2025.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Renting FAQs -->
+  <div id="category2" class="tab-content">
+    <section class="container" style="padding: 2rem 0 4rem;">
+      <div style="max-width: 900px; margin: 0 auto;">
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How does rental pricing work?</h3>
+          <p style="color: var(--text-muted);">
+            Rentals are priced per week. We offer discounts for longer durations: 10% off for 2 weeks, 
+            15% off for 1 month. The price shown includes delivery to and return shipping from your event.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">When will the display arrive?</h3>
+          <p style="color: var(--text-muted);">
+            Displays typically ship 3-5 days before your event start date to ensure timely arrival. 
+            You can specify your preferred delivery date during checkout.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">What happens if the display is damaged during my event?</h3>
+          <p style="color: var(--text-muted);">
+            Normal wear and tear is included. For significant damage, you're responsible for repair costs. 
+            We offer optional damage waiver insurance for complete peace of mind.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How do I return the display?</h3>
+          <p style="color: var(--text-muted);">
+            Return shipping is included and pre-arranged. We'll send you a prepaid shipping label and 
+            pickup instructions. The display must be returned within 24 hours of your event end date.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Can I extend my rental period?</h3>
+          <p style="color: var(--text-muted);">
+            Yes! Contact us before your rental period ends to extend. Additional weeks are charged at 
+            the standard weekly rate, subject to availability.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem;">
+          <h3 style="margin-bottom: 1rem;">What's your cancellation policy?</h3>
+          <p style="color: var(--text-muted);">
+            Free cancellation up to 48 hours before your event start date. Cancellations within 48 hours 
+            forfeit 50% of the rental fee.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Selling FAQs -->
+  <div id="category3" class="tab-content">
+    <section class="container" style="padding: 2rem 0 4rem;">
+      <div style="max-width: 900px; margin: 0 auto;">
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How do I become a seller?</h3>
+          <p style="color: var(--text-muted);">
+            Apply through our <a href="pilot-program.html" style="color: var(--accent);">pilot program page</a>. 
+            We'll verify your business credentials and typically approve applications within 24-48 hours.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">What are the seller fees?</h3>
+          <p style="color: var(--text-muted);">
+            Standard sellers pay 5% commission on completed sales. Pilot program members (first 100 sellers) 
+            pay 0% commission for their first 6 months.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">How do I get paid?</h3>
+          <p style="color: var(--text-muted);">
+            Payment is released to your account 2-3 business days after the buyer confirms receipt. 
+            We use secure bank transfers for all seller payouts.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Who handles shipping?</h3>
+          <p style="color: var(--text-muted);">
+            Sellers are responsible for packaging and shipping displays to buyers. We provide shipping 
+            guidelines and can recommend trusted freight partners for large displays.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem;">Can I list the same display for rent and sale?</h3>
+          <p style="color: var(--text-muted);">
+            Absolutely! Dual listing maximizes your revenue opportunities. You can offer the same display 
+            for both rental and purchase with different pricing.
+          </p>
+        </div>
+        
+        <div class="card" style="padding: 2rem;">
+          <h3 style="margin-bottom: 1rem;">What if a buyer doesn't pay?</h3>
+          <p style="color: var(--text-muted);">
+            Payment is collected upfront through our escrow system. Buyers cannot reserve displays without 
+            completing payment, so this isn't an issue.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Still have questions -->
+  <section class="hero" style="padding: 4rem 0;">
+    <div class="container">
+      <h2>Still Have Questions?</h2>
+      <p style="max-width: 600px; margin: 1rem auto 2rem;">
+        Can't find what you're looking for? Our team is here to help.
+      </p>
+      <a href="contact.html" class="btn btn-primary">Contact Support</a>
+    </div>
+  </section>
+
+  <!-- Footer inserted via include.js -->
+  
   <script src="shared/include.js"></script>
+  <script>
+    function showCategory(index) {
+      // Update tab buttons
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+      
+      // Show corresponding content
+      document.querySelectorAll('[id^="category"]').forEach((content, i) => {
+        content.classList.toggle('active', i === index);
+      });
+      
+      // Scroll to content
+      window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
