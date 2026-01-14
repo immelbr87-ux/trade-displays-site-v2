@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHOWROOM MARKET - Complete Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #fafafa;
+      --bg-secondary: #ffffff;
+      --text: #111111;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #00b85c;
+      --accent-hover: #009648;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    nav {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-cta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #27272a 0%, #3f3f46 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #3f3f46 0%, #52525b 100%);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-small {
+      padding: 10px 16px;
+      font-size: 13px;
+      border-radius: 6px;
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 32px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #166534;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-badge::before {
+      content: '✓';
+      font-weight: 900;
+    }
+
+    h1 {
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -1.5px;
+      color: var(--text);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(18px, 2vw, 22px);
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 40px;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 32px 60px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      display: block;
+      letter-spacing: -1px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Ticker */
+    .ticker-section {
+      background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+      overflow: hidden;
+      padding: 28px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ticker-wrapper {
+      display: flex;
+      width: fit-content;
+      animation: scroll 60s linear infinite;
+      gap: 16px;
+    }
+
+    .ticker-wrapper:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .ticker-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .ticker-item span {
+      color: var(--accent);
+      font-weight: 600;
+      margin-left: 12px;
+      font-size: 13px;
+    }
+
+    /* Section */
+    .section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    .section.how-it-works {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .section-header p {
+      font-size: 18px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* Steps */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: var(--text);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      margin: 0 auto 20px;
+    }
+
+    .step h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .feature-card {
+      background: var(--bg-secondary);
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--accent);
+      font-size: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .product-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+      border-color: var(--text);
+    }
+
+    .product-image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .product-badges {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .badge-grade {
+      background: rgba(16, 185, 129, 0.95);
+      color: #ffffff;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-rating {
+      background: rgba(17, 17, 17, 0.92);
+      color: #ffffff;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .product-location {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .product-price {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+
+    .product-retail {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      margin-bottom: 16px;
+    }
+
+    .product-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Brands Section */
+    .brands-section {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 32px;
+    }
+
+    .brands-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .brand-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .brand-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      max-width: 1000px;
+      margin: 40px auto 80px;
+      padding: 60px 32px;
+      background: var(--text);
+      color: white;
+      text-align: center;
+      border-radius: 16px;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      margin-bottom: 16px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .cta-section p {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 60px 32px 40px;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-brand span {
+      color: var(--accent);
+    }
+
+    .footer-tagline {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-column h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 12px;
+      font-size: 14px;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .footer-column a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal a {
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .footer-legal a:hover {
+      color: var(--text);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      color: var(--text-muted);
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 1024px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .product-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .footer-content { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <nav>
+      <div class="logo" onclick="showPage('home')">SHOWROOM <span>MARKET</span></div>
+      <div class="nav-links">
+        <a onclick="showPage('market')">Browse</a>
+        <a onclick="showPage('how')">How It Works</a>
+        <a onclick="showPage('pilot')">For Showrooms</a>
+      </div>
+      <div class="nav-cta">
+        <a onclick="showPage('signin')" class="btn btn-secondary">Sign In</a>
+        <a onclick="showPage('pilot')" class="btn btn-primary">List Your Inventory</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-badge">B2B Marketplace</div>
+      <h1>Premium Kitchen & Bath Floor Models</h1>
+      <p class="hero-subtitle">
+        Connect with verified showrooms liquidating floor models and display inventory. Save 40-70% on premium brands. Inspect before accepting. Funds held in escrow.
+      </p>
+      <div class="hero-cta">
+        <a onclick="showPage('market')" class="btn btn-primary">Browse Inventory</a>
+        <a onclick="showPage('pilot')" class="btn btn-secondary">List Your Showroom</a>
+      </div>
+    </section>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-number">247</span>
+        <span class="stat-label">Active Listings</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">40-70%</span>
+        <span class="stat-label">Below Retail</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">42</span>
+        <span class="stat-label">Verified Showrooms</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">24-48hr</span>
+        <span class="stat-label">Pickup Window</span>
+      </div>
+    </div>
+
+    <div class="ticker-section">
+      <div class="ticker-wrapper">
+        <a onclick="showPage('category')" class="ticker-item">Kitchen Cabinetry <span>42 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Bathroom Vanities <span>38 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Appliances <span>24 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Faucets & Fixtures <span>67 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Lighting <span>31 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Sinks & Basins <span>45 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Hardware <span>89 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Accessories <span>52 listings</span></a>
+        <!-- Duplicate -->
+        <a onclick="showPage('category')" class="ticker-item">Kitchen Cabinetry <span>42 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Bathroom Vanities <span>38 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Appliances <span>24 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Faucets & Fixtures <span>67 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Lighting <span>31 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Sinks & Basins <span>45 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Hardware <span>89 listings</span></a>
+        <a onclick="showPage('category')" class="ticker-item">Accessories <span>52 listings</span></a>
+      </div>
+    </div>
+
+    <section class="section how-it-works">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Simple, secure transactions from browse to pickup</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Browse & Reserve</h3>
+          <p>Search premium K&B products at 40-70% off retail. Reserve with secure escrow payment.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Schedule Pickup</h3>
+          <p>Coordinate pickup timing with showroom. Funds held in escrow until acceptance.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Inspect On-Site</h3>
+          <p>Visit showroom, inspect thoroughly. Accept if condition matches listing.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Accept & Complete</h3>
+          <p>Accept via app, funds release to seller. Load and transport same day.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Why SHOWROOM MARKET</h2>
+        <p>The trusted B2B marketplace for kitchen & bath professionals</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">✓</div>
+          <h3>Verified Showrooms</h3>
+          <p>Every showroom verified with business license and EIN. B2B only - no consumers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Escrow Protected</h3>
+          <p>Funds held securely until acceptance. Full refund if item doesn't match listing.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👀</div>
+          <h3>Inspect Before Buying</h3>
+          <p>Visit showroom in person. Measure, photograph, test before accepting.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Massive Savings</h3>
+          <p>Floor models 40-70% below retail. Premium brands at wholesale prices.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⭐</div>
+          <h3>Transparent Reviews</h3>
+          <p>See aggregate showroom ratings. Real reviews from verified buyers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Fast Pickup</h3>
+          <p>Reserve today, pickup within 24-48 hours. Perfect for tight timelines.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="brands-section">
+      <div class="section-header">
+        <h2>Featured Brands</h2>
+        <p>Premium kitchen & bath brands from verified showrooms</p>
+      </div>
+      <div class="brands-grid">
+        <div class="brand-card">Kohler</div>
+        <div class="brand-card">Moen</div>
+        <div class="brand-card">Delta Faucet</div>
+        <div class="brand-card">American Standard</div>
+        <div class="brand-card">KitchenAid</div>
+        <div class="brand-card">Sub-Zero</div>
+        <div class="brand-card">Wolf</div>
+        <div class="brand-card">Thermador</div>
+        <div class="brand-card">Hansgrohe</div>
+        <div class="brand-card">Brizo</div>
+        <div class="brand-card">Rohl</div>
+        <div class="brand-card">Waterworks</div>
+      </div>
+    </div>
+
+    <section class="section" style="padding-top: 20px;">
+      <div class="section-header">
+        <h2>Featured Listings</h2>
+        <p>Premium products available now</p>
+        <a onclick="showPage('market')" class="btn btn-secondary" style="margin-top: 16px;">Browse All Listings</a>
+      </div>
+      <div class="product-grid">
+        <div class="product-card" onclick="showPage('listing')">
+          <div class="product-image">
+            🏠
+            <div class="product-badges">
+              <span class="badge-grade">Grade A+</span>
+              <span class="badge-rating">⭐ 4.8 (23)</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">Kohler Artifacts Kitchen Island</div>
+            <div class="product-location">📍 Los Angeles, CA</div>
+            <div class="product-price">$8,450</div>
+            <div class="product-retail">Retail: $24,500</div>
+            <div class="product-actions">
+              <a onclick="showPage('reserve')" class="btn btn-primary btn-small">Reserve</a>
+              <a onclick="showPage('listing')" class="btn btn-secondary btn-small">Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="product-card" onclick="showPage('listing')">
+          <div class="product-image">
+            🚿
+            <div class="product-badges">
+              <span class="badge-grade">Grade A</span>
+              <span class="badge-rating">⭐ 4.9 (34)</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">Moen Luxury Double Vanity</div>
+            <div class="product-location">📍 Chicago, IL</div>
+            <div class="product-price">$4,900</div>
+            <div class="product-retail">Retail: $12,800</div>
+            <div class="product-actions">
+              <a onclick="showPage('reserve')" class="btn btn-primary btn-small">Reserve</a>
+              <a onclick="showPage('listing')" class="btn btn-secondary btn-small">Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="product-card" onclick="showPage('listing')">
+          <div class="product-image">
+            🔥
+            <div class="product-badges">
+              <span class="badge-grade">Grade A+</span>
+              <span class="badge-rating">⭐ 4.7 (18)</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">Sub-Zero Pro Refrigerator</div>
+            <div class="product-location">📍 Dallas, TX</div>
+            <div class="product-price">$18,500</div>
+            <div class="product-retail">Retail: $28,000</div>
+            <div class="product-actions">
+              <a onclick="showPage('reserve')" class="btn btn-primary btn-small">Reserve</a>
+              <a onclick="showPage('listing')" class="btn btn-secondary btn-small">Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="product-card" onclick="showPage('listing')">
+          <div class="product-image">
+            💧
+            <div class="product-badges">
+              <span class="badge-grade">Grade B+</span>
+              <span class="badge-rating">⭐ 4.6 (41)</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">Delta Ara Kitchen Faucet</div>
+            <div class="product-location">📍 Atlanta, GA</div>
+            <div class="product-price">$425</div>
+            <div class="product-retail">Retail: $895</div>
+            <div class="product-actions">
+              <a onclick="showPage('reserve')" class="btn btn-primary btn-small">Reserve</a>
+              <a onclick="showPage('listing')" class="btn btn-secondary btn-small">Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>Ready to get started?</h2>
+      <p>Join the B2B marketplace for kitchen & bath professionals</p>
+      <a onclick="showPage('pilot')" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px;">List Your Inventory</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div>
+        <div class="footer-brand">SHOWROOM <span>MARKET</span></div>
+        <p class="footer-tagline">The B2B marketplace for premium kitchen & bath showroom liquidation. Escrow protected. Inspect before accepting. Built for trade professionals.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Marketplace</h4>
+        <a onclick="showPage('market')">Browse Listings</a>
+        <a onclick="showPage('pilot')">List Inventory</a>
+        <a onclick="showPage('how')">How It Works</a>
+        <a onclick="showPage('pilot')">Pricing</a>
+      </div>
+      <div class="footer-column">
+        <h4>Company</h4>
+        <a onclick="showPage('about')">About</a>
+        <a onclick="showPage('contact')">Contact</a>
+        <a onclick="showPage('pilot')">For Showrooms</a>
+      </div>
+      <div class="footer-column">
+        <h4>Support</h4>
+        <a onclick="showPage('help')">Help Center</a>
+        <a onclick="showPage('faq')">FAQ</a>
+        <a onclick="showPage('compliance')">Guidelines</a>
+        <a onclick="showPage('safety')">Trust & Safety</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 SHOWROOM MARKET by Bargain Bond. All rights reserved.</div>
+      <div class="footer-legal">
+        <a onclick="showPage('privacy')">Privacy</a>
+        <a onclick="showPage('terms')">Terms</a>
+        <a onclick="showPage('cookies')">Cookies</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="pageModal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeModal()">×</span>
+      <h2 id="modalTitle" style="margin-bottom: 16px;">Page Info</h2>
+      <p id="modalDesc" style="color: var(--text-muted); margin-bottom: 24px;">Page information</p>
+      <div style="background: var(--bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 24px;">
+        <p style="font-size: 14px; font-weight: 600; color: var(--accent);" id="modalFile">-</p>
+      </div>
+      <button onclick="closeModal()" class="btn btn-primary" style="width: 100%; padding: 14px;">Got It</button>
+    </div>
+  </div>
+
+  <script>
+    const pages = {
+      home: { title: 'Homepage', file: 'index.html', desc: 'Full homepage with stats, ticker, brands, and featured listings' },
+      market: { title: 'Marketplace', file: 'market.html', desc: 'Browse K&B products with filters' },
+      listing: { title: 'Product Detail', file: 'listing-details.html', desc: 'Product page with reviews and escrow button' },
+      reserve: { title: 'Reserve', file: 'reserve-confirmation.html', desc: 'Secure checkout with Stripe escrow' },
+      pilot: { title: 'For Showrooms', file: 'pilot-program.html', desc: 'Showroom onboarding' },
+      how: { title: 'How It Works', file: 'how-it-works.html', desc: 'Platform guide for buyers and sellers' },
+      signin: { title: 'Sign In', file: 'signin.html', desc: 'User authentication' },
+      privacy: { title: 'Privacy Policy', file: 'privacy.html', desc: 'GDPR/CCPA compliant privacy policy' },
+      terms: { title: 'Terms of Service', file: 'terms.html', desc: 'Platform terms and conditions' },
+      cookies: { title: 'Cookie Policy', file: 'cookies.html', desc: 'Cookie usage and consent' }
+    };
+
+    function showPage(page) {
+      const info = pages[page] || pages.home;
+      document.getElementById('modalTitle').textContent = info.title;
+      document.getElementById('modalDesc').textContent = info.desc;
+      document.getElementById('modalFile').textContent = info.file;
+      document.getElementById('pageModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('pageModal').classList.remove('active');
+    }
+
+    document.getElementById('pageModal').addEventListener('click', e => {
+      if (e.target.id === 'pageModal') closeModal();
+    });
+  </script>
+
+</body>
+</html>
