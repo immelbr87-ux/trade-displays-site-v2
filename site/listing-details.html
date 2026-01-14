@@ -3,216 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Listing Details — Trade Displays</title>
-  <meta name="description" content="View floor model listing details: specs, condition, pickup window, and acceptance at pickup." />
-  <link rel="stylesheet" href="app.css" />
+  <title>Display Details - Trade Displays</title>
+  <meta name="description" content="View detailed information about this trade show display including specifications, pricing, and availability.">
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
-  <div id="bb-header"></div>
-
-  <div class="container section">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px;">
-      <div>
-        <div class="kicker">LISTING DETAILS</div>
-        <h1 class="h2" style="margin:8px 0 0;">Showroom floor model</h1>
-        <p class="muted" style="margin:8px 0 0;">Specs-first. Condition disclosed. Pickup-only. Acceptance on-site.</p>
-      </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <a class="btn btn-secondary btn-pill" href="/market">Back to market</a>
-        <a id="reserveTop" class="btn btn-primary btn-pill" href="#">Reserve</a>
-      </div>
+  
+  <!-- Header inserted via include.js -->
+  
+  <section class="container">
+    <div id="productDetail" class="loading">
+      <div class="spinner"></div>
+      <p>Loading display details...</p>
     </div>
-
-    <div class="panel" style="padding: 0; overflow:hidden;">
-      <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 0;">
-        <div style="padding: 24px; border-right: 1px solid var(--border);">
-          <div id="heroImage" style="width:100%; aspect-ratio: 1/1; background: #f9fafb; border:1px solid var(--border); border-radius: 12px; overflow:hidden; display:grid; place-items:center;">
-            <div class="muted">Loading image…</div>
-          </div>
-          <div style="height:20px;"></div>
-          <div id="photoStrip" style="display:flex; gap:12px; overflow:auto;"></div>
-        </div>
-        <div style="padding: 24px;">
-          <div id="badges" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;"></div>
-
-          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:24px;">
-            <div>
-              <div class="small muted" style="margin-bottom:4px;">Asking price</div>
-              <div id="price" style="font-size: 32px; font-weight: 800; letter-spacing:-0.5px;">—</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="small muted" style="margin-bottom:4px;">Condition</div>
-              <div id="grade" style="font-size: 20px; font-weight: 700;">—</div>
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div style="display:grid; gap:16px; margin:24px 0;">
-            <div>
-              <div class="small muted" style="margin-bottom:4px;">Pickup window</div>
-              <div id="pickup" style="font-weight: 700; font-size: 15px;">—</div>
-              <div class="small muted" style="margin-top:6px;">Inspect on-site. If it matches the listing, confirm acceptance at pickup.</div>
-            </div>
-            <div>
-              <div class="small muted" style="margin-bottom:4px;">Location</div>
-              <div id="location" style="font-weight: 700; font-size: 15px;">—</div>
-            </div>
-            <div>
-              <div class="small muted" style="margin-bottom:4px;">Specs</div>
-              <div id="specs" class="small" style="line-height:1.7;">—</div>
-            </div>
-            <div>
-              <div class="small muted" style="margin-bottom:4px;">Notes</div>
-              <div id="notes" class="small" style="line-height:1.7;">—</div>
-            </div>
-          </div>
-
-          <a id="reserve" class="btn btn-primary btn-pill btn-full" href="#" style="margin-bottom:12px;">Reserve this floor model</a>
-          <div class="small muted">
-            By reserving, you acknowledge this is <strong>pickup-only</strong> and <strong>as-is</strong>, and acceptance occurs at pickup.
-            See <a href="/terms">terms</a>.
-          </div>
-
-          <details style="margin-top:20px;">
-            <summary style="cursor:pointer; font-weight:700; font-size:14px;">What counts as a mismatch?</summary>
-            <div class="small muted" style="margin-top:12px; line-height:1.7;">
-              A mismatch is limited to <strong>material differences</strong> from the listing (wrong model, missing major components that were represented as included, undisclosed structural damage, or a grade that's materially worse than stated).
-              Normal showroom handling marks consistent with the stated grade are not a mismatch.
-            </div>
-          </details>
-        </div>
-      </div>
+    
+    <!-- Error State -->
+    <div id="errorState" class="hidden" style="text-align: center; padding: 4rem 2rem;">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
+      <h2>Display Not Found</h2>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">This display may have been sold or removed.</p>
+      <a href="market.html" class="btn btn-primary" style="margin-top: 1.5rem;">Browse All Displays</a>
     </div>
-  </div>
+  </section>
 
-  <div id="bb-footer"></div>
+  <!-- Footer inserted via include.js -->
+  
   <script src="shared/include.js"></script>
-
   <script>
-  (async function(){
-    const qs = new URLSearchParams(location.search);
-    const id = qs.get('id') || '';
-    const reserveUrl = '/reserve-confirmation?id=' + encodeURIComponent(id);
-    document.getElementById('reserve').setAttribute('href', reserveUrl);
-    document.getElementById('reserveTop').setAttribute('href', reserveUrl);
+    let currentDisplay = null;
+    let selectedDuration = 1; // weeks
+    let currentImageIndex = 0;
 
-    const setBadges = (x)=>{
-      const el = document.getElementById('badges');
-      if(!el) return;
-      const grade = String((x.grade || x.condition_grade || '').toUpperCase() || 'A');
-      const ready = !!(x.ready_for_transit || x.readyForTransit);
-      const pickupText = ready ? 'Ready for Transit' : (x.pickup_window_start ? pickupWindow(x.pickup_window_start, x.pickup_window_end) : 'Pickup window disclosed');
-      el.innerHTML = `
-        <span class="badge badge-grade">Grade ${grade}</span>
-        <span class="badge badge-pickup">${pickupText}</span>
-      `;
-    };
+    // Get display ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const displayId = urlParams.get('id');
 
-    try{
-      const r = await fetch('/.netlify/functions/listDisplays?id=' + encodeURIComponent(id), { cache: 'no-store' });
-      const data = await r.json().catch(()=>({}));
-      if(r.ok && data && (data.item || data.listing || data.record || data)){
-        const x = data.item || data.listing || data.record || data;
-        render(x);
+    // Fetch display details
+    async function loadDisplayDetails() {
+      if (!displayId) {
+        showError();
         return;
       }
-      const r2 = await fetch('/.netlify/functions/listDisplays?pageSize=50', { cache: 'no-store' });
-      const data2 = await r2.json().catch(()=>({}));
-      const arr = Array.isArray(data2.listings) ? data2.listings : (Array.isArray(data2.items) ? data2.items : []);
-      const x = arr.find(a => String(a.id||a.recordId||a.airtableId||'') === String(id)) || null;
-      if(x){ render(x); return; }
-      render(sample());
-    }catch(e){
-      render(sample());
-    }
 
-    function esc(v){
-      return String(v ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-    }
-    function money(v){
-      const n = Number(String(v||'').replace(/[^0-9.]/g,''));
-      if(!isFinite(n)) return esc(v||'');
-      return '$' + n.toLocaleString(undefined,{maximumFractionDigits:0});
-    }
-    function pickupWindow(start,end){
-      if(!start && !end) return 'Pickup window disclosed';
-      const s = start ? new Date(start) : null;
-      const e = end ? new Date(end) : null;
-      const fmt = d => d.toLocaleDateString(undefined,{month:'short', day:'numeric'});
-      if(s && e) return `Pickup ${fmt(s)}–${fmt(e)}`;
-      return `Pickup ${fmt(s||e)}`;
-    }
-
-    function render(x){
-      document.title = (x.title || x.name || 'Listing details') + ' — Trade Displays';
-      document.querySelector('h1.h2').textContent = x.title || x.name || 'Showroom floor model';
-      document.getElementById('price').textContent = money(x.price || x.list_price || x.ask || '');
-      document.getElementById('grade').textContent = 'Grade ' + String((x.grade || x.condition_grade || 'A')).toUpperCase();
-      document.getElementById('pickup').textContent = pickupWindow(x.pickup_window_start, x.pickup_window_end);
-      document.getElementById('location').textContent = x.location || x.city_state || x.city || 'Pickup location disclosed after reservation';
-
-      const specs = x.specs || x.specifications || x.details || x.key_spec || x.dimensions || '';
-      const notes = x.notes || x.description || '';
-      document.getElementById('specs').innerHTML = specs ? esc(specs).replace(/\n/g,'<br>') : '<span class="muted">No additional specs provided.</span>';
-      document.getElementById('notes').innerHTML = notes ? esc(notes).replace(/\n/g,'<br>') : '<span class="muted">No notes.</span>';
-
-      setBadges(x);
-
-      const images = normalizeImages(x);
-      const hero = document.getElementById('heroImage');
-      const strip = document.getElementById('photoStrip');
-
-      if(images.length){
-        hero.innerHTML = `<img alt="Listing photo" src="${images[0]}" style="width:100%;height:100%;object-fit:cover;" />`;
-        strip.innerHTML = images.slice(0,10).map((u,i)=>{
-          return `<button class="btn btn-secondary" style="padding:0;width:80px;height:80px;overflow:hidden;border-radius:8px;" aria-label="View photo ${i+1}">
-            <img alt="" src="${u}" style="width:100%;height:100%;object-fit:cover;" />
-          </button>`;
-        }).join('');
-        [...strip.querySelectorAll('button')].forEach((b,idx)=>{
-          b.addEventListener('click', ()=>{
-            hero.innerHTML = `<img alt="Listing photo" src="${images[idx]}" style="width:100%;height:100%;object-fit:cover;" />`;
-          });
-        });
-      } else {
-        hero.innerHTML = '<div class="muted">No photo provided.</div>';
-        strip.innerHTML = '';
+      try {
+        const response = await fetch(`/.netlify/functions/listDisplays`);
+        const data = await response.json();
+        
+        currentDisplay = data.displays.find(d => d.id === displayId);
+        
+        if (!currentDisplay) {
+          showError();
+          return;
+        }
+        
+        renderDisplayDetails();
+      } catch (error) {
+        console.error('Error loading display:', error);
+        showError();
       }
     }
 
-    function normalizeImages(x){
-      const out = [];
-      const add = (v)=>{
-        if(!v) return;
-        if(typeof v === 'string') out.push(v);
-        else if(Array.isArray(v)) v.forEach(add);
-        else if(typeof v === 'object'){
-          if(v.url) out.push(v.url);
-          if(v.thumbnails && v.thumbnails.large && v.thumbnails.large.url) out.push(v.thumbnails.large.url);
-        }
-      };
-      add(x.image_url || x.image || x.thumbnail_url);
-      add(x.images);
-      add(x.photos);
-      return [...new Set(out)].filter(Boolean);
+    // Render display details
+    function renderDisplayDetails() {
+      const container = document.getElementById('productDetail');
+      container.className = 'product-detail';
+      
+      // Mock additional images (in real app, these would come from API)
+      const images = [
+        currentDisplay.imageUrl || 'https://via.placeholder.com/800',
+        'https://via.placeholder.com/800/00ba88',
+        'https://via.placeholder.com/800/111111',
+        'https://via.placeholder.com/800/6b7280'
+      ];
+      
+      container.innerHTML = `
+        <!-- Product Gallery -->
+        <div class="product-gallery">
+          <div class="main-image" id="mainImage">
+            <img src="${images[0]}" alt="${currentDisplay.name}">
+          </div>
+          <div class="thumbnail-grid">
+            ${images.map((img, index) => `
+              <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeImage(${index})">
+                <img src="${img}" alt="View ${index + 1}">
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <!-- Product Info -->
+        <div class="product-info">
+          <div class="badge badge-${currentDisplay.listingType === 'rent' ? 'info' : 'success'}" style="margin-bottom: 1rem;">
+            ${currentDisplay.listingType === 'rent' ? 'Available for Rent' : 'For Sale'}
+          </div>
+          
+          <h1>${currentDisplay.name}</h1>
+          <p class="product-sku">SKU: ${currentDisplay.id}</p>
+          
+          <!-- Price Box -->
+          <div class="price-box">
+            <div class="price-label">
+              ${currentDisplay.listingType === 'rent' ? 'Weekly Rental Price' : 'Purchase Price'}
+            </div>
+            <div class="price-amount">$${currentDisplay.price.toLocaleString()}</div>
+            ${currentDisplay.listingType === 'buy' ? `
+              <div class="price-trend">↑ 5% above market average</div>
+            ` : ''}
+          </div>
+          
+          <!-- Reserve/Buy Section -->
+          <div class="reserve-section">
+            ${currentDisplay.listingType === 'rent' ? `
+              <h3>Select Rental Duration</h3>
+              <div class="rental-duration">
+                <button class="duration-btn active" onclick="selectDuration(1)">
+                  <div style="font-weight: 800; font-size: 1.25rem;">1 Week</div>
+                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${currentDisplay.price}</div>
+                </button>
+                <button class="duration-btn" onclick="selectDuration(2)">
+                  <div style="font-weight: 800; font-size: 1.25rem;">2 Weeks</div>
+                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${(currentDisplay.price * 1.8).toLocaleString()}</div>
+                </button>
+                <button class="duration-btn" onclick="selectDuration(4)">
+                  <div style="font-weight: 800; font-size: 1.25rem;">1 Month</div>
+                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${(currentDisplay.price * 3.5).toLocaleString()}</div>
+                </button>
+              </div>
+            ` : ''}
+            
+            <button class="btn btn-primary w-full" onclick="handleReserve()" style="padding: 1.25rem; font-size: 1.125rem;">
+              ${currentDisplay.listingType === 'rent' ? 'Reserve Display' : 'Make Offer'}
+            </button>
+            
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.875rem; margin-top: 1rem;">
+              ${currentDisplay.listingType === 'rent' ? 'Free cancellation up to 48 hours before event' : 'Secure payment • Protected by Trade Displays'}
+            </p>
+          </div>
+          
+          <!-- Product Specifications -->
+          <div class="product-specs">
+            <h3>Specifications</h3>
+            <div class="specs-grid">
+              <div class="spec-item">
+                <div class="spec-label">Display Size</div>
+                <div class="spec-value">${currentDisplay.size}</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-label">Condition</div>
+                <div class="spec-value">${currentDisplay.condition}</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-label">Type</div>
+                <div class="spec-value">${currentDisplay.type || 'Modular'}</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-label">Weight</div>
+                <div class="spec-value">${currentDisplay.weight || '450 lbs'}</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-label">Material</div>
+                <div class="spec-value">${currentDisplay.material || 'Aluminum Frame'}</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-label">Setup Time</div>
+                <div class="spec-value">${currentDisplay.setupTime || '2-3 hours'}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tabs Section -->
+          <div class="tabs">
+            <div class="tab-nav">
+              <button class="tab-btn active" onclick="switchTab(0)">Description</button>
+              <button class="tab-btn" onclick="switchTab(1)">Shipping</button>
+              <button class="tab-btn" onclick="switchTab(2)">Returns</button>
+            </div>
+            
+            <div class="tab-content active" id="tab0">
+              <h4>About This Display</h4>
+              <p>${currentDisplay.description || 'This premium trade show display offers exceptional visibility and professional presentation. Features modular design for easy setup and transport, with high-quality graphics and durable construction. Perfect for conventions, trade shows, and corporate events.'}</p>
+              
+              <h4 style="margin-top: 2rem;">Features</h4>
+              <ul style="color: var(--text-muted); line-height: 2; margin-top: 0.5rem;">
+                <li>Professional-grade aluminum frame</li>
+                <li>High-resolution fabric graphics</li>
+                <li>Tool-free assembly</li>
+                <li>Includes carrying case</li>
+                <li>LED lighting compatible</li>
+                <li>Expandable configuration</li>
+              </ul>
+            </div>
+            
+            <div class="tab-content" id="tab1">
+              <h4>Shipping Information</h4>
+              <p>We offer white-glove shipping services for all displays. Your display will be carefully packed and shipped directly to your event location or warehouse.</p>
+              
+              <div style="margin-top: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border);">
+                  <span style="font-weight: 600;">Estimated Delivery</span>
+                  <span>3-5 business days</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border);">
+                  <span style="font-weight: 600;">Shipping Cost</span>
+                  <span>Calculated at checkout</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 1rem 0;">
+                  <span style="font-weight: 600;">Tracking</span>
+                  <span>Provided via email</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-content" id="tab2">
+              <h4>Return Policy</h4>
+              ${currentDisplay.listingType === 'rent' ? `
+                <p>Rental returns must be initiated within 24 hours of event conclusion. Display must be returned in the same condition as received.</p>
+                <ul style="color: var(--text-muted); line-height: 2; margin-top: 1rem;">
+                  <li>Free cancellation up to 48 hours before event</li>
+                  <li>Damage fees apply for excessive wear</li>
+                  <li>Return shipping included in rental price</li>
+                  <li>Cleaning fees may apply</li>
+                </ul>
+              ` : `
+                <p>All sales are final. However, if the display arrives damaged or not as described, you may return it within 7 days for a full refund.</p>
+                <ul style="color: var(--text-muted); line-height: 2; margin-top: 1rem;">
+                  <li>7-day return window for damaged items</li>
+                  <li>Must be in original packaging</li>
+                  <li>Refund processed within 5-7 business days</li>
+                  <li>Return shipping costs may apply</li>
+                </ul>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Store images for gallery
+      window.displayImages = images;
     }
 
-    function sample(){
-      return {
-        title: 'Kallista kitchen faucet (display model)',
-        price: 1299,
-        grade: 'A',
-        ready_for_transit: true,
-        pickup_window_start: new Date(Date.now() + 3*864e5).toISOString(),
-        pickup_window_end: new Date(Date.now() + 10*864e5).toISOString(),
-        location: 'Milwaukee, WI (pickup address shared after reservation)',
-        specs: 'Finish: Polished Chrome\nMount: Deck\nIncludes: faucet body, handle(s), escutcheon (if shown)',
-        notes: 'Pickup-only. Buyer inspects on-site. Acceptance confirmed at pickup.',
-        images: []
-      };
+    // Change main image
+    function changeImage(index) {
+      currentImageIndex = index;
+      const mainImage = document.getElementById('mainImage');
+      mainImage.innerHTML = `<img src="${window.displayImages[index]}" alt="${currentDisplay.name}">`;
+      
+      // Update thumbnail active state
+      document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+      });
     }
-  })();
+
+    // Select rental duration
+    function selectDuration(weeks) {
+      selectedDuration = weeks;
+      document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.duration-btn').classList.add('active');
+    }
+
+    // Switch tabs
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('.tab-content').forEach((content, i) => {
+        content.classList.toggle('active', i === index);
+      });
+    }
+
+    // Handle reserve/buy
+    function handleReserve() {
+      if (!currentDisplay) return;
+      
+      // Prepare reservation data
+      const reservationData = {
+        displayId: currentDisplay.id,
+        displayName: currentDisplay.name,
+        listingType: currentDisplay.listingType,
+        price: currentDisplay.price,
+        duration: currentDisplay.listingType === 'rent' ? selectedDuration : null,
+        totalPrice: currentDisplay.listingType === 'rent' ? 
+          calculateRentalPrice(currentDisplay.price, selectedDuration) : 
+          currentDisplay.price
+      };
+      
+      // Store in sessionStorage
+      sessionStorage.setItem('reservationData', JSON.stringify(reservationData));
+      
+      // Redirect to confirmation page
+      window.location.href = 'reserve-confirmation.html';
+    }
+
+    // Calculate rental price based on duration
+    function calculateRentalPrice(weeklyPrice, weeks) {
+      const multipliers = {
+        1: 1,
+        2: 1.8,
+        4: 3.5
+      };
+      return Math.round(weeklyPrice * (multipliers[weeks] || weeks));
+    }
+
+    // Show error state
+    function showError() {
+      document.getElementById('productDetail').classList.add('hidden');
+      document.getElementById('errorState').classList.remove('hidden');
+    }
+
+    // Load display on page load
+    loadDisplayDetails();
   </script>
 </body>
 </html>
