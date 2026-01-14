@@ -22,6 +22,21 @@
       </div>
       
       <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Category:</label>
+        <select class="form-select" id="categoryFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Categories</option>
+          <option value="10x10">10x10 Displays</option>
+          <option value="20x20">20x20 Island Booths</option>
+          <option value="inline">Inline Displays</option>
+          <option value="custom">Custom Exhibits</option>
+          <option value="portable">Portable Pop-Ups</option>
+          <option value="tension">Tension Fabric</option>
+          <option value="kiosk">Kiosks & Counters</option>
+          <option value="accessories">Accessories</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
         <label style="font-weight: 600; margin-right: 0.5rem;">Type:</label>
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="rent">Rent</button>
@@ -35,6 +50,7 @@
           <option value="10x10">10x10</option>
           <option value="10x20">10x20</option>
           <option value="20x20">20x20</option>
+          <option value="30x30">30x30</option>
           <option value="custom">Custom</option>
         </select>
       </div>
@@ -50,13 +66,12 @@
       </div>
     </div>
     
-    <!-- Results Count -->
-    <div style="margin-bottom: 2rem;">
-      <p id="resultsCount" style="color: var(--text-muted); font-weight: 500;">Loading displays...</p>
+    <div id="resultsCount" style="margin: 2rem 0 1rem; color: var(--text-muted); font-weight: 500;">
+      Loading...
     </div>
     
     <!-- Displays Grid -->
-    <div class="grid grid-4" id="displaysGrid">
+    <div id="displaysGrid" class="product-grid">
       <div class="loading">
         <div class="spinner"></div>
         <p>Loading displays...</p>
@@ -78,6 +93,7 @@
   <script>
     let allDisplays = [];
     let currentFilter = 'all';
+    let currentCategory = 'all';
     let currentSize = 'all';
     let currentSort = 'newest';
     let searchQuery = '';
@@ -104,6 +120,20 @@
     function filterAndRenderDisplays() {
       let filtered = [...allDisplays];
       
+      // Apply category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(d => {
+          const category = d.category?.toLowerCase() || '';
+          const size = d.size?.toLowerCase() || '';
+          const name = d.name?.toLowerCase() || '';
+          
+          // Match category by name, size, or explicit category field
+          return category.includes(currentCategory.toLowerCase()) ||
+                 size.includes(currentCategory.toLowerCase()) ||
+                 name.includes(currentCategory.toLowerCase());
+        });
+      }
+      
       // Apply type filter
       if (currentFilter !== 'all') {
         filtered = filtered.filter(d => d.listingType === currentFilter);
@@ -111,7 +141,7 @@
       
       // Apply size filter
       if (currentSize !== 'all') {
-        filtered = filtered.filter(d => d.size.toLowerCase().includes(currentSize.toLowerCase()));
+        filtered = filtered.filter(d => d.size?.toLowerCase().includes(currentSize.toLowerCase()));
       }
       
       // Apply search
@@ -142,7 +172,7 @@
       updateResultsCount(filtered.length);
     }
 
-    // Render displays
+    // Render displays with Swappa-style spec lists
     function renderDisplays(displays) {
       const grid = document.getElementById('displaysGrid');
       const emptyState = document.getElementById('emptyState');
@@ -156,19 +186,44 @@
       grid.classList.remove('hidden');
       emptyState.classList.add('hidden');
       
-      grid.innerHTML = displays.map(display => `
-        <a href="listing-details.html?id=${display.id}" class="card" style="text-decoration: none; color: inherit;">
-          <div class="card-image">
-            <img src="${display.imageUrl || 'https://via.placeholder.com/400'}" alt="${display.name}">
+      grid.innerHTML = displays.map(display => {
+        // Extract city from location (if full address provided)
+        const location = display.location || 'Location TBD';
+        const cityOnly = location.split(',').slice(-2).join(',').trim() || location;
+        
+        // Get condition grade
+        const grade = display.condition || 'Grade A';
+        const availability = display.availability || 'Available Now';
+        
+        return `
+        <div class="product-card" onclick="window.location.href='listing-details.html?id=${display.id}'">
+          <div class="product-image" style="background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);">
+            <div class="product-badges">
+              <span class="badge badge-grade">${grade}</span>
+              <span class="badge badge-pickup">${availability}</span>
+            </div>
           </div>
-          <div class="badge badge-${display.listingType === 'rent' ? 'info' : 'success'}" style="margin-bottom: 0.5rem;">
-            ${display.listingType === 'rent' ? 'For Rent' : 'For Sale'}
+          <div class="product-info">
+            <div class="product-name">${display.name}</div>
+            
+            <!-- Swappa-style spec list -->
+            <ul class="product-specs">
+              <li><strong>Size:</strong> ${display.size || 'N/A'}</li>
+              <li><strong>Condition:</strong> ${display.condition || 'N/A'}</li>
+              <li><strong>Brand:</strong> ${display.brand || 'Various'}</li>
+              <li><strong>Location:</strong> ${cityOnly}</li>
+              <li><strong>Available:</strong> ${availability}</li>
+            </ul>
+            
+            <div class="product-price">$${display.price.toLocaleString()}${display.listingType === 'rent' ? '/week' : ''}</div>
+            <div class="product-actions">
+              <a href="reserve-confirmation.html?id=${display.id}" class="btn btn-primary btn-small" onclick="event.stopPropagation()">Reserve</a>
+              <a href="listing-details.html?id=${display.id}" class="btn btn-secondary btn-small" onclick="event.stopPropagation()">Details</a>
+            </div>
           </div>
-          <h3 class="card-title">${display.name}</h3>
-          <div class="card-price">$${display.price.toLocaleString()}${display.listingType === 'rent' ? '/week' : ''}</div>
-          <div class="card-meta">${display.size} • ${display.condition}</div>
-        </a>
-      `).join('');
+        </div>
+      `;
+      }).join('');
     }
 
     // Update results count
@@ -180,6 +235,7 @@
     // Reset filters
     function resetFilters() {
       currentFilter = 'all';
+      currentCategory = 'all';
       currentSize = 'all';
       currentSort = 'newest';
       searchQuery = '';
@@ -187,15 +243,25 @@
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === 'all');
       });
+      document.getElementById('categoryFilter').value = 'all';
       document.getElementById('sizeFilter').value = 'all';
       document.getElementById('sortSelect').value = 'newest';
       document.getElementById('searchInput').value = '';
+      
+      // Update URL
+      window.history.replaceState({}, '', 'market.html');
       
       filterAndRenderDisplays();
     }
 
     // Event listeners
     document.addEventListener('DOMContentLoaded', () => {
+      // Category filter
+      document.getElementById('categoryFilter').addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
       // Type filter buttons
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -230,6 +296,15 @@
       
       // Check URL parameters for filters
       const urlParams = new URLSearchParams(window.location.search);
+      
+      // Check for category parameter
+      const categoryParam = urlParams.get('category');
+      if (categoryParam) {
+        currentCategory = categoryParam;
+        document.getElementById('categoryFilter').value = categoryParam;
+      }
+      
+      // Check for filter parameter
       const filterParam = urlParams.get('filter');
       if (filterParam && ['all', 'rent', 'buy'].includes(filterParam)) {
         currentFilter = filterParam;
