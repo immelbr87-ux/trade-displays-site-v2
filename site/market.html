@@ -3,223 +3,244 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Market — Trade Displays</title>
-  <meta name="description" content="Browse verified pickup-only showroom floor models. Transparent pricing. Escrow until acceptance at pickup." />
-  <link rel="stylesheet" href="app.css" />
+  <title>Browse Displays - Trade Displays Marketplace</title>
+  <meta name="description" content="Browse hundreds of trade show displays available for rent or purchase. Filter by size, type, and price.">
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
-  <div id="bb-header"></div>
-
-  <div class="container section">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px;">
-      <div>
-        <h1 class="h2" style="margin:0;">Market</h1>
-        <p class="muted" style="margin:8px 0 0; max-width: 780px;">Verified pickup-only floor models. Acceptance happens on-site. Funds remain in escrow until confirmation at pickup.</p>
+  
+  <!-- Header inserted via include.js -->
+  
+  <section class="container" style="padding: 3rem 0;">
+    <h1 style="margin-bottom: 1rem;">Browse Displays</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Find the perfect display for your next trade show or event.</p>
+    
+    <!-- Filters -->
+    <div class="filters">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search displays...">
       </div>
-      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-        <a class="btn btn-secondary btn-pill" href="/list-a-display">List a Floor Model</a>
-        <a class="btn btn-primary btn-pill" href="/pilot">Start a Pilot</a>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Type:</label>
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="rent">Rent</button>
+        <button class="filter-btn" data-filter="buy">Buy</button>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Size:</label>
+        <select class="form-select" id="sizeFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Sizes</option>
+          <option value="10x10">10x10</option>
+          <option value="10x20">10x20</option>
+          <option value="20x20">20x20</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Sort:</label>
+        <select class="form-select" id="sortSelect" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="newest">Newest First</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="popular">Most Popular</option>
+        </select>
       </div>
     </div>
-
-    <div class="panel" style="margin-bottom:24px;">
-      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-          <span class="badge badge-grade">Pickup only</span>
-          <span class="badge badge-grade">Verified</span>
-          <span class="badge badge-pickup">In Stock</span>
-        </div>
-        <div class="muted small">Safety Green is reserved for Verified / In Stock signals.</div>
+    
+    <!-- Results Count -->
+    <div style="margin-bottom: 2rem;">
+      <p id="resultsCount" style="color: var(--text-muted); font-weight: 500;">Loading displays...</p>
+    </div>
+    
+    <!-- Displays Grid -->
+    <div class="grid grid-4" id="displaysGrid">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading displays...</p>
       </div>
-
-      <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:12px;">
-        <div>
-          <label class="small muted" for="q" style="display:block;margin-bottom:6px;">Search</label>
-          <input id="q" class="input" type="search" placeholder="Try: faucet, vanity, Kohler, Brizo…" autocomplete="off" />
-        </div>
-        <div>
-          <label class="small muted" for="grade" style="display:block;margin-bottom:6px;">Grade</label>
-          <select id="grade" class="input">
-            <option value="">All grades</option>
-            <option value="A">Grade A</option>
-            <option value="B">Grade B</option>
-          </select>
-        </div>
-        <div>
-          <label class="small muted" for="sort" style="display:block;margin-bottom:6px;">Sort</label>
-          <select id="sort" class="input">
-            <option value="new">Newest</option>
-            <option value="priceAsc">Price: Low → High</option>
-            <option value="priceDesc">Price: High → Low</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="small muted" style="margin-top:12px;">Tip: press <strong>Enter</strong> to search. Listings are square for catalog consistency.</div>
     </div>
-
-    <div class="listings" id="marketGrid" style="min-height:400px;">
-      <div class="muted">Loading market…</div>
+    
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden" style="text-align: center; padding: 4rem 2rem;">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+      <h3>No displays found</h3>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Try adjusting your filters or search criteria.</p>
+      <button onclick="resetFilters()" class="btn btn-outline" style="margin-top: 1.5rem;">Reset Filters</button>
     </div>
+  </section>
 
-    <div class="panel" style="margin-top:32px;">
-      <h2 style="margin:0 0 12px;">What you're buying</h2>
-      <p class="muted" style="margin:0; max-width: 900px;">
-        These are showroom floor models sold <strong>as-is</strong>. Inspect on-site at pickup.
-        If the item matches the listing (grade, completeness, photos), confirm acceptance and escrow releases.
-      </p>
-      <div style="height:16px;"></div>
-      <a class="btn btn-secondary btn-pill" href="/trust">See condition standards</a>
-    </div>
-  </div>
-
-  <div id="bb-footer"></div>
+  <!-- Footer inserted via include.js -->
+  
   <script src="shared/include.js"></script>
-
   <script>
-  (function(){
-    const grid = document.getElementById('marketGrid');
-    const qEl = document.getElementById('q');
-    const gradeEl = document.getElementById('grade');
-    const sortEl = document.getElementById('sort');
+    let allDisplays = [];
+    let currentFilter = 'all';
+    let currentSize = 'all';
+    let currentSort = 'newest';
+    let searchQuery = '';
 
-    const url = new URL(location.href);
-    const preset = url.searchParams.get('q') || '';
-    if(preset) qEl.value = preset;
-
-    let cache = [];
-
-    function safeText(v){
-      return String(v ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c] || c));
-    }
-    function money(v){
-      const n = Number(String(v||'').replace(/[^0-9.]/g,''));
-      if(!isFinite(n)) return safeText(v||'');
-      return '$' + n.toLocaleString(undefined,{maximumFractionDigits:0});
-    }
-    function pickupWindow(start,end){
-      if(!start && !end) return 'Pickup window disclosed';
-      const s = start ? new Date(start) : null;
-      const e = end ? new Date(end) : null;
-      const fmt = d => d.toLocaleDateString(undefined,{month:'short', day:'numeric'});
-      if(s && e) return `Pickup ${fmt(s)}–${fmt(e)}`;
-      return `Pickup ${fmt(s||e)}`;
-    }
-
-    function renderCard(x){
-      const id = x.id || x.recordId || x.airtableId || '';
-      const title = safeText(x.title || x.name || x.product || 'Showroom floor model');
-      const brand = safeText(x.brand || x.manufacturer || '');
-      const category = safeText(x.category || x.product_category || '');
-      const price = money(x.price || x.list_price || x.ask || '');
-      const grade = safeText((x.grade || x.condition_grade || '').toUpperCase() || '—');
-      const ready = !!(x.ready_for_transit || x.readyForTransit);
-      const img = x.thumbnail_url || x.image_url || x.image || (Array.isArray(x.images) ? x.images[0] : '');
-      const thumbStyle = img ? `background-image:url('${String(img).replace(/'/g,"%27")}')` : '';
-      const thumbClass = !img ? (category.toLowerCase().includes('kitchen') ? 'kitchen-island' : 
-                                  category.toLowerCase().includes('bath') || category.toLowerCase().includes('vanit') ? 'bathroom-vanity' : 
-                                  category.toLowerCase().includes('cabinet') ? 'kitchen-cabinetry' : 
-                                  'spa-bathroom') : '';
-
-      const sub = [brand, category].filter(Boolean).join(' • ');
-
-      return `
-        <div class="listing">
-          <div class="thumb ${thumbClass}" style="${thumbStyle}">
-            <div class="thumb-badges">
-              <span class="badge badge-grade">Grade ${grade}</span>
-              <span class="badge badge-pickup">${ready ? 'Ready for Transit' : pickupWindow(x.pickup_window_start, x.pickup_window_end)}</span>
-            </div>
+    // Fetch displays from Netlify Function
+    async function loadDisplays() {
+      try {
+        const response = await fetch('/.netlify/functions/listDisplays');
+        const data = await response.json();
+        allDisplays = data.displays;
+        
+        filterAndRenderDisplays();
+      } catch (error) {
+        console.error('Error loading displays:', error);
+        document.getElementById('displaysGrid').innerHTML = `
+          <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+            <p style="color: var(--error);">Unable to load displays. Please try again later.</p>
           </div>
-          <div class="listing-body">
-            <div class="title">
-              <h3>${title}</h3>
-              <div class="price">${price}</div>
-            </div>
-            ${sub ? `<div class="small muted" style="margin-top:2px;">${sub}</div>` : ``}
-            <div class="meta">
-              <div>Grade ${grade}</div>
-              <div>${safeText(pickupWindow(x.pickup_window_start, x.pickup_window_end))}</div>
-            </div>
-            <div class="actions">
-              <a class="btn btn-primary btn-pill" href="/reserve-confirmation?id=${encodeURIComponent(id)}">Reserve</a>
-              <a class="btn btn-secondary btn-pill" href="/listing-details?id=${encodeURIComponent(id)}">Details</a>
-            </div>
-          </div>
-        </div>`;
+        `;
+      }
     }
 
-    function getPrice(x){
-      const n = Number(String(x.price || x.list_price || x.ask || '').replace(/[^0-9.]/g,''));
-      return isFinite(n) ? n : NaN;
+    // Filter and render displays
+    function filterAndRenderDisplays() {
+      let filtered = [...allDisplays];
+      
+      // Apply type filter
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(d => d.listingType === currentFilter);
+      }
+      
+      // Apply size filter
+      if (currentSize !== 'all') {
+        filtered = filtered.filter(d => d.size.toLowerCase().includes(currentSize.toLowerCase()));
+      }
+      
+      // Apply search
+      if (searchQuery) {
+        filtered = filtered.filter(d => 
+          d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+      
+      // Sort
+      switch(currentSort) {
+        case 'price-low':
+          filtered.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-high':
+          filtered.sort((a, b) => b.price - a.price);
+          break;
+        case 'popular':
+          filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
+          break;
+        case 'newest':
+        default:
+          filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      }
+      
+      renderDisplays(filtered);
+      updateResultsCount(filtered.length);
     }
 
-    function apply(){
-      const q = (qEl.value || '').trim().toLowerCase();
-      const g = (gradeEl.value || '').trim().toUpperCase();
-      const s = sortEl.value;
-
-      let rows = cache.slice();
-
-      if(q){
-        rows = rows.filter(x => {
-          const hay = [x.title,x.name,x.product,x.brand,x.manufacturer,x.category,x.product_category,x.sku,x.model].filter(Boolean).join(' ').toLowerCase();
-          return hay.includes(q);
-        });
-      }
-      if(g){
-        rows = rows.filter(x => String(x.grade || x.condition_grade || '').toUpperCase() === g);
-      }
-
-      if(s === 'priceAsc'){
-        rows.sort((a,b)=> (getPrice(a) - getPrice(b)));
-      } else if(s === 'priceDesc'){
-        rows.sort((a,b)=> (getPrice(b) - getPrice(a)));
-      } else {
-        rows.sort((a,b)=>{
-          const da = a.created_at || a.createdAt || a.date || a.created || 0;
-          const db = b.created_at || b.createdAt || b.date || b.created || 0;
-          return String(db).localeCompare(String(da));
-        });
-      }
-
-      if(!rows.length){
-        grid.innerHTML = `<div class="panel"><div class="muted">No listings match your filters.</div></div>`;
+    // Render displays
+    function renderDisplays(displays) {
+      const grid = document.getElementById('displaysGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (displays.length === 0) {
+        grid.classList.add('hidden');
+        emptyState.classList.remove('hidden');
         return;
       }
-      grid.innerHTML = rows.map(renderCard).join('');
+      
+      grid.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+      
+      grid.innerHTML = displays.map(display => `
+        <a href="listing-details.html?id=${display.id}" class="card" style="text-decoration: none; color: inherit;">
+          <div class="card-image">
+            <img src="${display.imageUrl || 'https://via.placeholder.com/400'}" alt="${display.name}">
+          </div>
+          <div class="badge badge-${display.listingType === 'rent' ? 'info' : 'success'}" style="margin-bottom: 0.5rem;">
+            ${display.listingType === 'rent' ? 'For Rent' : 'For Sale'}
+          </div>
+          <h3 class="card-title">${display.name}</h3>
+          <div class="card-price">$${display.price.toLocaleString()}${display.listingType === 'rent' ? '/week' : ''}</div>
+          <div class="card-meta">${display.size} • ${display.condition}</div>
+        </a>
+      `).join('');
     }
 
-    async function load(){
-      try{
-        const r = await fetch('/.netlify/functions/listDisplays?pageSize=60', { cache: 'no-store' });
-        const data = await r.json().catch(()=> ({}));
-        if(!r.ok) throw new Error(data?.error || 'Failed to load market.');
-        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data.items) ? data.items : []);
-        cache = listings;
-        apply();
-      }catch(e){
-        grid.innerHTML = `
-          <div class="panel">
-            <h3 style="margin:0 0 12px;">Market unavailable</h3>
-            <p class="muted" style="margin:0 0 16px; max-width: 820px;">We couldn't load listings. The page is still brand-correct and error-safe.</p>
-            <a class="btn btn-secondary btn-pill" href="/example-listing">View an example listing format</a>
-          </div>`;
+    // Update results count
+    function updateResultsCount(count) {
+      document.getElementById('resultsCount').textContent = 
+        `Showing ${count} ${count === 1 ? 'display' : 'displays'}`;
+    }
+
+    // Reset filters
+    function resetFilters() {
+      currentFilter = 'all';
+      currentSize = 'all';
+      currentSort = 'newest';
+      searchQuery = '';
+      
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === 'all');
+      });
+      document.getElementById('sizeFilter').value = 'all';
+      document.getElementById('sortSelect').value = 'newest';
+      document.getElementById('searchInput').value = '';
+      
+      filterAndRenderDisplays();
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Type filter buttons
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          filterAndRenderDisplays();
+        });
+      });
+      
+      // Size filter
+      document.getElementById('sizeFilter').addEventListener('change', (e) => {
+        currentSize = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Sort select
+      document.getElementById('sortSelect').addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Search input with debounce
+      let searchTimeout;
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          searchQuery = e.target.value;
+          filterAndRenderDisplays();
+        }, 300);
+      });
+      
+      // Check URL parameters for filters
+      const urlParams = new URLSearchParams(window.location.search);
+      const filterParam = urlParams.get('filter');
+      if (filterParam && ['all', 'rent', 'buy'].includes(filterParam)) {
+        currentFilter = filterParam;
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.filter === filterParam);
+        });
       }
-    }
-
-    qEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') apply(); });
-    gradeEl.addEventListener('change', apply);
-    sortEl.addEventListener('change', apply);
-
-    window.addEventListener('bb:search', (ev)=>{
-      const q = (ev.detail && ev.detail.q) ? String(ev.detail.q) : '';
-      qEl.value = q;
-      apply();
+      
+      // Load displays
+      loadDisplays();
     });
-
-    load();
-  })();
   </script>
 </body>
 </html>
