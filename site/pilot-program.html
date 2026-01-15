@@ -210,9 +210,9 @@
           </div>
           
           <div class="form-group">
-            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-              <input type="checkbox" required>
-              <span>I agree to the Terms of Service and Privacy Policy *</span>
+            <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" required style="margin-top: 4px; flex-shrink: 0;">
+              <span>I agree to the <a href="#" onclick="openModal('terms'); return false;" style="color: var(--accent); text-decoration: underline;">Terms of Service</a> and <a href="#" onclick="openModal('privacy'); return false;" style="color: var(--accent); text-decoration: underline;">Privacy Policy</a> *</span>
             </label>
           </div>
           
@@ -224,37 +224,196 @@
     </div>
   </section>
 
+  <!-- Terms Modal -->
+  <div id="termsModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; overflow-y: auto;">
+    <div class="modal-content" style="background: white; max-width: 800px; margin: 2rem auto; border-radius: 8px; position: relative;">
+      <button onclick="closeModal('terms')" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 2rem; cursor: pointer; color: #6b7280;">&times;</button>
+      <div style="padding: 2rem;">
+        <h2 style="margin-bottom: 1rem;">Terms of Service</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Last updated: January 14, 2026</p>
+        
+        <div style="line-height: 1.8; color: var(--text-muted); max-height: 60vh; overflow-y: auto;">
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">1. Agreement to Terms</h3>
+          <p>By accessing or using SHOWROOM MARKET, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the platform.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">2. Account Registration</h3>
+          <p>You must register for an account to use the platform. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">3. Listing Requirements</h3>
+          <p>Showrooms must accurately represent all products listed on the platform. All products must be available for on-site inspection and pickup at the listed showroom location.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">4. Payment Terms</h3>
+          <p>All payments are processed through our secure escrow system. Funds are held until the buyer accepts the product during on-site inspection. A 2.5% commission fee applies to completed transactions after the 30-day pilot period.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">5. Pickup and Inspection</h3>
+          <p>All transactions are pickup only. Buyers must inspect products on-site at the showroom location before acceptance. No shipping is provided through the platform.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">6. Prohibited Activities</h3>
+          <p>Users may not: misrepresent products, engage in fraudulent activities, circumvent the platform's fee structure, or use the platform for any illegal purpose.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">7. Limitation of Liability</h3>
+          <p>SHOWROOM MARKET is a platform connecting buyers and showrooms. We are not responsible for the quality, condition, or legality of products listed. All transactions are between the buyer and showroom.</p>
+          
+          <p style="margin-top: 1.5rem;">For complete terms, please visit <a href="/terms" style="color: var(--accent);">showroommarket.com/terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Modal -->
+  <div id="privacyModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; overflow-y: auto;">
+    <div class="modal-content" style="background: white; max-width: 800px; margin: 2rem auto; border-radius: 8px; position: relative;">
+      <button onclick="closeModal('privacy')" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 2rem; cursor: pointer; color: #6b7280;">&times;</button>
+      <div style="padding: 2rem;">
+        <h2 style="margin-bottom: 1rem;">Privacy Policy</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Last updated: January 14, 2026</p>
+        
+        <div style="line-height: 1.8; color: var(--text-muted); max-height: 60vh; overflow-y: auto;">
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">1. Information We Collect</h3>
+          <p>We collect information you provide directly to us, including name, email, phone number, business information, and payment details when you register for an account or use our services.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">2. How We Use Your Information</h3>
+          <p>We use your information to: operate and improve the platform, process transactions, communicate with you, prevent fraud, and comply with legal obligations.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">3. Information Sharing</h3>
+          <p>We share your information with showrooms and buyers as necessary to facilitate transactions. We do not sell your personal information to third parties.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">4. Data Security</h3>
+          <p>We implement industry-standard security measures to protect your information. All payment processing is handled securely through encrypted payment processors.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">5. Your Rights</h3>
+          <p>You have the right to access, correct, or delete your personal information. You may also opt out of marketing communications at any time.</p>
+          
+          <h3 style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.75rem;">6. Cookies and Tracking</h3>
+          <p>We use cookies and similar technologies to improve your experience on our platform. You can control cookie preferences in your browser settings.</p>
+          
+          <p style="margin-top: 1.5rem;">For our complete privacy policy, please visit <a href="/privacy" style="color: var(--accent);">showroommarket.com/privacy</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type) {
+      if (type === 'terms') {
+        document.getElementById('termsModal').style.display = 'block';
+      } else if (type === 'privacy') {
+        document.getElementById('privacyModal').style.display = 'block';
+      }
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal(type) {
+      if (type === 'terms') {
+        document.getElementById('termsModal').style.display = 'none';
+      } else if (type === 'privacy') {
+        document.getElementById('privacyModal').style.display = 'none';
+      }
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const termsModal = document.getElementById('termsModal');
+      const privacyModal = document.getElementById('privacyModal');
+      if (event.target === termsModal) {
+        closeModal('terms');
+      } else if (event.target === privacyModal) {
+        closeModal('privacy');
+      }
+    }
+  </script>
+
   <!-- FAQ -->
   <section class="container" style="padding: 4rem 0;">
     <div style="max-width: 800px; margin: 0 auto;">
       <h2 style="text-align: center; margin-bottom: 3rem;">Frequently Asked Questions</h2>
       
-      <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
-        <h4 style="margin-bottom: 0.5rem;">What are the requirements to join?</h4>
-        <p style="color: var(--text-muted);">You must be an established kitchen & bath showroom with floor models to list, valid business credentials, and the ability to facilitate on-site pickups.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
-        <h4 style="margin-bottom: 0.5rem;">How long does approval take?</h4>
-        <p style="color: var(--text-muted);">We review all applications within 24-48 hours. You'll receive an email with your account activation details and next steps.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
-        <h4 style="margin-bottom: 0.5rem;">What happens after the 30-day pilot?</h4>
-        <p style="color: var(--text-muted);">After the 30-day pilot, you'll transition to our standard 2.5% commission rate. Pilot members receive priority support and ongoing benefits.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; margin-bottom: 1.5rem;">
-        <h4 style="margin-bottom: 0.5rem;">How do pickups work?</h4>
-        <p style="color: var(--text-muted);">All transactions are pickup only at your showroom. Buyers coordinate pickup times directly with you, inspect the product on-site, and arrange their own transportation.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem;">
-        <h4 style="margin-bottom: 0.5rem;">How do payments work?</h4>
-        <p style="color: var(--text-muted);">Buyers pay upfront through our secure escrow system. Funds are held until the buyer accepts the product at your showroom, then released to your account within 2-3 business days.</p>
+      <div class="faq-accordion">
+        <div class="faq-item" style="border-bottom: 1px solid #e5e7eb;">
+          <button class="faq-question" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 1.5rem 0; font-size: 1.125rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; color: var(--text);">
+            <span>What are the requirements to join?</span>
+            <svg class="faq-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+            <p style="color: var(--text-muted); padding-bottom: 1.5rem; line-height: 1.6;">You must be an established kitchen & bath showroom with floor models to list, valid business credentials, and the ability to facilitate on-site pickups.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item" style="border-bottom: 1px solid #e5e7eb;">
+          <button class="faq-question" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 1.5rem 0; font-size: 1.125rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; color: var(--text);">
+            <span>How long does approval take?</span>
+            <svg class="faq-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+            <p style="color: var(--text-muted); padding-bottom: 1.5rem; line-height: 1.6;">We review all applications within 24-48 hours. You'll receive an email with your account activation details and next steps.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item" style="border-bottom: 1px solid #e5e7eb;">
+          <button class="faq-question" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 1.5rem 0; font-size: 1.125rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; color: var(--text);">
+            <span>What happens after the 30-day pilot?</span>
+            <svg class="faq-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+            <p style="color: var(--text-muted); padding-bottom: 1.5rem; line-height: 1.6;">After the 30-day pilot, you'll transition to our standard 2.5% commission rate. Pilot members receive priority support and ongoing benefits.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item" style="border-bottom: 1px solid #e5e7eb;">
+          <button class="faq-question" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 1.5rem 0; font-size: 1.125rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; color: var(--text);">
+            <span>How do pickups work?</span>
+            <svg class="faq-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+            <p style="color: var(--text-muted); padding-bottom: 1.5rem; line-height: 1.6;">All transactions are pickup only at your showroom. Buyers coordinate pickup times directly with you, inspect the product on-site, and arrange their own transportation.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" style="width: 100%; text-align: left; padding: 1.5rem 0; font-size: 1.125rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; color: var(--text);">
+            <span>How do payments work?</span>
+            <svg class="faq-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.3s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+            <p style="color: var(--text-muted); padding-bottom: 1.5rem; line-height: 1.6;">Buyers pay upfront through our secure escrow system. Funds are held until the buyer accepts the product at your showroom, then released to your account within 2-3 business days.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+  
+  <script>
+    function toggleFaq(button) {
+      const answer = button.nextElementSibling;
+      const icon = button.querySelector('.faq-icon');
+      const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+      
+      // Close all other FAQs
+      document.querySelectorAll('.faq-answer').forEach(a => {
+        a.style.maxHeight = '0';
+      });
+      document.querySelectorAll('.faq-icon').forEach(i => {
+        i.style.transform = 'rotate(0deg)';
+      });
+      
+      // Toggle current FAQ
+      if (!isOpen) {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+  </script>
 
   <!-- Footer inserted via include.js -->
   

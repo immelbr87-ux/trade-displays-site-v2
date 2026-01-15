@@ -1,22 +1,77 @@
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-left">
-      <a class="brand footer-brand" href="/index.html">
-        <span class="brand-mark" aria-hidden="true">■</span>
-        <span class="brand-text">
-          <span class="brand-name">SHOWROOM <span style="color: #00b85c;">MARKET</span></span>
-          <span class="brand-sub">B2B marketplace for premium kitchen & bath floor models.</span>
-        </span>
-      </a>
-      <div class="footer-meta">SHOWROOM MARKET is operated by Bargain Bond.</div>
+<footer class="site-footer" style="background: #111827; color: #ffffff; padding: 4rem 0 2rem;">
+  <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 32px;">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem;">
+      <!-- Brand Column -->
+      <div>
+        <div style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; margin-bottom: 1rem;">
+          SHOWROOM <span style="color: #00b85c;">MARKET</span>
+        </div>
+        <p style="color: #9ca3af; line-height: 1.6; margin-bottom: 1.5rem;">
+          B2B marketplace for premium kitchen & bath floor models. Trade professionals connect with showrooms nationwide.
+        </p>
+        <div style="color: #6b7280; font-size: 14px;">
+          Operated by Bargain Bond
+        </div>
+      </div>
+      
+      <!-- Marketplace Column -->
+      <div>
+        <h4 style="color: #ffffff; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;">Marketplace</h4>
+        <nav style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/market" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">Browse Products</a>
+          <a href="/how-it-works" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">How It Works</a>
+          <a href="/pilot-program" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">For Showrooms</a>
+        </nav>
+      </div>
+      
+      <!-- Company Column -->
+      <div>
+        <h4 style="color: #ffffff; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;">Company</h4>
+        <nav style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/about" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">About</a>
+          <a href="/contact" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">Contact</a>
+          <a href="/faq" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">FAQ</a>
+        </nav>
+      </div>
+      
+      <!-- Legal Column -->
+      <div>
+        <h4 style="color: #ffffff; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;">Legal</h4>
+        <nav style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/terms" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">Terms of Service</a>
+          <a href="/privacy" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">Privacy Policy</a>
+          <a href="/cookies" style="color: #9ca3af; text-decoration: none; font-size: 14px; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#9ca3af'">Cookie Policy</a>
+        </nav>
+      </div>
     </div>
-
-    <nav class="footnav" aria-label="Footer">
-      <a href="/market">Browse</a>
-      <a href="/pilot-program">Start 30-Day Pilot</a>
-      <a href="/terms">Terms</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/contact">Contact</a>
-    </nav>
+    
+    <!-- Bottom Bar -->
+    <div style="border-top: 1px solid #374151; padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; color: #6b7280; font-size: 14px;">
+      <div>© 2026 SHOWROOM MARKET. All rights reserved.</div>
+      <div style="display: flex; gap: 2rem;">
+        <a href="/terms" style="color: #6b7280; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#9ca3af'" onmouseout="this.style.color='#6b7280'">Terms</a>
+        <a href="/privacy" style="color: #6b7280; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#9ca3af'" onmouseout="this.style.color='#6b7280'">Privacy</a>
+        <a href="/cookies" style="color: #6b7280; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#9ca3af'" onmouseout="this.style.color='#6b7280'">Cookies</a>
+      </div>
+    </div>
   </div>
 </footer>
+
+<style>
+@media (max-width: 1024px) {
+  .site-footer > .container > div:first-child {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-footer > .container > div:first-child {
+    grid-template-columns: 1fr !important;
+  }
+  .site-footer > .container > div:last-child {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+}
+</style>

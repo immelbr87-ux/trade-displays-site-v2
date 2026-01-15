@@ -208,7 +208,7 @@
       <h2>Why SHOWROOM MARKET</h2>
       <p>The trusted marketplace for premium kitchen & bath products</p>
     </div>
-    <div class="feature-grid">
+    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1200px; margin: 0 auto;">
       <div class="feature-card">
         <div class="feature-icon">
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,6 +265,19 @@
       </div>
     </div>
   </section>
+
+  <style>
+    @media (max-width: 1024px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (max-width: 640px) {
+      .feature-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
 
   <!-- Featured Brands Section -->
   <section class="brands-section">
