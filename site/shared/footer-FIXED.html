@@ -1,0 +1,308 @@
+<footer class="site-footer-premium">
+  <div class="container">
+    <!-- Main Footer Content -->
+    <div class="footer-grid">
+      <!-- Brand Column -->
+      <div class="footer-brand-column">
+        <div class="footer-logo">
+          <span class="footer-logo-mark">■</span>
+          <div class="footer-logo-text">
+            <div class="footer-logo-name">SHOWROOM <span>MARKET</span></div>
+            <div class="footer-logo-sub">by Bargain Bond</div>
+          </div>
+        </div>
+        <p class="footer-tagline">
+          Premium Kitchen & Bath Floor Models. B2B marketplace connecting showroom managers with verified trade buyers.
+        </p>
+        <div class="footer-trust-badges">
+          <div class="trust-badge">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="M9 12l2 2 4-4"></path>
+            </svg>
+            <span>Verified Listings</span>
+          </div>
+          <div class="trust-badge">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            <span>Escrow Protection</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Marketplace Column -->
+      <div class="footer-column">
+        <h4 class="footer-heading">Marketplace</h4>
+        <nav class="footer-links">
+          <a href="/market">Browse Products</a>
+          <a href="/market?cat=Trending">Trending Items</a>
+          <a href="/market?cat=Vanities">Vanities</a>
+          <a href="/market?cat=Faucets">Faucets & Fixtures</a>
+          <a href="/list-product">List an Item</a>
+        </nav>
+      </div>
+      
+      <!-- Platform Column -->
+      <div class="footer-column">
+        <h4 class="footer-heading">Platform</h4>
+        <nav class="footer-links">
+          <a href="/how-it-works">How It Works</a>
+          <a href="/pilot-program">For Showrooms</a>
+          <a href="/pilot-program">30-Day Pilot</a>
+          <a href="/faq">FAQ</a>
+          <a href="/help">Help Center</a>
+        </nav>
+      </div>
+      
+      <!-- Company Column -->
+      <div class="footer-column">
+        <h4 class="footer-heading">Company</h4>
+        <nav class="footer-links">
+          <a href="/about">About Us</a>
+          <a href="/contact">Contact</a>
+          <a href="/terms">Terms of Service</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/cookies">Cookie Policy</a>
+        </nav>
+      </div>
+    </div>
+    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <p>© 2026 SHOWROOM MARKET. Operated by Bargain Bond. All rights reserved.</p>
+      </div>
+      <div class="footer-bottom-right">
+        <a href="/terms">Terms</a>
+        <span class="footer-divider">·</span>
+        <a href="/privacy">Privacy</a>
+        <span class="footer-divider">·</span>
+        <a href="/cookies">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* Premium Footer Styling */
+.site-footer-premium {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  padding: 5rem 0 2rem;
+  margin-top: 6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 184, 92, 0.5) 50%, transparent);
+}
+
+.site-footer-premium .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+/* Brand Column */
+.footer-brand-column {
+  max-width: 400px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.footer-logo-mark {
+  width: 40px;
+  height: 40px;
+  background: #00b85c;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.footer-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-logo-name {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.footer-logo-name span {
+  color: #00b85c;
+}
+
+.footer-logo-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.footer-tagline {
+  color: #cbd5e1;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  font-size: 15px;
+}
+
+.footer-trust-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.trust-badge svg {
+  color: #00b85c;
+  flex-shrink: 0;
+}
+
+/* Footer Columns */
+.footer-column {
+}
+
+.footer-heading {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 1.25rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: #00b85c;
+  transform: translateX(2px);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-bottom-left p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+}
+
+.footer-bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-bottom-right a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom-right a:hover {
+  color: #ffffff;
+}
+
+.footer-divider {
+  color: #475569;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  
+  .footer-brand-column {
+    grid-column: 1 / -1;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-footer-premium {
+    padding: 3rem 0 1.5rem;
+    margin-top: 4rem;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .footer-bottom-left,
+  .footer-bottom-right {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
