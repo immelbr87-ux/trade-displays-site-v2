@@ -1648,3 +1648,69 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* New Premium Button Styles */
+.header-cta-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-grey {
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-grey:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.btn-black {
+  background: #111827;
+  color: #ffffff;
+  border: 1px solid #111827;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-black:hover {
+  background: #1f2937;
+  border-color: #1f2937;
+}
+
+.btn-green {
+  background: #00b85c;
+  color: #ffffff;
+  border: 1px solid #00b85c;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-green:hover {
+  background: #009648;
+  border-color: #009648;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 184, 92, 0.3);
+}
+
+@media (max-width: 768px) {
+  .header-cta-group {
+    display: none;
+  }
+}
