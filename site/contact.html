@@ -3,291 +3,459 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - SHOWROOM MARKET | Kitchen & Bath Floor Models</title>
-  <meta name="description" content="Contact SHOWROOM MARKET for kitchen and bath showroom liquidation. Questions about listing, buying, or our B2B marketplace? We're here to help.">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="Contact SHOWROOM MARKET">
-  <meta property="og:description" content="Get in touch with our team about showroom liquidation">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://showroommarket.com/contact">
-  
+  <title>Contact Us - SHOWROOM MARKET</title>
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="fixes.css">
-  
-  <!-- reCAPTCHA v3 (Invisible) -->
-  <!-- Replace YOUR_RECAPTCHA_SITE_KEY with your actual site key -->
-  <script src="https://www.google.com/recaptcha/api.js?render=YOUR_RECAPTCHA_SITE_KEY"></script>
+  <style>
+    /* Premium Contact Page Styling */
+    .contact-wrapper {
+      min-height: calc(100vh - 140px);
+      background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+      padding: 6rem 0;
+    }
+    
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    
+    /* Left Side - Info */
+    .contact-info {
+      position: sticky;
+      top: 120px;
+    }
+    
+    .contact-title {
+      font-size: 48px;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 1rem;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+    }
+    
+    .contact-subtitle {
+      font-size: 18px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+    
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .contact-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #00b85c;
+    }
+    
+    .contact-method-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+    
+    .contact-method-content p {
+      font-size: 15px;
+      color: #6b7280;
+      margin: 0;
+    }
+    
+    .contact-method-content a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    .contact-method-content a:hover {
+      color: #009648;
+    }
+    
+    /* Right Side - Form */
+    .contact-form-wrapper {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: 3rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+    
+    .form-header {
+      margin-bottom: 2.5rem;
+    }
+    
+    .form-header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-header p {
+      font-size: 15px;
+      color: #6b7280;
+      margin: 0;
+    }
+    
+    .premium-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      padding: 14px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fafafa;
+      transition: all 0.2s;
+    }
+    
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none;
+      border-color: #00b85c;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 184, 92, 0.08);
+    }
+    
+    .form-field textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+    
+    .char-count {
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: right;
+      margin-top: -0.5rem;
+    }
+    
+    .form-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    
+    .form-checkbox input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    
+    .form-checkbox label {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+      cursor: pointer;
+    }
+    
+    .form-checkbox label a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .form-checkbox label a:hover {
+      color: #009648;
+    }
+    
+    .submit-btn {
+      padding: 16px;
+      background: #111827;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      margin-top: 0.5rem;
+    }
+    
+    .submit-btn:hover {
+      background: #1f2937;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(17, 24, 39, 0.2);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    
+    .form-footer {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+    
+    .form-footer a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .contact-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      
+      .contact-info {
+        position: static;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .contact-wrapper {
+        padding: 3rem 0;
+      }
+      
+      .contact-title {
+        font-size: 36px;
+      }
+      
+      .contact-form-wrapper {
+        padding: 2rem;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
   
   <!-- Header inserted via include.js -->
   
-  <section class="container" style="padding: 6rem 0;">
-    <div style="max-width: 600px; margin: 0 auto;">
-      <h1 style="margin-bottom: 1rem;">Contact Us</h1>
-      <p style="color: var(--text-muted); margin-bottom: 3rem;">Have questions about listing your showroom inventory or buying premium K&B products? We're here to help.</p>
-      
-      <!-- Success Message (hidden by default) -->
-      <div id="successMessage" class="alert alert-success" style="display: none; margin-bottom: 2rem; padding: 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; color: #166534;">
-        <strong>✓ Message sent!</strong> We'll respond within 24 hours.
-      </div>
-      
-      <!-- Error Message (hidden by default) -->
-      <div id="errorMessage" class="alert alert-error" style="display: none; margin-bottom: 2rem; padding: 1rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b;">
-        <strong>✗ Error:</strong> <span id="errorText">Please try again.</span>
-      </div>
-      
-      <form id="contactForm" class="form">
-        <!-- CSRF Token -->
-        <input type="hidden" name="csrf_token" id="csrfToken">
-        
-        <!-- Timestamp (detect bot speed) -->
-        <input type="hidden" name="form_start_time" id="formStartTime">
-        
-        <!-- Honeypot Field (hidden from humans, bots will fill) -->
-        <input type="text" 
-               name="website" 
-               id="website"
-               style="position: absolute; left: -9999px; width: 1px; height: 1px;"
-               tabindex="-1" 
-               autocomplete="off"
-               aria-hidden="true">
-        
-        <div class="form-group">
-          <label for="name">Name *</label>
-          <input type="text" 
-                 id="name" 
-                 name="name" 
-                 required 
-                 maxlength="100"
-                 autocomplete="name">
-        </div>
-        
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input type="email" 
-                 id="email" 
-                 name="email" 
-                 required
-                 maxlength="100"
-                 autocomplete="email">
-        </div>
-        
-        <div class="form-group">
-          <label for="phone">Phone (optional)</label>
-          <input type="tel" 
-                 id="phone" 
-                 name="phone"
-                 maxlength="20"
-                 autocomplete="tel">
-        </div>
-        
-        <div class="form-group">
-          <label for="inquiry_type">Inquiry Type</label>
-          <select id="inquiry_type" name="inquiry_type" required>
-            <option value="">Select one...</option>
-            <option value="selling">Listing Showroom Inventory (Seller)</option>
-            <option value="buying">Buying Products (Trade Buyer)</option>
-            <option value="general">General Question</option>
-            <option value="support">Technical Support</option>
-            <option value="partnership">Partnership Opportunity</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="subject">Subject *</label>
-          <input type="text" 
-                 id="subject" 
-                 name="subject" 
-                 required
-                 maxlength="200">
-        </div>
-        
-        <div class="form-group">
-          <label for="message">Message *</label>
-          <textarea id="message" 
-                    name="message" 
-                    rows="6" 
-                    required
-                    maxlength="2000"></textarea>
-          <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
-            <span id="charCount">0</span> / 2000 characters
-          </small>
-        </div>
-        
-        <!-- reCAPTCHA Token (hidden) -->
-        <input type="hidden" id="recaptchaToken" name="recaptcha_token">
-        
-        <!-- Privacy Notice -->
-        <div style="margin: 1.5rem 0; padding: 1rem; background: #fafafa; border-radius: 8px; font-size: 0.875rem; color: var(--text-muted);">
-          <label style="display: flex; align-items: start; cursor: pointer;">
-            <input type="checkbox" 
-                   id="privacy_consent" 
-                   name="privacy_consent" 
-                   required
-                   style="margin-top: 0.25rem; margin-right: 0.5rem;">
-            <span>I agree to the <a href="/privacy" target="_blank" style="color: var(--accent);">Privacy Policy</a> and consent to SHOWROOM MARKET storing my information to respond to this inquiry.</span>
-          </label>
-        </div>
-        
-        <button type="submit" 
-                id="submitBtn"
-                class="btn btn-primary w-full"
-                style="position: relative;">
-          <span id="btnText">Send Message</span>
-          <span id="btnLoading" style="display: none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle;">
-              <circle cx="12" cy="12" r="10" stroke-width="3" stroke-opacity="0.25"/>
-              <path d="M12 2a10 10 0 0 1 10 10" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-            Sending...
-          </span>
-        </button>
-        
-        <p style="text-align: center; color: var(--text-muted); font-size: 0.875rem; margin-top: 1rem;">
-          This site is protected by reCAPTCHA and the Google
-          <a href="https://policies.google.com/privacy" target="_blank" style="color: var(--accent);">Privacy Policy</a> and
-          <a href="https://policies.google.com/terms" target="_blank" style="color: var(--accent);">Terms of Service</a> apply.
+  <div class="contact-wrapper">
+    <div class="contact-container">
+      <!-- Left Side - Contact Info -->
+      <div class="contact-info">
+        <h1 class="contact-title">Get in Touch</h1>
+        <p class="contact-subtitle">
+          Have questions about listing your showroom inventory or buying premium K&B products? We're here to help.
         </p>
-      </form>
-      
-      <!-- Alternative Contact Methods -->
-      <div style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border);">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Other Ways to Reach Us</h2>
-        <div style="display: grid; gap: 1.5rem;">
-          <div>
-            <strong style="display: block; margin-bottom: 0.5rem;">Email</strong>
-            <a href="/cdn-cgi/l/email-protection#8fe7eae3e3e0cffce7e0f8fde0e0e2e2eefde4eafba1ece0e2" style="color: var(--accent);"><span class="__cf_email__" data-cfemail="83ebe6efefecc3f0ebecf4f1ececeeeee2f1e8e6f7ade0ecee">[email&#160;protected]</span></a>
+        
+        <div class="contact-methods">
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div class="contact-method-content">
+              <h3>Email Support</h3>
+              <p>General inquiries and support</p>
+              <a href="mailto:support@showroommarket.com">support@showroommarket.com</a>
+            </div>
           </div>
-          <div>
-            <strong style="display: block; margin-bottom: 0.5rem;">For Sellers</strong>
-            <a href="/cdn-cgi/l/email-protection#44282d37302d2a233704372c2b33362b2b292925362f21306a272b29" style="color: var(--accent);"><span class="__cf_email__" data-cfemail="99f5f0eaedf0f7feead9eaf1f6eeebf6f6f4f4f8ebf2fcedb7faf6f4">[email&#160;protected]</span></a>
+          
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <div class="contact-method-content">
+              <h3>For Showrooms</h3>
+              <p>Questions about listing inventory</p>
+              <a href="mailto:sellers@showroommarket.com">sellers@showroommarket.com</a>
+            </div>
           </div>
-          <div>
-            <strong style="display: block; margin-bottom: 0.5rem;">Support</strong>
-            <a href="/cdn-cgi/l/email-protection#1a696f6a6a75686e5a6972756d68757577777b68717f6e34797577" style="color: var(--accent);"><span class="__cf_email__" data-cfemail="e0939590908f9294a093888f97928f8f8d8d81928b8594ce838f8d">[email&#160;protected]</span></a>
-          </div>
-          <div>
-            <strong style="display: block; margin-bottom: 0.5rem;">Response Time</strong>
-            <span style="color: var(--text-muted);">We typically respond within 24 hours during business days.</span>
+          
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div class="contact-method-content">
+              <h3>Response Time</h3>
+              <p>We typically respond within 24 hours during business days (Monday-Friday, 9am-6pm EST)</p>
+            </div>
           </div>
         </div>
+      </div>
+      
+      <!-- Right Side - Contact Form -->
+      <div class="contact-form-wrapper">
+        <div class="form-header">
+          <h2>Send us a Message</h2>
+          <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+        </div>
+        
+        <form class="premium-form" action="/netlify/functions/contact" method="POST">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="name">Name *</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                placeholder="Your full name" 
+                required
+              />
+            </div>
+            
+            <div class="form-field">
+              <label for="email">Email *</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="your@email.com" 
+                required
+              />
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-field">
+              <label for="phone">Phone (Optional)</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                placeholder="(555) 123-4567"
+              />
+            </div>
+            
+            <div class="form-field">
+              <label for="inquiry-type">Inquiry Type *</label>
+              <select id="inquiry-type" name="inquiry-type" required>
+                <option value="">Select one...</option>
+                <option value="buyer">Buyer Inquiry</option>
+                <option value="seller">Showroom / Seller</option>
+                <option value="support">Technical Support</option>
+                <option value="partnership">Partnership</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-field">
+            <label for="subject">Subject *</label>
+            <input 
+              type="text" 
+              id="subject" 
+              name="subject" 
+              placeholder="Brief description of your inquiry" 
+              required
+            />
+          </div>
+          
+          <div class="form-field">
+            <label for="message">Message *</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              placeholder="Tell us more about your inquiry..."
+              maxlength="2000"
+              required
+              oninput="updateCharCount()"
+            ></textarea>
+            <div class="char-count">
+              <span id="char-count">0</span> / 2000 characters
+            </div>
+          </div>
+          
+          <div class="form-checkbox">
+            <input 
+              type="checkbox" 
+              id="privacy-agree" 
+              name="privacy-agree" 
+              required
+            />
+            <label for="privacy-agree">
+              I agree to the <a href="/privacy">Privacy Policy</a> and consent to SHOWROOM MARKET storing my information to respond to this inquiry.
+            </label>
+          </div>
+          
+          <button type="submit" class="submit-btn">Send Message</button>
+          
+          <div class="form-footer">
+            This site is protected by reCAPTCHA and the Google 
+            <a href="/privacy">Privacy Policy</a> and 
+            <a href="/terms">Terms of Service</a> apply.
+          </div>
+        </form>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- Footer inserted via include.js -->
   
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared/include.js"></script>
-  
-  <style>
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  </style>
-  
+  <script src="shared/include.js"></script>
   <script>
-    // Initialize form security
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('contactForm');
-      const submitBtn = document.getElementById('submitBtn');
-      const btnText = document.getElementById('btnText');
-      const btnLoading = document.getElementById('btnLoading');
-      const successMsg = document.getElementById('successMessage');
-      const errorMsg = document.getElementById('errorMessage');
-      const errorText = document.getElementById('errorText');
-      
-      // Generate CSRF token
-      document.getElementById('csrfToken').value = 
-        Math.random().toString(36).substring(2) + Date.now().toString(36);
-      
-      // Record form load time
-      document.getElementById('formStartTime').value = Date.now();
-      
-      // Character counter
-      const messageField = document.getElementById('message');
-      const charCount = document.getElementById('charCount');
-      messageField.addEventListener('input', function() {
-        charCount.textContent = this.value.length;
-      });
-      
-      // Form submission
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Hide previous messages
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-        
-        // Security checks
-        
-        // 1. Honeypot check
-        if (document.getElementById('website').value !== '') {
-          console.log('Bot detected: Honeypot filled');
-          showError('Invalid submission. Please try again.');
-          return false;
-        }
-        
-        // 2. Time check (must spend at least 3 seconds)
-        const startTime = parseInt(document.getElementById('formStartTime').value);
-        const elapsed = Date.now() - startTime;
-        if (elapsed < 3000) {
-          showError('Please take your time filling out the form.');
-          return false;
-        }
-        
-        // 3. Privacy consent check
-        if (!document.getElementById('privacy_consent').checked) {
-          showError('Please agree to the Privacy Policy to continue.');
-          return false;
-        }
-        
-        // Show loading state
-        submitBtn.disabled = true;
-        btnText.style.display = 'none';
-        btnLoading.style.display = 'inline';
-        
-        // Get reCAPTCHA token
-        try {
-          const token = await new Promise((resolve, reject) => {
-            grecaptcha.ready(function() {
-              // Replace YOUR_RECAPTCHA_SITE_KEY with your actual site key
-              grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', {action: 'contact'})
-                .then(resolve)
-                .catch(reject);
-            });
-          });
-          
-          document.getElementById('recaptchaToken').value = token;
-          
-          // Collect form data
-          const formData = new FormData(form);
-          const data = Object.fromEntries(formData.entries());
-          
-          // Submit to Netlify Function (when created)
-          const response = await fetch('/.netlify/functions/contact', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-          });
-          
-          if (response.ok) {
-            // Success
-            form.reset();
-            successMsg.style.display = 'block';
-            document.getElementById('formStartTime').value = Date.now();
-            charCount.textContent = '0';
-            
-            // Scroll to success message
-            successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } else {
-            const error = await response.json();
-            showError(error.message || 'Unable to send message. Please try again.');
-          }
-          
-        } catch (error) {
-          console.error('Form submission error:',
+    function updateCharCount() {
+      const textarea = document.getElementById('message');
+      const charCount = document.getElementById('char-count');
+      charCount.textContent = textarea.value.length;
+    }
+  </script>
+</body>
+</html>
