@@ -485,6 +485,39 @@
           </div>
         </div>
 
+        <!-- Verification Requirement -->
+        <div class="form-section" style="background: #fffbeb; border-color: #fcd34d;">
+          <h2 style="color: #92400e;">⚠️ Verification Required</h2>
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: start; gap: 1rem; cursor: pointer; padding: 1rem; background: white; border: 2px solid #fcd34d; border-radius: 8px;">
+              <input 
+                type="checkbox" 
+                id="verifyAccuracy" 
+                required
+                style="width: 24px; height: 24px; margin-top: 2px; cursor: pointer;"
+              >
+              <span style="flex: 1;">
+                <strong style="display: block; font-size: 1rem; margin-bottom: 0.5rem; color: #92400e;">
+                  I verify that all auto-filled product specifications are accurate and complete
+                </strong>
+                <span style="font-size: 0.875rem; color: #6b7280; font-weight: 400;">
+                  I have reviewed the product name, description, specifications, dimensions, and retail price. 
+                  I confirm that all information matches the actual product I am listing. 
+                  I understand that inaccurate listings may result in transaction disputes and account suspension.
+                </span>
+              </span>
+            </label>
+          </div>
+          
+          <div style="background: white; border: 1px solid #fcd34d; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+            <p style="font-size: 0.875rem; color: #92400e; margin: 0;">
+              <strong>Why this matters:</strong> Buyers rely on accurate specifications to make purchasing decisions. 
+              While our AI does its best, you must verify all details match your actual product before listing.
+            </p>
+          </div>
+        </div>
+
         <!-- Submit Buttons -->
         <div style="display: flex; gap: 1rem;">
           <button type="button" class="btn-secondary" onclick="resetForm()">
@@ -667,6 +700,14 @@
     // Handle form submission
     document.getElementById('listProductForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      
+      // Validate verification checkbox
+      const verified = document.getElementById('verifyAccuracy');
+      if (!verified.checked) {
+        alert('⚠️ You must verify that the auto-filled specifications are accurate before publishing.');
+        verified.focus();
+        return;
+      }
       
       // Validate photos
       const photos = document.getElementById('photos').files;
