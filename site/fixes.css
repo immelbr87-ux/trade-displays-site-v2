@@ -1,0 +1,97 @@
+/* CRITICAL OVERRIDES - Fix Header Green Box and Headlines */
+
+/* Remove any background from header CTA group */
+.header-cta-group {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  display: flex !important;
+  gap: 12px !important;
+  align-items: center !important;
+}
+
+/* Ensure topbar and topbar-inner have no green background */
+.topbar,
+.topbar-inner,
+.site-header .topbar,
+.site-header .topbar-inner {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+/* Force button styling with !important */
+.header-cta-group a {
+  display: inline-block !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s !important;
+}
+
+/* Individual button overrides */
+.header-cta-group a:nth-child(1),
+.header-cta-group a[href*="signin"] {
+  background: #f3f4f6 !important;
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.header-cta-group a:nth-child(2),
+.header-cta-group a[href*="signup"] {
+  background: #111827 !important;
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  border: 1px solid #111827 !important;
+}
+
+.header-cta-group a:nth-child(3),
+.header-cta-group a[href*="pilot"] {
+  background: #00b85c !important;
+  background-color: #00b85c !important;
+  color: #ffffff !important;
+  border: 1px solid #00b85c !important;
+}
+
+/* Fix all hero headlines to be solid black */
+.hero h1,
+.hero h1 *,
+h1.hero-title,
+.section h1,
+section h1 {
+  color: #111827 !important;
+  background: none !important;
+  background-image: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-clip: initial !important;
+  text-fill-color: initial !important;
+}
+
+/* Specific override for home page headline */
+#root h1,
+body > section:first-of-type h1,
+.hero-section h1 {
+  color: #111827 !important;
+}
+
+/* Remove any green color from headline text */
+.hero h1 span,
+h1 span {
+  color: inherit !important;
+  background: none !important;
+}
+
+/* Fix footer branding */
+.site-footer .brand-name,
+footer .brand-name {
+  color: #ffffff !important;
+}
+
+.site-footer .brand-name span,
+footer .brand-name span {
+  color: #00b85c !important;
+}
