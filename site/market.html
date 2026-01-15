@@ -37,21 +37,49 @@
       </div>
       
       <div class="filter-group">
-        <label style="font-weight: 600; margin-right: 0.5rem;">Type:</label>
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="rent">Rent</button>
-        <button class="filter-btn" data-filter="buy">Buy</button>
+        <label style="font-weight: 600; margin-right: 0.5rem;">Condition:</label>
+        <select class="form-select" id="conditionFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Conditions</option>
+          <option value="grade-a">Grade A - Like New</option>
+          <option value="grade-b">Grade B - Excellent</option>
+          <option value="grade-c">Grade C - Good</option>
+        </select>
       </div>
       
       <div class="filter-group">
-        <label style="font-weight: 600; margin-right: 0.5rem;">Size:</label>
-        <select class="form-select" id="sizeFilter" style="width: auto; padding: 0.625rem 1rem;">
-          <option value="all">All Sizes</option>
-          <option value="10x10">10x10</option>
-          <option value="10x20">10x20</option>
-          <option value="20x20">20x20</option>
-          <option value="30x30">30x30</option>
-          <option value="custom">Custom</option>
+        <label style="font-weight: 600; margin-right: 0.5rem;">Brand:</label>
+        <select class="form-select" id="brandFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Brands</option>
+          <option value="kohler">Kohler</option>
+          <option value="sub-zero">Sub-Zero</option>
+          <option value="wolf">Wolf</option>
+          <option value="miele">Miele</option>
+          <option value="thermador">Thermador</option>
+          <option value="other">Other Premium Brands</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Price Range:</label>
+        <select class="form-select" id="priceFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Prices</option>
+          <option value="0-1000">Under $1,000</option>
+          <option value="1000-5000">$1,000 - $5,000</option>
+          <option value="5000-10000">$5,000 - $10,000</option>
+          <option value="10000-25000">$10,000 - $25,000</option>
+          <option value="25000+">$25,000+</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Location:</label>
+        <select class="form-select" id="locationFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Locations</option>
+          <option value="california">California</option>
+          <option value="new-york">New York</option>
+          <option value="illinois">Illinois</option>
+          <option value="texas">Texas</option>
+          <option value="florida">Florida</option>
         </select>
       </div>
       
@@ -92,9 +120,11 @@
   <script src="shared/include.js"></script>
   <script>
     let allDisplays = [];
-    let currentFilter = 'all';
     let currentCategory = 'all';
-    let currentSize = 'all';
+    let currentCondition = 'all';
+    let currentBrand = 'all';
+    let currentPrice = 'all';
+    let currentLocation = 'all';
     let currentSort = 'newest';
     let searchQuery = '';
 
@@ -124,31 +154,55 @@
       if (currentCategory !== 'all') {
         filtered = filtered.filter(d => {
           const category = d.category?.toLowerCase() || '';
-          const size = d.size?.toLowerCase() || '';
           const name = d.name?.toLowerCase() || '';
-          
-          // Match category by name, size, or explicit category field
           return category.includes(currentCategory.toLowerCase()) ||
-                 size.includes(currentCategory.toLowerCase()) ||
                  name.includes(currentCategory.toLowerCase());
         });
       }
       
-      // Apply type filter
-      if (currentFilter !== 'all') {
-        filtered = filtered.filter(d => d.listingType === currentFilter);
+      // Apply condition filter
+      if (currentCondition !== 'all') {
+        filtered = filtered.filter(d => {
+          const condition = d.condition?.toLowerCase().replace(/\s/g, '-') || '';
+          return condition.includes(currentCondition);
+        });
       }
       
-      // Apply size filter
-      if (currentSize !== 'all') {
-        filtered = filtered.filter(d => d.size?.toLowerCase().includes(currentSize.toLowerCase()));
+      // Apply brand filter
+      if (currentBrand !== 'all') {
+        filtered = filtered.filter(d => {
+          const brand = d.brand?.toLowerCase() || '';
+          return brand.includes(currentBrand.toLowerCase());
+        });
+      }
+      
+      // Apply price filter
+      if (currentPrice !== 'all') {
+        filtered = filtered.filter(d => {
+          const price = d.price || 0;
+          if (currentPrice === '0-1000') return price < 1000;
+          if (currentPrice === '1000-5000') return price >= 1000 && price < 5000;
+          if (currentPrice === '5000-10000') return price >= 5000 && price < 10000;
+          if (currentPrice === '10000-25000') return price >= 10000 && price < 25000;
+          if (currentPrice === '25000+') return price >= 25000;
+          return true;
+        });
+      }
+      
+      // Apply location filter
+      if (currentLocation !== 'all') {
+        filtered = filtered.filter(d => {
+          const location = d.location?.toLowerCase() || '';
+          return location.includes(currentLocation.toLowerCase());
+        });
       }
       
       // Apply search
       if (searchQuery) {
         filtered = filtered.filter(d => 
           d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.description?.toLowerCase().includes(searchQuery.toLowerCase())
+          d.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.brand?.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
       
@@ -172,7 +226,7 @@
       updateResultsCount(filtered.length);
     }
 
-    // Render displays with Swappa-style spec lists
+    // Render displays
     function renderDisplays(displays) {
       const grid = document.getElementById('displaysGrid');
       const emptyState = document.getElementById('emptyState');
@@ -187,11 +241,8 @@
       emptyState.classList.add('hidden');
       
       grid.innerHTML = displays.map(display => {
-        // Extract city from location (if full address provided)
         const location = display.location || 'Location TBD';
         const cityOnly = location.split(',').slice(-2).join(',').trim() || location;
-        
-        // Get condition grade
         const grade = display.condition || 'Grade A';
         const availability = display.availability || 'Available Now';
         
@@ -206,16 +257,14 @@
           <div class="product-info">
             <div class="product-name">${display.name}</div>
             
-            <!-- Swappa-style spec list -->
             <ul class="product-specs">
-              <li><strong>Size:</strong> ${display.size || 'N/A'}</li>
               <li><strong>Condition:</strong> ${display.condition || 'N/A'}</li>
               <li><strong>Brand:</strong> ${display.brand || 'Various'}</li>
               <li><strong>Location:</strong> ${cityOnly}</li>
               <li><strong>Available:</strong> ${availability}</li>
             </ul>
             
-            <div class="product-price">$${display.price.toLocaleString()}${display.listingType === 'rent' ? '/week' : ''}</div>
+            <div class="product-price">$${display.price.toLocaleString()}</div>
             <div class="product-actions">
               <a href="reserve-confirmation.html?id=${display.id}" class="btn btn-primary btn-small" onclick="event.stopPropagation()">Reserve</a>
               <a href="listing-details.html?id=${display.id}" class="btn btn-secondary btn-small" onclick="event.stopPropagation()">Details</a>
@@ -234,23 +283,23 @@
 
     // Reset filters
     function resetFilters() {
-      currentFilter = 'all';
       currentCategory = 'all';
-      currentSize = 'all';
+      currentCondition = 'all';
+      currentBrand = 'all';
+      currentPrice = 'all';
+      currentLocation = 'all';
       currentSort = 'newest';
       searchQuery = '';
       
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.filter === 'all');
-      });
       document.getElementById('categoryFilter').value = 'all';
-      document.getElementById('sizeFilter').value = 'all';
+      document.getElementById('conditionFilter').value = 'all';
+      document.getElementById('brandFilter').value = 'all';
+      document.getElementById('priceFilter').value = 'all';
+      document.getElementById('locationFilter').value = 'all';
       document.getElementById('sortSelect').value = 'newest';
       document.getElementById('searchInput').value = '';
       
-      // Update URL
       window.history.replaceState({}, '', 'market.html');
-      
       filterAndRenderDisplays();
     }
 
@@ -262,19 +311,27 @@
         filterAndRenderDisplays();
       });
       
-      // Type filter buttons
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentFilter = btn.dataset.filter;
-          filterAndRenderDisplays();
-        });
+      // Condition filter
+      document.getElementById('conditionFilter').addEventListener('change', (e) => {
+        currentCondition = e.target.value;
+        filterAndRenderDisplays();
       });
       
-      // Size filter
-      document.getElementById('sizeFilter').addEventListener('change', (e) => {
-        currentSize = e.target.value;
+      // Brand filter
+      document.getElementById('brandFilter').addEventListener('change', (e) => {
+        currentBrand = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Price filter
+      document.getElementById('priceFilter').addEventListener('change', (e) => {
+        currentPrice = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Location filter
+      document.getElementById('locationFilter').addEventListener('change', (e) => {
+        currentLocation = e.target.value;
         filterAndRenderDisplays();
       });
       
@@ -296,24 +353,12 @@
       
       // Check URL parameters for filters
       const urlParams = new URLSearchParams(window.location.search);
-      
-      // Check for category parameter
       const categoryParam = urlParams.get('category');
       if (categoryParam) {
         currentCategory = categoryParam;
         document.getElementById('categoryFilter').value = categoryParam;
       }
       
-      // Check for filter parameter
-      const filterParam = urlParams.get('filter');
-      if (filterParam && ['all', 'rent', 'buy'].includes(filterParam)) {
-        currentFilter = filterParam;
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.filter === filterParam);
-        });
-      }
-      
-      // Load displays
       loadDisplays();
     });
   </script>
