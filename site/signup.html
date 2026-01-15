@@ -4,36 +4,287 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Account - SHOWROOM MARKET</title>
-  <meta name="description" content="Create your SHOWROOM MARKET account. Join the B2B marketplace for kitchen & bath showroom liquidation.">
+  <meta name="description" content="Create your SHOWROOM MARKET account. Join the B2B marketplace for premium kitchen and bath floor models.">
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="fixes.css">
+  <style>
+    /* StockX-Inspired Signup Design */
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%);
+      padding: 2rem 1rem;
+    }
+    
+    .auth-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      max-width: 500px;
+      width: 100%;
+      padding: 3rem;
+    }
+    
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .auth-logo-text {
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.8px;
+      color: #111827;
+    }
+    
+    .auth-logo-text span {
+      color: #00b85c;
+    }
+    
+    .auth-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    
+    .auth-subtitle {
+      color: #6b7280;
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .account-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .account-type-card {
+      padding: 1.5rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #ffffff;
+    }
+    
+    .account-type-card:hover {
+      border-color: #00b85c;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 184, 92, 0.15);
+    }
+    
+    .account-type-card.active {
+      border-color: #00b85c;
+      background: #f0fdf4;
+    }
+    
+    .account-type-icon {
+      font-size: 32px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .account-type-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+    
+    .account-type-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    .auth-form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .auth-label {
+      display: block;
+      color: #111827;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .auth-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: #ffffff;
+    }
+    
+    .auth-input:focus {
+      outline: none;
+      border-color: #00b85c;
+      box-shadow: 0 0 0 3px rgba(0, 184, 92, 0.1);
+    }
+    
+    .auth-submit {
+      width: 100%;
+      padding: 14px;
+      background: #00b85c;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .auth-submit:hover {
+      background: #009648;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 184, 92, 0.3);
+    }
+    
+    .auth-footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e5e7eb;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    
+    .auth-footer a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    .auth-footer a:hover {
+      color: #009648;
+    }
+    
+    .auth-coming-soon {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      color: #166534;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    
+    .terms-text {
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.6;
+      margin-top: 1rem;
+    }
+    
+    .terms-text a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
 </head>
 <body>
   
   <!-- Header inserted via include.js -->
   
-  <div style="max-width: 500px; margin: 4rem auto; padding: 0 2rem;">
-    <div style="text-align: center; margin-bottom: 2rem;">
-      <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Create Account</h1>
-      <p style="color: #6b7280;">Join SHOWROOM MARKET</p>
+  <div class="auth-container">
+    <div class="auth-card">
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo-text">SHOWROOM <span>MARKET</span></div>
+      </div>
+      
+      <!-- Title -->
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-subtitle">Join the B2B marketplace for premium floor models</p>
+      
+      <!-- Account Type Selector -->
+      <div class="account-type-selector">
+        <div class="account-type-card active">
+          <div class="account-type-icon">🏢</div>
+          <div class="account-type-title">Buyer</div>
+          <div class="account-type-desc">Trade professional</div>
+        </div>
+        <div class="account-type-card">
+          <div class="account-type-icon">🏪</div>
+          <div class="account-type-title">Seller</div>
+          <div class="account-type-desc">Showroom manager</div>
+        </div>
+      </div>
+      
+      <!-- Coming Soon Notice -->
+      <div class="auth-coming-soon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        Registration launching soon! Apply for early access.
+      </div>
+      
+      <!-- Form (Placeholder) -->
+      <form onsubmit="event.preventDefault(); alert('Registration coming soon!');">
+        <div class="auth-form-group">
+          <label class="auth-label" for="company">Company Name</label>
+          <input type="text" id="company" class="auth-input" placeholder="Your Company LLC" disabled>
+        </div>
+        
+        <div class="auth-form-group">
+          <label class="auth-label" for="email">Work Email</label>
+          <input type="email" id="email" class="auth-input" placeholder="you@company.com" disabled>
+        </div>
+        
+        <div class="auth-form-group">
+          <label class="auth-label" for="password">Password</label>
+          <input type="password" id="password" class="auth-input" placeholder="Min 8 characters" disabled>
+        </div>
+        
+        <button type="button" onclick="window.location.href='pilot-program.html'" class="auth-submit">
+          Apply for Early Access
+        </button>
+        
+        <p class="terms-text">
+          By creating an account, you agree to our <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>
+        </p>
+      </form>
+      
+      <!-- Footer -->
+      <div class="auth-footer">
+        Already have an account? <a href="signin.html">Sign In</a>
+      </div>
     </div>
-
-    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 2rem;">
-      <p style="text-align: center; color: #6b7280; margin-bottom: 2rem;">
-        Account creation coming soon! Contact us for early access.
-      </p>
-      <a href="contact.html" style="display: block; text-align: center; background: #00b85c; color: white; padding: 0.75rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
-        Contact Us
-      </a>
-    </div>
-
-    <p style="text-align: center; margin-top: 2rem; color: #6b7280; font-size: 0.875rem;">
-      Already have an account? <a href="signin.html" style="color: #00b85c; font-weight: 600;">Sign In</a>
-    </p>
   </div>
 
   <!-- Footer inserted via include.js -->
   
   <script src="shared/include.js"></script>
+  
+  <script>
+    // Account type selector interaction
+    document.querySelectorAll('.account-type-card').forEach(card => {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.account-type-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

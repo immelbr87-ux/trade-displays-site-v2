@@ -140,17 +140,15 @@ nav.topnav a {
   background: transparent !important;
 }
 
-/* Fix "For Showrooms" and "Sell" - should NOT be green by default */
+/* Fix "For Showrooms" - should NOT be green */
 .topnav a[href*="pilot"],
-.topnav a[href*="showroom"],
-.topnav a[href*="sell"] {
+.topnav a[href*="showroom"] {
   color: #111827 !important;
   background: transparent !important;
 }
 
 .topnav a[href*="pilot"]:hover,
-.topnav a[href*="showroom"]:hover,
-.topnav a[href*="sell"]:hover {
+.topnav a[href*="showroom"]:hover {
   color: #00b85c !important;
 }
 
@@ -199,23 +197,6 @@ nav.topnav a {
 .site-footer-v2 a:hover {
   color: #ffffff !important;
   transform: translateX(2px) !important;
-}
-
-/* Specifically target "Sell" and any pilot-related links */
-.footer-nav a[href*="pilot"],
-.footer-nav a[href*="sell"],
-.footer-links a[href*="pilot"],
-.footer-links a[href*="sell"] {
-  color: #cbd5e1 !important;
-  background: transparent !important;
-}
-
-.footer-nav a[href*="pilot"]:hover,
-.footer-nav a[href*="sell"]:hover,
-.footer-links a[href*="pilot"]:hover,
-.footer-links a[href*="sell"]:hover {
-  color: #ffffff !important;
-  background: transparent !important;
 }
 
 /* Footer legal links should never be green */
