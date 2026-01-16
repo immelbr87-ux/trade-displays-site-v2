@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Account - SHOWROOM MARKET</title>
-  <meta name="description" content="Create your SHOWROOM MARKET account. Join the B2B marketplace for premium kitchen and bath floor models.">
+  <title>Create Account - THE SHOWROOM MARKET</title>
+  <meta name="description" content="Create your THE SHOWROOM MARKET account. Join the B2B marketplace for premium kitchen and bath floor models.">
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="fixes.css">
   <style>
@@ -209,7 +209,7 @@
     <div class="auth-card">
       <!-- Logo -->
       <div class="auth-logo">
-        <div class="auth-logo-text">SHOWROOM <span>MARKET</span></div>
+        <div class="auth-logo-text">THE SHOWROOM <span>MARKET</span></div>
       </div>
       
       <!-- Title -->
@@ -241,23 +241,66 @@
       </div>
       
       <!-- Form (Placeholder) -->
-      <form onsubmit="event.preventDefault(); alert('Registration coming soon!');">
-        <div class="auth-form-group">
-          <label class="auth-label" for="company">Company Name</label>
-          <input type="text" id="company" class="auth-input" placeholder="Your Company LLC" disabled>
+      <form id="signupForm" onsubmit="event.preventDefault(); handleSubmit();">
+        <!-- Buyer Form Fields -->
+        <div id="buyerFields">
+          <div class="auth-form-group">
+            <label class="auth-label" for="company">Company Name</label>
+            <input type="text" id="company" class="auth-input" placeholder="Your Company LLC" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="email">Work Email</label>
+            <input type="email" id="email" class="auth-input" placeholder="you@company.com" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="password">Password</label>
+            <input type="password" id="password" class="auth-input" placeholder="Min 8 characters" disabled>
+          </div>
         </div>
         
-        <div class="auth-form-group">
-          <label class="auth-label" for="email">Work Email</label>
-          <input type="email" id="email" class="auth-input" placeholder="you@company.com" disabled>
+        <!-- Seller Form Fields -->
+        <div id="sellerFields" style="display: none;">
+          <div class="auth-form-group">
+            <label class="auth-label" for="sellerName">Full Name</label>
+            <input type="text" id="sellerName" class="auth-input" placeholder="John Doe" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="sellerEmail">Email</label>
+            <input type="email" id="sellerEmail" class="auth-input" placeholder="you@showroom.com" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="sellerPhone">Phone</label>
+            <input type="tel" id="sellerPhone" class="auth-input" placeholder="(555) 123-4567" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="sellerCompany">Showroom Name</label>
+            <input type="text" id="sellerCompany" class="auth-input" placeholder="Your Showroom LLC" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="sellerWebsite">Website (Optional)</label>
+            <input type="url" id="sellerWebsite" class="auth-input" placeholder="https://yourshowroom.com" disabled>
+          </div>
+          
+          <div class="auth-form-group">
+            <label class="auth-label" for="sellerInventory">Estimated Floor Model Count</label>
+            <select id="sellerInventory" class="auth-input" disabled>
+              <option value="">Select range</option>
+              <option value="1-10">1-10 items</option>
+              <option value="11-25">11-25 items</option>
+              <option value="26-50">26-50 items</option>
+              <option value="51-100">51-100 items</option>
+              <option value="100+">100+ items</option>
+            </select>
+          </div>
         </div>
         
-        <div class="auth-form-group">
-          <label class="auth-label" for="password">Password</label>
-          <input type="password" id="password" class="auth-input" placeholder="Min 8 characters" disabled>
-        </div>
-        
-        <button type="button" onclick="window.location.href='pilot-program.html'" class="auth-submit">
+        <button type="button" onclick="handleSubmit()" class="auth-submit">
           Apply for Early Access
         </button>
         
@@ -278,13 +321,34 @@
   <script src="shared/include.js"></script>
   
   <script>
+    let accountType = 'buyer'; // Default
+    
     // Account type selector interaction
-    document.querySelectorAll('.account-type-card').forEach(card => {
+    document.querySelectorAll('.account-type-card').forEach((card, index) => {
       card.addEventListener('click', function() {
         document.querySelectorAll('.account-type-card').forEach(c => c.classList.remove('active'));
         this.classList.add('active');
+        
+        // Determine account type
+        if (index === 0) {
+          accountType = 'buyer';
+          document.getElementById('buyerFields').style.display = 'block';
+          document.getElementById('sellerFields').style.display = 'none';
+        } else {
+          accountType = 'seller';
+          document.getElementById('buyerFields').style.display = 'none';
+          document.getElementById('sellerFields').style.display = 'block';
+        }
       });
     });
+    
+    function handleSubmit() {
+      if (accountType === 'seller') {
+        window.location.href = 'pilot-program.html';
+      } else {
+        alert('Buyer registration coming soon! Meanwhile, browse our marketplace.');
+      }
+    }
   </script>
 </body>
 </html>

@@ -3,202 +3,359 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About SHOWROOM MARKET - Premium Kitchen & Bath Liquidation Marketplace</title>
-  <meta name="description" content="Learn how SHOWROOM MARKET connects showroom managers with trade professionals. B2B marketplace for premium kitchen and bath floor models at wholesale prices.">
+  <title>About THE SHOWROOM MARKET - Premium Kitchen & Bath Liquidation Marketplace</title>
+  <meta name="description" content="Learn how THE SHOWROOM MARKET connects showroom managers with trade professionals. B2B marketplace for premium kitchen and bath floor models at wholesale prices.">
   
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://showroommarket.com/about">
-  <meta property="og:title" content="About SHOWROOM MARKET - Kitchen & Bath B2B Marketplace">
-  <meta property="og:description" content="The trusted marketplace connecting showroom managers with trade professionals for premium K&B products.">
-  <meta property="og:image" content="https://showroommarket.com/og-image.jpg">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://showroommarket.com/about">
-  <meta property="twitter:title" content="About SHOWROOM MARKET - Kitchen & Bath Marketplace">
-  <meta property="twitter:description" content="B2B marketplace for premium kitchen and bath showroom floor models.">
-  <meta property="twitter:image" content="https://showroommarket.com/twitter-image.jpg">
-  
-  <!-- Canonical URL -->
   <link rel="canonical" href="https://showroommarket.com/about">
   
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="fixes.css">
+  <style>
+    /* Premium About Page Styling */
+    .premium-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 8rem 0 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .premium-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(0, 184, 92, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .premium-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+    
+    .premium-hero .subtitle {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+    
+    .mission-section {
+      padding: 8rem 0;
+      background: #ffffff;
+    }
+    
+    .mission-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .mission-content h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .mission-content .lead {
+      font-size: 1.375rem;
+      line-height: 1.8;
+      color: #4b5563;
+      font-weight: 400;
+    }
+    
+    .values-section {
+      padding: 8rem 0;
+      background: linear-gradient(180deg, #fafafa 0%, #f3f4f6 100%);
+    }
+    
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 4rem auto 0;
+    }
+    
+    .value-card {
+      background: #ffffff;
+      padding: 3rem 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    
+    .value-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+    }
+    
+    .value-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #00b85c 0%, #009648 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+    }
+    
+    .value-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+    
+    .value-card p {
+      color: #6b7280;
+      line-height: 1.7;
+      font-size: 1.0625rem;
+    }
+    
+    .story-section {
+      padding: 8rem 0;
+      background: #ffffff;
+    }
+    
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .story-content h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .story-content p {
+      font-size: 1.125rem;
+      line-height: 1.8;
+      color: #4b5563;
+      margin-bottom: 1.5rem;
+    }
+    
+    .story-visual {
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      border-radius: 24px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cta-section {
+      padding: 6rem 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      text-align: center;
+    }
+    
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+    
+    .cta-section p {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    @media (max-width: 1024px) {
+      .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .story-grid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .premium-hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .premium-hero .subtitle {
+        font-size: 1.125rem;
+      }
+      
+      .values-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .mission-content h2,
+      .story-content h2,
+      .cta-section h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
 </head>
 <body>
   
   <!-- Header inserted via include.js -->
   
-  <!-- Hero -->
-  <section class="hero">
+  <!-- Premium Hero -->
+  <section class="premium-hero">
     <div class="container">
-      <h1>About SHOWROOM MARKET</h1>
-      <p>We're building the future of kitchen & bath showroom liquidation.</p>
+      <h1>Redefining Showroom Liquidation</h1>
+      <p class="subtitle">Where premium kitchen and bath floor models meet verified trade professionals</p>
     </div>
   </section>
 
   <!-- Mission -->
-  <section class="container" style="padding: 6rem 0;">
-    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-      <h2 style="margin-bottom: 2rem;">Our Mission</h2>
-      <p style="font-size: 1.25rem; line-height: 1.8; color: var(--text-muted);">
-        Trade Displays exists to make the buying, selling, and renting of trade show displays simple, 
-        transparent, and trustworthy. We believe exhibitors deserve a marketplace that understands 
-        their unique needs and provides professional, reliable service.
-      </p>
+  <section class="mission-section">
+    <div class="container">
+      <div class="mission-content">
+        <h2>Our Mission</h2>
+        <p class="lead">
+          THE SHOWROOM <span style="color: #00b85c; font-weight: 600;">MARKET</span> exists to transform the kitchen and bath showroom liquidation process. We've created a sophisticated B2B marketplace where showroom managers can efficiently liquidate floor models while connecting verified trade professionals with premium products at exceptional value. Our platform brings transparency, trust, and efficiency to an industry that has long needed modernization.
+        </p>
+      </div>
     </div>
   </section>
 
   <!-- Story -->
-  <section class="features">
+  <section class="story-section">
     <div class="container">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
-        <div>
-          <h2 style="margin-bottom: 1.5rem;">Our Story</h2>
-          <p style="margin-bottom: 1rem;">
-            Founded by trade show industry veterans, Trade Displays was born from a simple observation: 
-            there was no dedicated marketplace for trade show displays.
-          </p>
-          <p style="margin-bottom: 1rem;">
-            Exhibitors were forced to navigate fragmented marketplaces, unclear pricing, and unreliable 
-            sellers. We knew there had to be a better way.
+      <div class="story-grid">
+        <div class="story-content">
+          <h2>Our Story</h2>
+          <p>
+            Founded by industry veterans with decades of experience in kitchen and bath showrooms, THE SHOWROOM <span style="color: #00b85c; font-weight: 600;">MARKET</span> was born from a clear market need. Showroom managers struggled with inefficient liquidation processes, while trade professionals lacked access to premium floor models at wholesale prices.
           </p>
           <p>
-            Today, we're building a platform that brings transparency, trust, and professionalism to 
-            an industry that deserves it. Our marketplace connects verified sellers with serious buyers, 
-            ensuring every transaction is secure and straightforward.
+            We recognized that the traditional approach—fragmented networks, unclear pricing, and complex logistics—was holding the industry back. There had to be a better way to connect quality inventory with qualified buyers.
+          </p>
+          <p>
+            Today, we've built a platform that brings institutional-grade transparency and professionalism to showroom liquidation. Our marketplace ensures every transaction is secure, straightforward, and mutually beneficial for both showroom managers and trade professionals.
           </p>
         </div>
-        <div style="background: var(--bg); border-radius: var(--radius); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 5rem;">
-          🏢
+        <div class="story-visual">
+          🏛️
         </div>
       </div>
     </div>
   </section>
 
   <!-- Values -->
-  <section class="container" style="padding: 6rem 0;">
-    <h2 style="text-align: center; margin-bottom: 4rem;">Our Values</h2>
-    
-    <div class="grid grid-3">
-      <div class="card" style="padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-        <h3>Transparency</h3>
-        <p style="color: var(--text-muted);">Clear pricing, honest descriptions, and open communication in every transaction.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🤝</div>
-        <h3>Trust</h3>
-        <p style="color: var(--text-muted);">Verified sellers, secure payments, and buyer protection on every purchase.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
-        <h3>Efficiency</h3>
-        <p style="color: var(--text-muted);">Streamlined processes that save time and eliminate unnecessary complexity.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
-        <h3>Quality</h3>
-        <p style="color: var(--text-muted);">High standards for listings, service, and user experience across the platform.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🌟</div>
-        <h3>Innovation</h3>
-        <p style="color: var(--text-muted);">Constantly improving our platform with new features and better tools.</p>
-      </div>
-      
-      <div class="card" style="padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">💚</div>
-        <h3>Community</h3>
-        <p style="color: var(--text-muted);">Building a supportive community of exhibitors helping each other succeed.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Team -->
-  <section class="features">
+  <section class="values-section">
     <div class="container">
-      <h2 style="text-align: center; margin-bottom: 1rem;">Our Team</h2>
-      <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 4rem;">
-        We're a diverse team of industry experts, designers, and engineers passionate about 
-        transforming the trade show display marketplace.
-      </p>
+      <div class="mission-content">
+        <h2>Our Values</h2>
+        <p class="lead" style="margin-bottom: 0;">The principles that guide everything we do</p>
+      </div>
       
-      <div class="grid grid-4">
-        <div class="card" style="padding: 2rem; text-align: center;">
-          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900;">
-            JD
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
           </div>
-          <h4>John Doe</h4>
-          <p style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">CEO & Founder</p>
-          <p style="color: var(--text-muted); font-size: 0.875rem;">20+ years in trade shows</p>
+          <h3>Verified Excellence</h3>
+          <p>Every listing is verified showroom quality with comprehensive condition documentation. No surprises, no compromises on authenticity.</p>
         </div>
         
-        <div class="card" style="padding: 2rem; text-align: center;">
-          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900;">
-            SJ
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="40" height="40" fill="white" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
           </div>
-          <h4>Sarah Johnson</h4>
-          <p style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">CTO</p>
-          <p style="color: var(--text-muted); font-size: 0.875rem;">Marketplace technology expert</p>
+          <h3>Trust & Security</h3>
+          <p>Enterprise-grade escrow protection and transparent processes ensure both parties are protected throughout every transaction.</p>
         </div>
         
-        <div class="card" style="padding: 2rem; text-align: center;">
-          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900;">
-            MC
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
           </div>
-          <h4>Michael Chen</h4>
-          <p style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">Head of Operations</p>
-          <p style="color: var(--text-muted); font-size: 0.875rem;">Logistics & fulfillment specialist</p>
+          <h3>Efficiency First</h3>
+          <p>Streamlined processes that eliminate unnecessary complexity, saving time and reducing friction for all participants.</p>
         </div>
         
-        <div class="card" style="padding: 2rem; text-align: center;">
-          <div style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 900;">
-            LM
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="40" height="40" fill="white" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
           </div>
-          <h4>Lisa Martinez</h4>
-          <p style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">Head of Customer Success</p>
-          <p style="color: var(--text-muted); font-size: 0.875rem;">Dedicated to seller support</p>
+          <h3>Premium Quality</h3>
+          <p>High standards for listings, service, and user experience. We curate a marketplace of distinction and sophistication.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats -->
-  <section class="container">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-value">2024</span>
-        <span class="stat-label">Founded</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value">500+</span>
-        <span class="stat-label">Displays Listed</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value">200+</span>
-        <span class="stat-label">Verified Sellers</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value">$2M+</span>
-        <span class="stat-label">Platform Volume</span>
+        
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="40" height="40" fill="white" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+            </svg>
+          </div>
+          <h3>Transparent Pricing</h3>
+          <p>Clear, wholesale pricing with no hidden fees. Every participant knows exactly what they're paying and receiving.</p>
+        </div>
+        
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="40" height="40" fill="white" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3>Professional Community</h3>
+          <p>Building a network of verified trade professionals who value quality, integrity, and mutual success.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="hero" style="padding: 4rem 0; margin-top: 6rem;">
+  <section class="cta-section">
     <div class="container">
-      <h2>Join Our Growing Community</h2>
-      <p style="max-width: 600px; margin: 1rem auto 2rem;">Be part of the future of trade show display marketplaces.</p>
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="market.html" class="btn btn-primary">Browse Displays</a>
-        <a href="pilot-program.html" class="btn btn-secondary">Become a Seller</a>
+      <h2>Experience The Difference</h2>
+      <p>Join THE SHOWROOM <span style="color: #00b85c; font-weight: 700;">MARKET</span> and discover a better way to buy and sell premium floor models</p>
+      <div class="cta-buttons">
+        <a href="market.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.0625rem;">Browse Premium Products</a>
+        <a href="pilot-program.html" class="btn btn-secondary" style="padding: 1rem 2.5rem; font-size: 1.0625rem;">Start 30-Day Pilot</a>
       </div>
     </div>
   </section>
