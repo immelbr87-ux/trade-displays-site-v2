@@ -12,5 +12,5 @@
   "@anthropic-ai/sdk": "^0.30.0",
   "stripe": "^14.21.0",
   "node-fetch": "^2.6.1"
-  }
+}
 }
