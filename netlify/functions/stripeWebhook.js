@@ -23,6 +23,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: `Webhook Error: ${err.message}` };
   }
 
+  // 🎯 PAYMENT SUCCESS HANDLER
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
     const listingId = session.metadata?.listingId;
@@ -33,7 +34,9 @@ exports.handler = async (event) => {
       amount: session.amount_total,
     });
 
-    // 👉 NEXT STEP: update Airtable / DB record here
+    // 👉 TODO (next step): Update Airtable record here
+    // Example:
+    // await updateListingStatus(listingId);
   }
 
   return { statusCode: 200, body: "ok" };
