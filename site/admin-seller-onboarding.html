@@ -39,12 +39,18 @@ document.getElementById("startOnboarding").addEventListener("click", async () =>
 
   try {
     // STEP 1 — Create Stripe Connected Account
-    const accountRes = await fetch("/.netlify/functions/createConnectAccount", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sellerName,
-        sellerEmail
+    const recordId = "recA1B2C3D4E5F6G"; // ← paste the real Airtable record ID here
+
+const accountRes = await fetch("/.netlify/functions/createConnectAccount", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    sellerName,
+    sellerEmail,
+    recordId
+  })
+});
+
       })
     });
 
