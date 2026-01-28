@@ -2,7 +2,7 @@ const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
-  // 🚨 SECURITY FIX: Only allow POST requests
+  // 🚨 SECURITY: Only allow POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -23,7 +23,7 @@ exports.handler = async (event) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
 
-      // ✅ Automatically enable cards, Apple Pay, Google Pay, etc.
+      // ✅ Auto enables cards, Apple Pay, Google Pay, etc.
       automatic_payment_methods: { enabled: true },
 
       line_items: [
@@ -33,7 +33,7 @@ exports.handler = async (event) => {
             product_data: {
               name: "Showroom Market Purchase",
             },
-            unit_amount: price, // price in cents
+            unit_amount: price, // cents
           },
           quantity: 1,
         },
