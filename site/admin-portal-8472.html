@@ -8,16 +8,12 @@
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; max-width: 900px; margin: 0 auto; }
     h1 { font-size: 22px; margin-bottom: 8px; }
     h2 { font-size: 18px; margin-top: 28px; }
-    .small { color: #666; font-size: 14px; line-height: 1.35; }
     .card { border: 1px solid #e5e5e5; border-radius: 12px; padding: 16px; margin-top: 12px; background: #fff; }
     label { display:block; font-weight: 600; margin: 12px 0 6px; }
     input { width: 100%; max-width: 520px; padding: 10px 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 10px; }
     button { padding: 10px 14px; font-size: 16px; border: 1px solid #111; border-radius: 10px; background: #111; color: #fff; cursor: pointer; margin-right: 10px; }
     button.secondary { background:#fff; color:#111; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .row { margin-top: 14px; }
     .status { margin-top: 14px; padding: 12px; border: 1px solid #eee; border-radius: 10px; background: #fafafa; white-space: pre-wrap; }
-    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
   </style>
 </head>
 <body>
@@ -35,7 +31,6 @@
   </div>
 </div>
 
-<!-- 🔓 ACTUAL ADMIN PAGE -->
 <div id="adminApp" style="display:none;">
 
   <h1>Admin – Seller Onboarding + Payout</h1>
@@ -44,11 +39,7 @@
     <h2>1) Airtable Record</h2>
     <label>Airtable recordId</label>
     <input id="recordId" placeholder="recXXXXXXXXXXXXXX" />
-    <div class="row">
-      <button id="saveRecordIdBtn" class="secondary">Save recordId</button>
-      <button id="clearSavedBtn" class="secondary">Clear saved</button>
-    </div>
-    <div id="recordStatus" class="status">Status: waiting…</div>
+    <div class="status" id="recordStatus">Status: waiting…</div>
   </div>
 
   <div class="card">
@@ -57,23 +48,26 @@
     <input id="sellerName" placeholder="Showroom LLC" />
     <label>Seller email</label>
     <input id="sellerEmail" placeholder="seller@email.com" />
-    <div class="row">
-      <button id="startOnboardingBtn">Start Stripe Onboarding</button>
-    </div>
-    <div id="onboardingStatus" class="status">Status: waiting…</div>
+    <button id="startOnboardingBtn">Start Stripe Onboarding</button>
+    <div class="status" id="onboardingStatus">Status: waiting…</div>
   </div>
 
   <div class="card">
     <h2>3) Send Seller Payout</h2>
+    <label>Stripe Account ID</label>
+    <input id="stripeAccountId" placeholder="acct_xxxxxxxxxx" />
+    <label>Amount (USD)</label>
+    <input id="payoutAmount" placeholder="250.00" />
     <button id="sendPayoutBtn">Send Payout</button>
-    <div id="payoutStatus" class="status">Status: waiting…</div>
+    <div class="status" id="payoutStatus">Status: waiting…</div>
   </div>
 
 </div>
 
 <script>
-// 🔐 CHANGE PASSWORD HERE
+// 🔐 CHANGE THESE TWO VALUES
 const ADMIN_PASSCODE = "SR2026BargainBond!";
+const ADMIN_PAYOUT_SECRET = "SM_PAYOUT_LOCK_2026!x9A$72";
 
 // Gate logic
 const gate = document.getElementById("gate");
@@ -85,72 +79,55 @@ const gateMsg = document.getElementById("gateMsg");
 function unlock() {
   gate.style.display = "none";
   adminApp.style.display = "block";
-  sessionStorage.setItem("admin_unlocked", "1");
 }
-
-if (sessionStorage.getItem("admin_unlocked") === "1") unlock();
 
 gateBtn.addEventListener("click", () => {
   if (gatePass.value.trim() === ADMIN_PASSCODE) unlock();
   else gateMsg.textContent = "Incorrect passcode.";
 });
 
-// Existing admin JS logic continues below
-const $ = id => document.getElementById(id);
-const recordStatus = $("recordStatus");
-const onboardingStatus = $("onboardingStatus");
-const payoutStatus = $("payoutStatus");
+// Onboarding
+document.getElementById("startOnboardingBtn").onclick = async () => {
+  const sellerName = document.getElementById("sellerName").value;
+  const sellerEmail = document.getElementById("sellerEmail").value;
+  const recordId = document.getElementById("recordId").value;
 
-function setStatus(el, msg) { el.textContent = msg; }
+  const res = await fetch("/.netlify/functions/createConnectAccount", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sellerName, sellerEmail, recordId })
+  });
 
-function getRecordId() {
-  const id = $("recordId").value.trim();
-  if (!id.startsWith("rec")) throw new Error("Invalid recordId");
-  return id;
-}
+  const data = await res.json();
+  if (!res.ok) return alert(data.error || "Error creating account");
 
-$("saveRecordIdBtn").onclick = () => {
-  try { localStorage.setItem("admin_recordId", getRecordId()); setStatus(recordStatus, "Saved recordId"); }
-  catch(e){ setStatus(recordStatus, e.message); }
+  const linkRes = await fetch("/.netlify/functions/createOnboardingLink", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ stripe_account_id: data.stripe_account_id })
+  });
+
+  const linkData = await linkRes.json();
+  window.location.href = linkData.url;
 };
 
-$("clearSavedBtn").onclick = () => {
-  localStorage.removeItem("admin_recordId");
-  $("recordId").value = "";
-  setStatus(recordStatus, "Cleared saved recordId");
-};
+// Payout
+document.getElementById("sendPayoutBtn").onclick = async () => {
+  const stripeAccountId = document.getElementById("stripeAccountId").value;
+  const amount = parseFloat(document.getElementById("payoutAmount").value);
 
-$("startOnboardingBtn").onclick = async () => {
-  try {
-    const recordId = getRecordId();
-    const sellerName = $("sellerName").value;
-    const sellerEmail = $("sellerEmail").value;
-    setStatus(onboardingStatus, "Creating Stripe account...");
-    const res = await fetch("/.netlify/functions/createConnectAccount", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sellerName, sellerEmail, recordId })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed");
-    setStatus(onboardingStatus, "Account created. Redirecting...");
-    window.location.href = data.onboarding_url;
-  } catch (e) { setStatus(onboardingStatus, "Error: " + e.message); }
-};
+  const res = await fetch("/.netlify/functions/sendSellerPayout", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-secret": ADMIN_PAYOUT_SECRET
+    },
+    body: JSON.stringify({ stripeAccountId, amount })
+  });
 
-$("sendPayoutBtn").onclick = async () => {
-  try {
-    const recordId = getRecordId();
-    setStatus(payoutStatus, "Sending payout...");
-    const res = await fetch("/.netlify/functions/sendSellerPayout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ recordId })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed");
-    setStatus(payoutStatus, "Success — transfer_id: " + data.transfer_id);
-  } catch (e) { setStatus(payoutStatus, "Error: " + e.message); }
+  const data = await res.json();
+  if (!res.ok) alert(data.error || "Error sending payout");
+  else alert("Success — Transfer ID: " + data.payoutId);
 };
 </script>
 
