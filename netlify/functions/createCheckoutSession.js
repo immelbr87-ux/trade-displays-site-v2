@@ -22,7 +22,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🔒 INVENTORY LOCK: Check Airtable listing status BEFORE checkout
+    // 🔒 INVENTORY LOCK — Check Airtable before allowing checkout
     const airtableRes = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
       {
@@ -43,7 +43,8 @@ exports.handler = async (event) => {
 
     const listingStatus = airtableData.fields.status;
 
-    if (listingStatus !== "Public – Active") {
+    // ✅ Only listings with status "Active" can be purchased
+    if (listingStatus !== "Active") {
       return {
         statusCode: 409,
         body: JSON.stringify({
@@ -56,7 +57,7 @@ exports.handler = async (event) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
 
-      // ✅ Enables cards, Apple Pay, Google Pay, etc.
+      // Auto enables cards, Apple Pay, Google Pay, etc.
       automatic_payment_methods: { enabled: true },
 
       line_items: [
@@ -77,18 +78,4 @@ exports.handler = async (event) => {
       },
 
       success_url: "https://showroommarket.com/success.html",
-      cancel_url: "https://showroommarket.com/cancel.html",
-    });
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ url: session.url }),
-    };
-  } catch (err) {
-    console.error("Checkout Error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Checkout session failed" }),
-    };
-  }
-};
+      cancel_url: "https://showroommarke_
