@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin – Seller Onboarding + Payout</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 22px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 28px; }
+    .small { color: #666; font-size: 14px; line-height: 1.35; }
+    .card { border: 1px solid #e5e5e5; border-radius: 12px; padding: 16px; margin-top: 12px; background: #fff; }
+    label { display:block; font-weight: 600; margin: 12px 0 6px; }
+    input { width: 100%; max-width: 520px; padding: 10px 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 10px; }
+    button { padding: 10px 14px; font-size: 16px; border: 1px solid #111; border-radius: 10px; background: #111; color: #fff; cursor: pointer; margin-right: 10px; }
+    button.secondary { background:#fff; color:#111; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .row { margin-top: 14px; }
+    .status { margin-top: 14px; padding: 12px; border: 1px solid #eee; border-radius: 10px; background: #fafafa; white-space: pre-wrap; }
+    code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+    .warn { background: #fff7ed; border-color: #fed7aa; }
+  </style>
+</head>
+<body>
+
+  <h1>Admin – Seller Onboarding + Payout</h1>
+  <p class="small warn card">
+    <strong>Security note:</strong> This page can trigger payouts. Don’t link it publicly.
+    Consider renaming the file to something non-obvious (e.g. <code>admin-9f2k3.html</code>) and keep it out of navigation.
+  </p>
+
+  <div class="card">
+    <h2>1) Identify the Airtable Record</h2>
+    <p class="small">
+      Paste the Airtable row ID you want to update. It must start with <code>rec</code>.
+      This same ID is used for both onboarding + payout actions.
+    </p>
+
+    <label for="recordId">Airtable recordId</label>
+    <input id="recordId" type="text" placeholder="recXXXXXXXXXXXXXX" />
+
+    <div class="row">
+      <button class="secondary" id="saveRecordIdBtn">Save recordId</button>
+      <button class="secondary" id="clearSavedBtn">Clear saved</button>
+    </div>
+
+    <div id="recordStatus" class="status">Status: waiting…</div>
+  </div>
+
+  <div class="card">
+    <h2>2) Seller Stripe Onboarding (Connect Express)</h2>
+    <p class="small">
+      This will: create a Stripe Connect account, save <code>stripe_account_id</code> to Airtable for this record,
+      then generate an onboarding link and redirect the seller to Stripe to complete setup.
+    </p>
+
+    <label for="sellerName">Seller name</label>
+    <input id="sellerName" type="text" placeholder="Example Showroom LLC" />
+
+    <label for="sellerEmail">Seller email</label>
+    <input id="sellerEmail" type="email" placeholder="seller@example.com" />
+
+    <div class="row">
+      <button id="startOnboardingBtn">Start Stripe Onboarding</button>
+      <button class="secondary" id="copyStripeAccountBtn" disabled>Copy stripe_account_id</button>
+    </div>
+
+    <div id="onboardingStatus" class="status">Status: waiting…</div>
+  </div>
+
+  <div class="card">
+    <h2>3) Send Seller Payout</h2>
+    <p class="small">
+      This calls <code>/.netlify/functions/sendSellerPayout</code> with the same recordId.
+      It will only succeed if <code>pickup_confirmed</code> is true, seller is onboarded, and payout isn’t already Paid.
+    </p>
+
+    <div class="row">
+      <button id="sendPayoutBtn">Send Payout</button>
+    </div>
+
+    <div id="payoutStatus" class="status">Status: waiting…</div>
+  </div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  const recordIdEl = $("recordId");
+  const recordStatus = $("recordStatus");
+
+  const onboardingStatus = $("onboardingStatus");
+  const payoutStatus = $("payoutStatus");
+
+  const copyStripeAccountBtn = $("copyStripeAccountBtn");
+
+  let lastStripeAccountId = null;
+
+  function setStatus(el, msg) {
+    el.textContent = msg;
+  }
+
+  function getRecordId() {
+    const recordId = recordIdEl.value.trim();
+    if (!recordId || !recordId.startsWith("rec")) {
+      throw new Error("Please enter a valid Airtable recordId (starts with rec…).");
+    }
+    return recordId;
+  }
+
+  // Restore saved recordId
+  (function init() {
+    const saved = localStorage.getItem("admin_recordId");
+    if (saved) {
+      recordIdEl.value = saved;
+      setStatus(recordStatus, `Status: loaded saved recordId\n${saved}`);
+    } else {
+      setStatus(recordStatus, "Status: no saved recordId");
+    }
+  })();
+
+  $("saveRecordIdBtn").addEventListener("click", () => {
+    try {
+      const recordId = getRecordId();
+      localStorage.setItem("admin_recordId", recordId);
+      setStatus(recordStatus, `Status: saved recordId\n${recordId}`);
+    } catch (e) {
+      setStatus(recordStatus, `Status: ${e.message}`);
+    }
+  });
+
+  $("clearSavedBtn").addEventListener("click", () => {
+    localStorage.removeItem("admin_recordId");
+    recordIdEl.value = "";
+    setStatus(recordStatus, "Status: cleared saved recordId");
+  });
+
+  // 2) Start onboarding
+  $("startOnboardingBtn").addEventListener("click", async () => {
+    try {
+      const recordId = getRecordId();
+      const sellerName = $("sellerName").value.trim();
+      const sellerEmail = $("sellerEmail").value.trim();
+
+      if (!sellerEmail) throw new Error("Seller email is required.");
+
+      setStatus(onboardingStatus, "Status: Creating Stripe Connect account…");
+
+      // Step 1: create connected account AND save stripe_account_id to Airtable (your updated function does this)
+      const accountRes = await fetch("/.netlify/functions/createConnectAccount", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sellerName, sellerEmail, recordId })
+      });
+
+      const accountData = await accountRes.json().catch(() => ({}));
+
+      if (!accountRes.ok) {
+        throw new Error(accountData.error || `Failed to create account (${accountRes.status})`);
+      }
+
+      if (!accountData.stripe_account_id) {
+        throw new Error("No stripe_account_id returned from server.");
+      }
+
+      lastStripeAccountId = accountData.stripe_account_id;
+      copyStripeAccountBtn.disabled = false;
+
+      setStatus(onboardingStatus,
+        `Status: Stripe account created + saved to Airtable ✅\nstripe_account_id: ${lastStripeAccountId}\n\nGenerating onboarding link…`
+      );
+
+      // Step 2: create onboarding link
+      const linkRes = await fetch("/.netlify/functions/createOnboardingLink", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stripe_account_id: lastStripeAccountId })
+      });
+
+      const linkData = await linkRes.json().catch(() => ({}));
+
+      if (!linkRes.ok) {
+        throw new Error(linkData.error || `Failed to create onboarding link (${linkRes.status})`);
+      }
+
+      if (!linkData.url) {
+        throw new Error("No onboarding URL returned.");
+      }
+
+      setStatus(onboardingStatus,
+        `Status: Redirecting seller to Stripe onboarding…\n\nIf they don’t finish, Stripe will send them to your refresh URL.`
+      );
+
+      // Redirect to Stripe
+      window.location.href = linkData.url;
+
+    } catch (err) {
+      console.error(err);
+      setStatus(onboardingStatus, `Status: ❌ ${err.message}`);
+    }
+  });
+
+  // Copy stripe_account_id
+  copyStripeAccountBtn.addEventListener("click", async () => {
+    if (!lastStripeAccountId) return;
+    try {
+      await navigator.clipboard.writeText(lastStripeAccountId);
+      setStatus(onboardingStatus,
+        `${onboardingStatus.textContent}\n\nCopied stripe_account_id to clipboard ✅`
+      );
+    } catch (e) {
+      setStatus(onboardingStatus,
+        `${onboardingStatus.textContent}\n\nCould not copy automatically. stripe_account_id: ${lastStripeAccountId}`
+      );
+    }
+  });
+
+  // 3) Send payout
+  $("sendPayoutBtn").addEventListener("click", async () => {
+    try {
+      const recordId = getRecordId();
+      setStatus(payoutStatus, "Status: Sending payout…");
+
+      const res = await fetch("/.netlify/functions/sendSellerPayout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recordId })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.error || `Payout failed (${res.status})`);
+      }
+
+      setStatus(payoutStatus, `Status: ✅ Success\ntransfer_id: ${data.transfer_id}`);
+    } catch (err) {
+      console.error(err);
+      setStatus(payoutStatus, `Status: ❌ ${err.message}`);
+    }
+  });
+</script>
+
+</body>
+</html>
