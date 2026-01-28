@@ -1,4 +1,6 @@
 const Stripe = require("stripe");
+const fetch = require("node-fetch");
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
@@ -20,10 +22,41 @@ exports.handler = async (event) => {
       };
     }
 
+    // 🔒 INVENTORY LOCK: Check Airtable listing status BEFORE checkout
+    const airtableRes = await fetch(
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+        },
+      }
+    );
+
+    const airtableData = await airtableRes.json();
+
+    if (!airtableData || !airtableData.fields) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ error: "Listing not found" }),
+      };
+    }
+
+    const listingStatus = airtableData.fields.status;
+
+    if (listingStatus !== "Public – Active") {
+      return {
+        statusCode: 409,
+        body: JSON.stringify({
+          error: "This item is no longer available.",
+        }),
+      };
+    }
+
+    // 💳 Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
 
-      // ✅ Auto enables cards, Apple Pay, Google Pay, etc.
+      // ✅ Enables cards, Apple Pay, Google Pay, etc.
       automatic_payment_methods: { enabled: true },
 
       line_items: [
@@ -52,7 +85,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ url: session.url }),
     };
   } catch (err) {
-    console.error("Stripe Checkout Error:", err);
+    console.error("Checkout Error:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Checkout session failed" }),
