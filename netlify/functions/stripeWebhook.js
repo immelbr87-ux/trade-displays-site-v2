@@ -1,4 +1,5 @@
 const Stripe = require("stripe");
+const fetch = require("node-fetch");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
@@ -34,9 +35,31 @@ exports.handler = async (event) => {
       amount: session.amount_total,
     });
 
-    // 👉 TODO (next step): Update Airtable record here
-    // Example:
-    // await updateListingStatus(listingId);
+    if (listingId) {
+      try {
+        await fetch(
+          `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              fields: {
+                status: "Paid – Pending Pickup",
+                stripe_session_id: session.id,
+                paid_at: new Date().toISOString(),
+              },
+            }),
+          }
+        );
+
+        console.log("📦 Airtable record updated for listing:", listingId);
+      } catch (airtableErr) {
+        console.error("❌ Airtable update failed:", airtableErr);
+      }
+    }
   }
 
   return { statusCode: 200, body: "ok" };
