@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Showroom Market — Pickup QR Scanner</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0b1220; color:#e8eefc; margin:0; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 24px; }
+    .card { background:#111b33; border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; margin-bottom:16px; }
+    h1 { font-size: 22px; margin: 0 0 8px; }
+    p { margin: 6px 0; opacity:.9; }
+    .row { display:flex; gap:16px; flex-wrap:wrap; }
+    .col { flex: 1 1 340px; }
+    label { display:block; margin: 10px 0 6px; font-size: 13px; opacity:.9; }
+    input, button, textarea {
+      width:100%; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+      background:#0b1220; color:#e8eefc; padding:12px; font-size: 14px;
+    }
+    button { cursor:pointer; background:#2b6cff; border:none; font-weight:700; }
+    button.secondary { background:#1f2b4d; border:1px solid rgba(255,255,255,.12); }
+    .status { padding:10px 12px; border-radius:10px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); }
+    .ok { background: rgba(0, 200, 120, .12); border-color: rgba(0,200,120,.35); }
+    .bad { background: rgba(255, 80, 80, .12); border-color: rgba(255,80,80,.35); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    #reader { width: 100%; min-height: 280px; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,.12); background:#0b1220; }
+    small { opacity:.8; }
+  </style>
+
+  <!-- QR scanner library -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Pickup QR Scanner</h1>
+    <p>Scan the buyer’s QR code at pickup to confirm pickup and (optionally) trigger payout.</p>
+
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label>Admin Password (same as your ADMIN token)</label>
+          <input id="adminToken" type="password" placeholder="showroommarket_admin_92XkL0pQ7z!" />
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <button id="saveTokenBtn">Unlock Scanner</button>
+            <button class="secondary" id="clearTokenBtn" type="button">Lock</button>
+          </div>
+          <p><small>Tip: This token is stored in <span class="mono">sessionStorage</span> (clears when you close the tab).</small></p>
+        </div>
+
+        <div class="col">
+          <div class="status" id="authStatus">Locked. Enter admin password to enable scanning.</div>
+          <label>Scan Result</label>
+          <textarea id="scanText" rows="5" placeholder="QR content will appear here…" class="mono"></textarea>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="secondary" id="confirmBtn" type="button">Confirm Pickup (manual)</button>
+            <button class="secondary" id="startBtn" type="button">Start Camera</button>
+            <button class="secondary" id="stopBtn" type="button">Stop</button>
+          </div>
+          <p><small>QR format expected: <span class="mono">SMK|LISTING_ID|QR_TOKEN</span></small></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="reader"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 8px; font-size:16px;">Response</h2>
+      <div class="status mono" id="resultBox">Waiting…</div>
+    </div>
+  </div>
+
+  <script>
+    const TOKEN_KEY = "smk_admin_token";
+    const readerId = "reader";
+    const resultBox = document.getElementById("resultBox");
+    const authStatus = document.getElementById("authStatus");
+    const scanText = document.getElementById("scanText");
+    const adminTokenInput = document.getElementById("adminToken");
+
+    let html5QrCode = null;
+    let scanning = false;
+
+    function setStatus(el, msg, cls) {
+      el.className = "status mono " + (cls || "");
+      el.textContent = msg;
+    }
+
+    function getAdminToken() {
+      return sessionStorage.getItem(TOKEN_KEY) || "";
+    }
+
+    function setAdminToken(token) {
+      if (!token) sessionStorage.removeItem(TOKEN_KEY);
+      else sessionStorage.setItem(TOKEN_KEY, token);
+      refreshAuthUI();
+    }
+
+    function refreshAuthUI() {
+      const tok = getAdminToken();
+      if (tok) {
+        authStatus.className = "status ok";
+        authStatus.textContent = "Unlocked ✅ Scanner ready.";
+      } else {
+        authStatus.className = "status";
+        authStatus.textContent = "Locked. Enter admin password to enable scanning.";
+      }
+    }
+
+    function parseQrPayload(raw) {
+      // Expected: SMK|recXXXXXXXXXXXXXX|token123
+      const trimmed = (raw || "").trim();
+      const parts = trimmed.split("|");
+      if (parts.length !== 3 || parts[0] !== "SMK") {
+        return { ok: false, error: "Invalid QR format. Expected: SMK|LISTING_ID|QR_TOKEN" };
+      }
+      return { ok: true, listingId: parts[1], qrToken: parts[2], raw: trimmed };
+    }
+
+    async function confirmPickup(raw) {
+      const token = getAdminToken();
+      if (!token) {
+        setStatus(resultBox, "Locked. Enter admin password first.", "bad");
+        return;
+      }
+
+      const parsed = parseQrPayload(raw);
+      if (!parsed.ok) {
+        setStatus(resultBox, parsed.error, "bad");
+        return;
+      }
+
+      setStatus(resultBox, "Confirming pickup…", "");
+
+      try {
+        const res = await fetch("/.netlify/functions/confirmPickup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-token": token
+          },
+          body: JSON.stringify({
+            listingId: parsed.listingId,
+            qrToken: parsed.qrToken
+          })
+        });
+
+        const text = await res.text();
+        let json;
+        try { json = JSON.parse(text); } catch { json = { raw: text }; }
+
+        if (!res.ok) {
+          setStatus(resultBox, `❌ ${res.status} ${res.statusText}\n${JSON.stringify(json, null, 2)}`, "bad");
+          return;
+        }
+
+        setStatus(resultBox, `✅ Pickup confirmed!\n${JSON.stringify(json, null, 2)}`, "ok");
+
+      } catch (e) {
+        setStatus(resultBox, `❌ Network/Error: ${e.message}`, "bad");
+      }
+    }
+
+    async function startCamera() {
+      const token = getAdminToken();
+      if (!token) {
+        setStatus(resultBox, "Locked. Enter admin password first.", "bad");
+        return;
+      }
+      if (scanning) return;
+
+      if (!html5QrCode) html5QrCode = new Html5Qrcode(readerId);
+
+      setStatus(resultBox, "Starting camera…", "");
+      scanning = true;
+
+      try {
+        const cameras = await Html5Qrcode.getCameras();
+        const camId = cameras?.[0]?.id;
+        if (!camId) throw new Error("No camera found");
+
+        await html5QrCode.start(
+          camId,
+          { fps: 10, qrbox: { width: 280, height: 280 } },
+          (decodedText) => {
+            // on success
+            scanText.value = decodedText;
+            // Auto-confirm immediately on scan:
+            confirmPickup(decodedText);
+          },
+          () => {} // ignore scan errors
+        );
+
+        setStatus(resultBox, "Camera running. Scan a QR code…", "ok");
+
+      } catch (e) {
+        scanning = false;
+        setStatus(resultBox, `❌ Camera start failed: ${e.message}`, "bad");
+      }
+    }
+
+    async function stopCamera() {
+      if (!html5QrCode || !scanning) return;
+      try {
+        await html5QrCode.stop();
+      } catch {}
+      scanning = false;
+      setStatus(resultBox, "Stopped.", "");
+    }
+
+    document.getElementById("saveTokenBtn").addEventListener("click", () => {
+      const tok = adminTokenInput.value.trim();
+      if (!tok) return;
+      setAdminToken(tok);
+      adminTokenInput.value = "";
+      setStatus(resultBox, "Unlocked. You can start the camera now.", "ok");
+    });
+
+    document.getElementById("clearTokenBtn").addEventListener("click", async () => {
+      await stopCamera();
+      setAdminToken("");
+      setStatus(resultBox, "Locked.", "");
+    });
+
+    document.getElementById("startBtn").addEventListener("click", startCamera);
+    document.getElementById("stopBtn").addEventListener("click", stopCamera);
+
+    document.getElementById("confirmBtn").addEventListener("click", () => {
+      confirmPickup(scanText.value);
+    });
+
+    // initialize
+    refreshAuthUI();
+  </script>
+</body>
+</html>
