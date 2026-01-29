@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <title>Showroom Market Admin Portal</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body style="font-family: Arial; padding: 24px; max-width: 1100px; margin:auto;">
+<body style="font-family: Arial; padding: 24px; max-width: 1200px; margin:auto;">
 
 <h1>Showroom Market Admin Portal</h1>
 
@@ -22,6 +25,7 @@
   <button onclick="showTab('metrics')">Ops Metrics</button>
 </div>
 
+<!-- PICKUP SCAN -->
 <div id="pickupTab">
   <h2>Scan Pickup QR</h2>
   <input id="payload" placeholder="SMK|recXXXX|token" style="width:420px;padding:10px;">
@@ -29,16 +33,23 @@
   <pre id="out" style="background:#111;color:#0f0;padding:12px;"></pre>
 </div>
 
+<!-- PICKUP OPS -->
 <div id="opsTab" style="display:none;">
   <h2>Pickup Operations</h2>
   <button onclick="loadOps()">Refresh</button>
   <pre id="opsOut"></pre>
 </div>
 
+<!-- METRICS DASHBOARD -->
 <div id="metricsTab" style="display:none;">
-  <h2>Operations Metrics</h2>
-  <button onclick="loadMetrics()">Refresh</button>
-  <pre id="metricsOut"></pre>
+  <h2>Operations Metrics Dashboard</h2>
+  <button onclick="loadMetrics()">Refresh Metrics</button>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;margin-top:20px;">
+    <canvas id="todayChart"></canvas>
+    <canvas id="weekChart"></canvas>
+    <canvas id="healthChart"></canvas>
+  </div>
 </div>
 
 <script>
@@ -79,13 +90,58 @@ async function loadOps() {
   document.getElementById("opsOut").textContent = JSON.stringify(await res.json(),null,2);
 }
 
+let todayChart, weekChart, healthChart;
+
 async function loadMetrics() {
   const res = await authedFetch("/.netlify/functions/admin", {
     method:"POST",
     body:JSON.stringify({ action:"get_metrics" })
   });
   const data = await res.json();
-  document.getElementById("metricsOut").textContent = JSON.stringify(data.metrics,null,2);
+  const m = data.metrics;
+
+  // Destroy old charts if reloading
+  if (todayChart) todayChart.destroy();
+  if (weekChart) weekChart.destroy();
+  if (healthChart) healthChart.destroy();
+
+  // Today chart
+  todayChart = new Chart(document.getElementById('todayChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pickups Today', 'Payouts Today', 'Failed Scans Today'],
+      datasets: [{
+        label: 'Today',
+        data: [m.today_pickups, m.today_payouts, m.today_failed_scans],
+        backgroundColor: ['#4CAF50','#2196F3','#F44336']
+      }]
+    }
+  });
+
+  // Weekly performance chart
+  weekChart = new Chart(document.getElementById('weekChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pickups (7d)', 'Failed Scans (7d)'],
+      datasets: [{
+        label: 'Last 7 Days',
+        data: [m.week_pickups, m.week_failed_scans],
+        backgroundColor: ['#8BC34A','#FF5722']
+      }]
+    }
+  });
+
+  // System health
+  healthChart = new Chart(document.getElementById('healthChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Pending Pickups', 'Payout Errors'],
+      datasets: [{
+        data: [m.pending_pickups, m.payout_errors],
+        backgroundColor: ['#FFC107','#E91E63']
+      }]
+    }
+  });
 }
 </script>
 
