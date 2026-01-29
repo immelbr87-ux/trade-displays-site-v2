@@ -5,19 +5,27 @@
 <title>Showroom Market Ops Dashboard</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+}
+.high { background:#ffe5e5 }
+.medium { background:#fff4cc }
+.low { background:#e8f8ee }
+</style>
 </head>
 <body style="font-family:Arial;padding:24px;max-width:1200px;margin:auto;">
 
-<h1>Showroom Market Operations Dashboard</h1>
+<h1>Showroom Market – Ops Command Center</h1>
 
 <input type="password" id="adminToken" placeholder="Admin Password">
 <button onclick="saveToken()">Unlock</button>
+<button onclick="loadDashboard()">Refresh</button>
+
 <hr>
-
-<button onclick="loadDashboard()">Refresh Dashboard</button>
-
-<h2>Seller Reliability</h2>
-<canvas id="sellerChart"></canvas>
 
 <h2>GMV Trend</h2>
 <canvas id="gmvChart"></canvas>
@@ -28,10 +36,10 @@
 <h2>Pickups by City</h2>
 <canvas id="geoChart"></canvas>
 
-<h2>Dispute Trend</h2>
-<canvas id="disputeChart"></canvas>
+<h2>Seller Performance Report Cards</h2>
+<div id="sellerCards"></div>
 
-<h2>High Risk Listings</h2>
+<h2>High-Risk Listings</h2>
 <ul id="riskList"></ul>
 
 <script>
@@ -39,69 +47,63 @@ function saveToken(){
   localStorage.setItem("ADMIN_TOKEN",document.getElementById("adminToken").value);
 }
 
-function authedFetch(body){
+function authedFetch(){
   return fetch("/.netlify/functions/admin",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
       "Authorization":`Bearer ${localStorage.getItem("ADMIN_TOKEN")}`
     },
-    body:JSON.stringify(body)
+    body:JSON.stringify({action:"get_dashboard"})
   }).then(r=>r.json());
 }
 
-let charts = {};
-
 async function loadDashboard(){
-  const data = await authedFetch({});
+  const data = await authedFetch();
 
-  // Seller Chart
-  charts.seller?.destroy();
-  charts.seller = new Chart(document.getElementById("sellerChart"),{
-    type:"bar",
-    data:{
-      labels:Object.keys(data.sellers),
-      datasets:[{label:"Seller Score",data:Object.values(data.sellers).map(s=>s.score)}]
-    }
-  });
-
-  // GMV Trend
-  charts.gmv?.destroy();
-  charts.gmv = new Chart(document.getElementById("gmvChart"),{
+  // GMV
+  new Chart(document.getElementById("gmvChart"),{
     type:"line",
     data:{labels:Object.keys(data.gmvByDay),datasets:[{label:"GMV",data:Object.values(data.gmvByDay)}]}
   });
 
-  // Pickup Delay Histogram
-  const bins = [0,1,2,3,4,5,7,10];
-  const counts = bins.map((b,i)=>data.pickupDelays.filter(d=>d>=b && d<(bins[i+1]||999)).length);
-  charts.delay?.destroy();
-  charts.delay = new Chart(document.getElementById("delayChart"),{
+  // Pickup delays
+  const bins=[0,1,2,3,4,5,7,10];
+  const counts=bins.map((b,i)=>data.pickupDelays.filter(d=>d>=b && d<(bins[i+1]||999)).length);
+  new Chart(document.getElementById("delayChart"),{
     type:"bar",
-    data:{labels:["0-1d","1-2d","2-3d","3-4d","4-5d","5-7d","7-10d","10+d"],datasets:[{label:"Pickup Delays",data:counts}]}
+    data:{labels:["0-1","1-2","2-3","3-4","4-5","5-7","7-10","10+"],datasets:[{data:counts}]}
   });
 
-  // Geo Chart
-  charts.geo?.destroy();
-  charts.geo = new Chart(document.getElementById("geoChart"),{
+  // Geo
+  new Chart(document.getElementById("geoChart"),{
     type:"bar",
-    data:{labels:Object.keys(data.geoCounts),datasets:[{label:"Pickups",data:Object.values(data.geoCounts)}]}
+    data:{labels:Object.keys(data.geoCounts),datasets:[{data:Object.values(data.geoCounts)}]}
   });
 
-  // Disputes
-  charts.dispute?.destroy();
-  charts.dispute = new Chart(document.getElementById("disputeChart"),{
-    type:"line",
-    data:{labels:Object.keys(data.disputesByDay),datasets:[{label:"Disputes",data:Object.values(data.disputesByDay)}]}
+  // Seller cards
+  const c=document.getElementById("sellerCards");
+  c.innerHTML="";
+  data.sellerCards.forEach(s=>{
+    const d=document.createElement("div");
+    d.className=`card ${s.riskTier.toLowerCase()}`;
+    d.innerHTML=`
+      <strong>${s.seller}</strong><br>
+      Score: ${s.score} (${s.riskTier})<br>
+      Sales: ${s.sales} | GMV: $${s.gmv}<br>
+      Avg Pickup: ${s.avgPickupDays} days<br>
+      Late Pickups: ${s.latePickups} | Disputes: ${s.disputes}
+    `;
+    c.appendChild(d);
   });
 
-  // Risk List
-  const list = document.getElementById("riskList");
-  list.innerHTML = "";
-  data.riskyListings.forEach(r=>{
-    const li = document.createElement("li");
-    li.textContent = `${r.listing} – Seller: ${r.seller} (Risk ${r.riskScore})`;
-    list.appendChild(li);
+  // Risk list
+  const rl=document.getElementById("riskList");
+  rl.innerHTML="";
+  data.riskListings.forEach(r=>{
+    const li=document.createElement("li");
+    li.textContent=`${r.listing} – ${r.seller} (Risk ${r.risk})`;
+    rl.appendChild(li);
   });
 }
 </script>
