@@ -19,6 +19,7 @@
 <div style="margin:20px 0;">
   <button onclick="showTab('pickup')">Pickup Scan</button>
   <button onclick="showTab('ops')">Pickup Ops</button>
+  <button onclick="showTab('metrics')">Ops Metrics</button>
 </div>
 
 <div id="pickupTab">
@@ -32,6 +33,12 @@
   <h2>Pickup Operations</h2>
   <button onclick="loadOps()">Refresh</button>
   <pre id="opsOut"></pre>
+</div>
+
+<div id="metricsTab" style="display:none;">
+  <h2>Operations Metrics</h2>
+  <button onclick="loadMetrics()">Refresh</button>
+  <pre id="metricsOut"></pre>
 </div>
 
 <script>
@@ -52,6 +59,7 @@ function authedFetch(url, options={}) {
 function showTab(tab) {
   document.getElementById("pickupTab").style.display = tab==="pickup"?"block":"none";
   document.getElementById("opsTab").style.display = tab==="ops"?"block":"none";
+  document.getElementById("metricsTab").style.display = tab==="metrics"?"block":"none";
 }
 
 async function verify() {
@@ -69,6 +77,15 @@ async function loadOps() {
     body:JSON.stringify({ action:"get_ops" })
   });
   document.getElementById("opsOut").textContent = JSON.stringify(await res.json(),null,2);
+}
+
+async function loadMetrics() {
+  const res = await authedFetch("/.netlify/functions/admin", {
+    method:"POST",
+    body:JSON.stringify({ action:"get_metrics" })
+  });
+  const data = await res.json();
+  document.getElementById("metricsOut").textContent = JSON.stringify(data.metrics,null,2);
 }
 </script>
 
