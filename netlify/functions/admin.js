@@ -83,7 +83,7 @@ exports.handler = async (event) => {
 
   try {
 
-    // 🔎 PICKUP SCAN + FRAUD PROTECTION
+    // ================= PICKUP SCAN =================
     if (action === "verify_pickup_and_payout") {
       const parsed = parsePayload(body.payload || "");
       if (!parsed) {
@@ -109,7 +109,6 @@ exports.handler = async (event) => {
         return json(409, { error: "Not paid" });
       }
 
-      // 🔒 Burn QR + confirm pickup
       await airtablePatch(parsed.recordId, {
         pickup_qr_used: true,
         pickup_confirmed: true,
@@ -119,7 +118,6 @@ exports.handler = async (event) => {
 
       await logScan(parsed.recordId, body.payload, "success", "Pickup confirmed", event);
 
-      // 💸 Trigger payout
       const updated = await airtableGet(parsed.recordId);
       const amount = Math.round((updated.fields.seller_payout_amount || 0) * 100);
       const acct = updated.fields.stripe_account_id;
@@ -142,13 +140,62 @@ exports.handler = async (event) => {
       return json(200, { ok: true, listingId: parsed.recordId });
     }
 
-    // 📊 PICKUP OPS DASHBOARD DATA
+    // ================= PICKUP OPS =================
     if (action === "get_ops") {
       const r = await fetch(`https://api.airtable.com/v0/${baseId}/${table}?filterByFormula=OR(FIND("Paid",{status}),FIND("Pickup",{status}))`, {
         headers: { Authorization: `Bearer ${apiKey}` }
       });
       const data = await r.json();
       return json(200, { ok: true, records: data.records || [] });
+    }
+
+    // ================= OPS METRICS =================
+    if (action === "get_metrics") {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const week = new Date(); week.setDate(today.getDate() - 7);
+
+      const listRes = await fetch(`https://api.airtable.com/v0/${baseId}/${table}`, {
+        headers: { Authorization: `Bearer ${apiKey}` }
+      });
+      const listings = (await listRes.json()).records || [];
+
+      const logRes = await fetch(`https://api.airtable.com/v0/${baseId}/${logsTable}`, {
+        headers: { Authorization: `Bearer ${apiKey}` }
+      });
+      const logs = (await logRes.json()).records || [];
+
+      let metrics = {
+        today_pickups: 0,
+        today_payouts: 0,
+        today_failed_scans: 0,
+        week_pickups: 0,
+        week_payout_total: 0,
+        week_failed_scans: 0,
+        pending_pickups: 0,
+        payout_errors: 0
+      };
+
+      listings.forEach(r => {
+        const f = r.fields || {};
+        const pickupDate = new Date(f.pickup_confirmed_at);
+        const payoutDate = new Date(f.payout_sent_at);
+
+        if (f.pickup_confirmed && pickupDate >= today) metrics.today_pickups++;
+        if (f.pickup_confirmed && pickupDate >= week) metrics.week_pickups++;
+        if (f.payout_sent_at && payoutDate >= today) metrics.today_payouts++;
+        if (f.payout_sent_at && payoutDate >= week) metrics.week_payout_total += Number(f.seller_payout_amount || 0);
+        if (String(f.status).includes("Paid") && !f.pickup_confirmed) metrics.pending_pickups++;
+        if (f.seller_payout_status === "Failed") metrics.payout_errors++;
+      });
+
+      logs.forEach(r => {
+        const f = r.fields || {};
+        const d = new Date(f.scanned_at);
+        if (d >= today && f.scan_result !== "success") metrics.today_failed_scans++;
+        if (d >= week && f.scan_result !== "success") metrics.week_failed_scans++;
+      });
+
+      return json(200, { ok:true, metrics });
     }
 
     return json(400, { error: "Unknown action" });
