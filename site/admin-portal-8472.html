@@ -26,12 +26,12 @@
 </head>
 <body>
 
-<!-- 🔐 PASSWORD GATE -->
+<!-- 🔐 PASSWORD GATE (server-validated; no secret stored here) -->
 <div id="gate" style="position:fixed;inset:0;background:#0b0b0b;display:flex;align-items:center;justify-content:center;z-index:99999;">
   <div style="width:min(520px,92vw);background:#111;border:1px solid #2a2a2a;border-radius:16px;padding:18px;color:#fff;">
     <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Admin Access Required</div>
     <div style="color:#bdbdbd;font-size:14px;line-height:1.35;margin-bottom:10px;">
-      Enter the admin passcode to continue.
+      Enter the admin passcode (checked server-side). Token expires ~30 minutes.
     </div>
     <input id="gatePass" type="password" placeholder="Enter Admin Passcode"
       style="width:100%;padding:12px;border-radius:12px;border:1px solid #333;background:#0b0b0b;color:#fff;font-size:16px;" />
@@ -40,7 +40,7 @@
       <div id="gateMsg" style="color:#ffb4b4;font-size:14px;"></div>
     </div>
     <div style="margin-top:12px;color:#9a9a9a;font-size:12px;">
-      Token expires ~30 min. Close tab to lock.
+      If you get “Session expired”, just re-enter passcode.
     </div>
   </div>
 </div>
@@ -48,7 +48,7 @@
 <div id="adminApp" style="display:none;">
 
   <h1>Admin – Seller Onboarding + Payout</h1>
-  <p class="small">This page uses a short-lived server token. No secrets are stored in this file.</p>
+  <p class="small">All admin actions are token-protected. No secrets are embedded in this file.</p>
 
   <div class="card">
     <h2>1) Load Listing Record</h2>
@@ -83,7 +83,7 @@
 
   <div class="card">
     <h2>2) Seller Stripe Onboarding</h2>
-    <p class="small">Creates a Stripe Connect Express account and saves <code>stripe_account_id</code> into Airtable for this record.</p>
+    <p class="small">Creates a Stripe Connect Express account and saves <code>stripe_account_id</code> into Airtable for this record, then redirects to Stripe onboarding.</p>
 
     <label for="sellerName">Seller name</label>
     <input id="sellerName" placeholder="Showroom LLC" />
@@ -196,9 +196,9 @@
 
     const res = await fetch(url, Object.assign({}, options, { headers }));
 
-    // If token expired, force logout UX
     if (res.status === 403) {
       sessionStorage.removeItem("admin_token");
+      sessionStorage.removeItem("admin_unlocked");
       gate.style.display = "flex";
       adminApp.style.display = "none";
       throw new Error("Session expired. Please re-enter passcode.");
@@ -256,10 +256,10 @@
   (function init() {
     const saved = localStorage.getItem("admin_recordId");
     if (saved) $("recordId").value = saved;
+
     setStatus(recordStatus, "Status: waiting…");
     $("sendPayoutBtn").disabled = true;
 
-    // If already unlocked this tab, show app (token must exist)
     if (sessionStorage.getItem("admin_unlocked") === "1" && getToken()) {
       gate.style.display = "none";
       adminApp.style.display = "block";
@@ -290,10 +290,7 @@
     const recordId = getRecordId();
     setStatus(recordStatus, "Status: Loading…");
 
-    const res = await authedFetch(`/.netlify/functions/getListingAdmin?recordId=${encodeURIComponent(recordId)}`, {
-      method: "GET"
-    });
-
+    const res = await authedFetch(`/.netlify/functions/getListingAdmin?recordId=${encodeURIComponent(recordId)}`, { method: "GET" });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || `Load failed (${res.status})`);
 
@@ -307,7 +304,7 @@
   $("loadRecordBtn").addEventListener("click", () => loadRecord().catch(e => setStatus(recordStatus, "Status: ❌ " + e.message)));
   $("refreshEligibilityBtn").addEventListener("click", () => loadRecord().catch(e => setStatus(recordStatus, "Status: ❌ " + e.message)));
 
-  // Onboarding (still calls your existing functions; you can also token-protect them later)
+  // ✅ TOKEN-PROTECTED ONBOARDING (FULLY UPDATED)
   $("startOnboardingBtn").addEventListener("click", async () => {
     try {
       const recordId = getRecordId();
@@ -317,7 +314,7 @@
 
       setStatus(onboardingStatus, "Status: Creating Stripe Connect account…");
 
-      const accountRes = await fetch("/.netlify/functions/createConnectAccount", {
+      const accountRes = await authedFetch("/.netlify/functions/createConnectAccount", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sellerName, sellerEmail, recordId })
@@ -329,7 +326,7 @@
 
       setStatus(onboardingStatus, `Status: Account created + saved ✅\nstripe_account_id: ${accountData.stripe_account_id}\nGenerating onboarding link…`);
 
-      const linkRes = await fetch("/.netlify/functions/createOnboardingLink", {
+      const linkRes = await authedFetch("/.netlify/functions/createOnboardingLink", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stripe_account_id: accountData.stripe_account_id })
@@ -348,7 +345,7 @@
     }
   });
 
-  // Payout
+  // Payout (token-protected)
   $("sendPayoutBtn").addEventListener("click", async () => {
     try {
       const recordId = getRecordId();
