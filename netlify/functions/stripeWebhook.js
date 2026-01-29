@@ -4,7 +4,6 @@ const fetch = require("node-fetch");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
-  // 🚨 Stripe requires the RAW body for signature verification
   const sig = event.headers["stripe-signature"];
 
   let stripeEvent;
@@ -23,10 +22,9 @@ exports.handler = async (event) => {
     };
   }
 
-  // 🎯 We only care about successful checkout payments
+  // 🎯 Successful checkout
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
-
     const listingId = session.metadata.listingId;
 
     if (!listingId) {
@@ -37,7 +35,7 @@ exports.handler = async (event) => {
     console.log("💰 Payment successful for listing:", listingId);
 
     try {
-      // 🗂 Update Airtable record
+      // 1️⃣ Update Airtable record
       await fetch(
         `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
         {
@@ -57,13 +55,17 @@ exports.handler = async (event) => {
       );
 
       console.log("📦 Airtable record updated to Paid – Pending Pickup");
-    } catch (err) {
-      console.error("❌ Airtable update failed:", err);
-    }
-  }
 
-  return {
-    statusCode: 200,
-    body: "Webhook received",
-  };
-};
+      // 2️⃣ Fetch listing details for email
+      const recordRes = await fetch(
+        `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
+        {
+          headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}` },
+        }
+      );
+
+      const recordData = await recordRes.json();
+      const fields = recordData.fields || {};
+
+      // 3️⃣ Send buyer pickup email
+      a
