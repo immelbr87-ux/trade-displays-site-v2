@@ -1,147 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Showroom Market Admin Portal</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8" />
+<title>Showroom Market Ops OS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body style="font-family: Arial; padding: 24px; max-width: 1200px; margin:auto;">
+<body style="font-family:Arial;padding:24px;max-width:1200px;margin:auto;">
 
-<h1>Showroom Market Admin Portal</h1>
+<h1>Showroom Market Ops OS</h1>
 
-<label>Admin Password:</label>
-<input type="password" id="adminToken" style="width:320px;padding:8px;">
+<input type="password" id="adminToken" placeholder="Admin Password">
 <button onclick="saveToken()">Unlock</button>
-<span id="tokenStatus"></span>
-
 <hr>
 
-<div style="margin:20px 0;">
-  <button onclick="showTab('pickup')">Pickup Scan</button>
-  <button onclick="showTab('ops')">Pickup Ops</button>
-  <button onclick="showTab('metrics')">Ops Metrics</button>
-</div>
+<button onclick="loadMetrics()">Refresh Dashboard</button>
 
-<!-- PICKUP SCAN -->
-<div id="pickupTab">
-  <h2>Scan Pickup QR</h2>
-  <input id="payload" placeholder="SMK|recXXXX|token" style="width:420px;padding:10px;">
-  <button onclick="verify()">Verify & Pay</button>
-  <pre id="out" style="background:#111;color:#0f0;padding:12px;"></pre>
-</div>
+<h2>Financial Overview</h2>
+<canvas id="financeChart"></canvas>
 
-<!-- PICKUP OPS -->
-<div id="opsTab" style="display:none;">
-  <h2>Pickup Operations</h2>
-  <button onclick="loadOps()">Refresh</button>
-  <pre id="opsOut"></pre>
-</div>
+<h2>Pickup Performance</h2>
+<canvas id="pickupChart"></canvas>
 
-<!-- METRICS DASHBOARD -->
-<div id="metricsTab" style="display:none;">
-  <h2>Operations Metrics Dashboard</h2>
-  <button onclick="loadMetrics()">Refresh Metrics</button>
+<h2>Fraud & Failures</h2>
+<canvas id="fraudChart"></canvas>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;margin-top:20px;">
-    <canvas id="todayChart"></canvas>
-    <canvas id="weekChart"></canvas>
-    <canvas id="healthChart"></canvas>
-  </div>
-</div>
+<h2>Seller Leaderboard</h2>
+<pre id="sellerStats"></pre>
 
 <script>
-function saveToken() {
-  localStorage.setItem("ADMIN_TOKEN", document.getElementById("adminToken").value);
-  document.getElementById("tokenStatus").innerText = "Saved ✔";
+function saveToken(){
+  localStorage.setItem("ADMIN_TOKEN",document.getElementById("adminToken").value);
 }
 
-function authedFetch(url, options={}) {
-  options.headers = {
-    ...(options.headers||{}),
-    "Content-Type":"application/json",
-    "Authorization":`Bearer ${localStorage.getItem("ADMIN_TOKEN")}`
-  };
-  return fetch(url, options);
-}
-
-function showTab(tab) {
-  document.getElementById("pickupTab").style.display = tab==="pickup"?"block":"none";
-  document.getElementById("opsTab").style.display = tab==="ops"?"block":"none";
-  document.getElementById("metricsTab").style.display = tab==="metrics"?"block":"none";
-}
-
-async function verify() {
-  const payload = document.getElementById("payload").value;
-  const res = await authedFetch("/.netlify/functions/admin", {
+function authedFetch(body){
+  return fetch("/.netlify/functions/admin",{
     method:"POST",
-    body:JSON.stringify({ action:"verify_pickup_and_payout", payload })
-  });
-  document.getElementById("out").textContent = JSON.stringify(await res.json(),null,2);
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":`Bearer ${localStorage.getItem("ADMIN_TOKEN")}`
+    },
+    body:JSON.stringify(body)
+  }).then(r=>r.json());
 }
 
-async function loadOps() {
-  const res = await authedFetch("/.netlify/functions/admin", {
-    method:"POST",
-    body:JSON.stringify({ action:"get_ops" })
-  });
-  document.getElementById("opsOut").textContent = JSON.stringify(await res.json(),null,2);
-}
+let financeChart,pickupChart,fraudChart;
 
-let todayChart, weekChart, healthChart;
+async function loadMetrics(){
+  const {metrics}=await authedFetch({action:"get_metrics"});
 
-async function loadMetrics() {
-  const res = await authedFetch("/.netlify/functions/admin", {
-    method:"POST",
-    body:JSON.stringify({ action:"get_metrics" })
-  });
-  const data = await res.json();
-  const m = data.metrics;
+  if(financeChart)financeChart.destroy();
+  if(pickupChart)pickupChart.destroy();
+  if(fraudChart)fraudChart.destroy();
 
-  // Destroy old charts if reloading
-  if (todayChart) todayChart.destroy();
-  if (weekChart) weekChart.destroy();
-  if (healthChart) healthChart.destroy();
-
-  // Today chart
-  todayChart = new Chart(document.getElementById('todayChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Pickups Today', 'Payouts Today', 'Failed Scans Today'],
-      datasets: [{
-        label: 'Today',
-        data: [m.today_pickups, m.today_payouts, m.today_failed_scans],
-        backgroundColor: ['#4CAF50','#2196F3','#F44336']
-      }]
-    }
+  financeChart=new Chart(financeChart=document.getElementById("financeChart"),{
+    type:"bar",
+    data:{labels:["GMV","Fees","Payouts Sent","Payouts Pending"],
+    datasets:[{data:[metrics.gmv,metrics.fees,metrics.payouts_sent,metrics.payouts_pending]}]}
   });
 
-  // Weekly performance chart
-  weekChart = new Chart(document.getElementById('weekChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Pickups (7d)', 'Failed Scans (7d)'],
-      datasets: [{
-        label: 'Last 7 Days',
-        data: [m.week_pickups, m.week_failed_scans],
-        backgroundColor: ['#8BC34A','#FF5722']
-      }]
-    }
+  pickupChart=new Chart(document.getElementById("pickupChart"),{
+    type:"bar",
+    data:{labels:["Today Pickups","Week Pickups","Avg Pickup Days"],
+    datasets:[{data:[metrics.today_pickups,metrics.week_pickups,metrics.avg_pickup_days]}]}
   });
 
-  // System health
-  healthChart = new Chart(document.getElementById('healthChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Pending Pickups', 'Payout Errors'],
-      datasets: [{
-        data: [m.pending_pickups, m.payout_errors],
-        backgroundColor: ['#FFC107','#E91E63']
-      }]
-    }
+  fraudChart=new Chart(document.getElementById("fraudChart"),{
+    type:"doughnut",
+    data:{labels:["Fraud Attempts","Pickup Failures"],
+    datasets:[{data:[metrics.fraud_attempts,metrics.pickup_failures]}]}
   });
+
+  let sellerText="";
+  Object.entries(metrics.sellers).forEach(([s,d])=>{
+    sellerText+=`${s}: ${d.sales} sales\n`;
+  });
+  document.getElementById("sellerStats").textContent=sellerText;
 }
 </script>
 
