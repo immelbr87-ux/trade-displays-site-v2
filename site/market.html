@@ -129,21 +129,48 @@
     let currentSort = 'newest';
     let searchQuery = '';
 
+    // ✅ Race-condition guard for loadDisplays()
+    let isLoadingDisplays = false;
+    let loadAbortController = null;
+
     // Fetch displays from Netlify Function
     async function loadDisplays() {
+      if (isLoadingDisplays) return;
+      isLoadingDisplays = true;
+
+      // cancel any in-flight request if this is called again
+      if (loadAbortController) {
+        try { loadAbortController.abort(); } catch {}
+      }
+      loadAbortController = new AbortController();
+
       try {
-        const response = await fetch('/.netlify/functions/listDisplays');
+        const response = await fetch('/.netlify/functions/listDisplays', {
+          signal: loadAbortController.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`listDisplays failed: ${response.status}`);
+        }
+
         const data = await response.json();
-        allDisplays = data.displays;
-        
+        allDisplays = Array.isArray(data.displays) ? data.displays : [];
+
         filterAndRenderDisplays();
       } catch (error) {
-        console.error('Error loading displays:', error);
-        document.getElementById('displaysGrid').innerHTML = `
-          <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
-            <p style="color: var(--error);">Unable to load products. Please try again later.</p>
-          </div>
-        `;
+        if (error?.name === "AbortError") {
+          // ignore aborted requests
+        } else {
+          console.error('Error loading displays:', error);
+          document.getElementById('displaysGrid').innerHTML = `
+            <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+              <p style="color: var(--error);">Unable to load products. Please try again later.</p>
+            </div>
+          `;
+          document.getElementById('resultsCount').textContent = "Unable to load products.";
+        }
+      } finally {
+        isLoadingDisplays = false;
       }
     }
 
@@ -154,8 +181,8 @@
       // Apply category filter
       if (currentCategory !== 'all') {
         filtered = filtered.filter(d => {
-          const category = d.category?.toLowerCase() || '';
-          const name = d.name?.toLowerCase() || '';
+          const category = String(d.category || '').toLowerCase();
+          const name = String(d.name || '').toLowerCase();
           return category.includes(currentCategory.toLowerCase()) ||
                  name.includes(currentCategory.toLowerCase());
         });
@@ -164,7 +191,7 @@
       // Apply condition filter
       if (currentCondition !== 'all') {
         filtered = filtered.filter(d => {
-          const condition = d.condition?.toLowerCase().replace(/\s/g, '-') || '';
+          const condition = String(d.condition || '').toLowerCase().replace(/\s/g, '-') || '';
           return condition.includes(currentCondition);
         });
       }
@@ -172,7 +199,7 @@
       // Apply brand filter
       if (currentBrand !== 'all') {
         filtered = filtered.filter(d => {
-          const brand = d.brand?.toLowerCase() || '';
+          const brand = String(d.brand || '').toLowerCase();
           return brand.includes(currentBrand.toLowerCase());
         });
       }
@@ -180,7 +207,7 @@
       // Apply price filter
       if (currentPrice !== 'all') {
         filtered = filtered.filter(d => {
-          const price = d.price || 0;
+          const price = Number(d.price || 0);
           if (currentPrice === '0-1000') return price < 1000;
           if (currentPrice === '1000-5000') return price >= 1000 && price < 5000;
           if (currentPrice === '5000-10000') return price >= 5000 && price < 10000;
@@ -193,30 +220,32 @@
       // Apply location filter
       if (currentLocation !== 'all') {
         filtered = filtered.filter(d => {
-          const location = d.location?.toLowerCase() || '';
+          const location = String(d.location || '').toLowerCase();
           return location.includes(currentLocation.toLowerCase());
         });
       }
       
-      // Apply search
+      // Apply search (✅ null safe)
       if (searchQuery) {
-        filtered = filtered.filter(d => 
-          d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.brand?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(d => {
+          const n = String(d.name || '').toLowerCase();
+          const desc = String(d.description || '').toLowerCase();
+          const b = String(d.brand || '').toLowerCase();
+          return n.includes(q) || desc.includes(q) || b.includes(q);
+        });
       }
       
       // Sort
       switch(currentSort) {
         case 'price-low':
-          filtered.sort((a, b) => a.price - b.price);
+          filtered.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
           break;
         case 'price-high':
-          filtered.sort((a, b) => b.price - a.price);
+          filtered.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
           break;
         case 'popular':
-          filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
+          filtered.sort((a, b) => Number(b.views || 0) - Number(a.views || 0));
           break;
         case 'newest':
         default:
@@ -246,9 +275,21 @@
         const cityOnly = location.split(',').slice(-2).join(',').trim() || location;
         const grade = display.condition || 'Grade A';
         const availability = display.availability || 'Available Now';
-        
+
+        // ✅ UX guard: if data includes status/locked, stop navigation on clearly unavailable items
+        const status = String(display.status || '').toLowerCase();
+        const locked = display.locked === true;
+        const unavailableByStatus = status && status !== 'active';
+        const unavailableByAvailability = String(availability).toLowerCase().includes('unavailable') ||
+                                         String(availability).toLowerCase().includes('sold') ||
+                                         String(availability).toLowerCase().includes('pending');
+
+        const isUnavailable = locked || unavailableByStatus || unavailableByAvailability;
+
         return `
-        <div class="product-card" onclick="window.location.href='listing-details.html?id=${display.id}'">
+        <div class="product-card ${isUnavailable ? 'is-unavailable' : ''}"
+             onclick="${isUnavailable ? "return false" : `window.location.href='listing-details.html?id=${display.id}'`}"
+             style="${isUnavailable ? "opacity:0.55; cursor:not-allowed;" : ""}">
           <div class="product-image" style="background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);">
             <div class="product-badges">
               <span class="badge badge-grade">${grade}</span>
@@ -256,7 +297,7 @@
             </div>
           </div>
           <div class="product-info">
-            <div class="product-name">${display.name}</div>
+            <div class="product-name">${display.name || 'Unnamed Product'}</div>
             
             <ul class="product-specs">
               <li><strong>Condition:</strong> ${display.condition || 'N/A'}</li>
@@ -265,10 +306,16 @@
               <li><strong>Available:</strong> ${availability}</li>
             </ul>
             
-            <div class="product-price">$${display.price.toLocaleString()}</div>
+            <div class="product-price">$${Number(display.price || 0).toLocaleString()}</div>
             <div class="product-actions">
-              <a href="reserve-confirmation.html?id=${display.id}" class="btn btn-primary btn-small" onclick="event.stopPropagation()">Reserve</a>
-              <a href="listing-details.html?id=${display.id}" class="btn btn-secondary btn-small" onclick="event.stopPropagation()">Details</a>
+              <a href="reserve-confirmation.html?id=${display.id}" class="btn btn-primary btn-small"
+                 onclick="${isUnavailable ? "event.preventDefault(); event.stopPropagation(); alert('This listing is not currently available.');" : "event.stopPropagation()"}">
+                 Reserve
+              </a>
+              <a href="listing-details.html?id=${display.id}" class="btn btn-secondary btn-small"
+                 onclick="${isUnavailable ? "event.preventDefault(); event.stopPropagation(); alert('This listing is not currently available.');" : "event.stopPropagation()"}">
+                 Details
+              </a>
             </div>
           </div>
         </div>
