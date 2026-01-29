@@ -1,485 +1,76 @@
-<!-- site/admin-portal-8472.html -->
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <title>Showroom Market Admin Portal</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Showroom Market — Admin Portal</title>
-
-  <style>
-    body{margin:0;background:#0b1220;color:#e8eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    h1{margin:0 0 10px;font-size:22px}
-    .card{background:#111b33;border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:16px;margin:14px 0}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
-    label{display:block;margin:10px 0 6px;font-size:13px;opacity:.85}
-    input,select,button,textarea{border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0b1220;color:#e8eefc;padding:10px 12px;font-size:14px}
-    textarea{width:100%;min-height:90px;resize:vertical}
-    button{cursor:pointer;background:#2b6cff;border:none;font-weight:800}
-    button.secondary{background:#1f2b4d;border:1px solid rgba(255,255,255,.12);font-weight:700}
-    button.danger{background:#d94b4b;border:none;font-weight:800}
-    button:disabled{opacity:.55;cursor:not-allowed}
-    .status{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);white-space:pre-wrap}
-    .ok{background:rgba(0,200,120,.14);border-color:rgba(0,200,120,.35)}
-    .bad{background:rgba(255,80,80,.14);border-color:rgba(255,80,80,.35)}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0b1220;color:#e8eefc;cursor:pointer;font-weight:800}
-    .tab.active{background:#2b6cff;border-color:#2b6cff}
-    .hidden{display:none}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-    a{color:#9fc0ff;text-decoration:none}
-    a:hover{text-decoration:underline}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.10);vertical-align:top}
-    th{text-align:left;font-size:12px;opacity:.85}
-    .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
-    .pill.paid{border-color:rgba(0,200,120,.35);background:rgba(0,200,120,.14)}
-    .pill.failed{border-color:rgba(255,80,80,.35);background:rgba(255,80,80,.14)}
-    .pill.pending{border-color:rgba(255,200,0,.35);background:rgba(255,200,0,.12)}
-    #reader{width:100%;min-height:320px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#070b14}
-  </style>
-
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
-<body>
-  <div class="wrap">
-    <h1>Admin Portal</h1>
+<body style="font-family: Arial; padding: 24px; max-width: 1100px; margin:auto;">
 
-    <div class="card">
-      <div class="row">
-        <div style="min-width:280px;flex:1 1 280px">
-          <label>Admin Password</label>
-          <input id="adminToken" type="password" placeholder="Enter ADMIN_SECRET_TOKEN…" />
-        </div>
-        <div>
-          <button id="unlockBtn" type="button">Unlock</button>
-          <button id="lockBtn" class="secondary" type="button">Lock</button>
-        </div>
+<h1>Showroom Market Admin Portal</h1>
 
-        <div style="min-width:180px">
-          <label>Stripe mode (for links)</label>
-          <select id="stripeMode">
-            <option value="live">Live</option>
-            <option value="test">Test</option>
-          </select>
-        </div>
-      </div>
-      <div id="authStatus" class="status" style="margin-top:12px">Locked.</div>
-      <div id="msg" class="status" style="margin-top:10px">Ready.</div>
-    </div>
+<label>Admin Password:</label>
+<input type="password" id="adminToken" style="width:320px;padding:8px;">
+<button onclick="saveToken()">Unlock</button>
+<span id="tokenStatus"></span>
 
-    <div class="tabs">
-      <div class="tab active" data-tab="pickup">Pickup Scan + Pay</div>
-      <div class="tab" data-tab="payouts">Payouts Dashboard</div>
-      <div class="tab" data-tab="onboarding">Seller Onboarding</div>
-      <div class="tab" data-tab="listing">Load Listing</div>
-    </div>
+<hr>
 
-    <!-- PICKUP -->
-    <div id="tab-pickup" class="card">
-      <h3 style="margin:0 0 10px">Pickup Scan + Immediate Payout</h3>
-      <div class="row">
-        <div style="flex:1 1 360px">
-          <label>QR Payload (auto-fills when scanned)</label>
-          <textarea id="payload" class="mono" placeholder="SMK|recXXXXXXXXXXXXXX|token"></textarea>
-          <div class="row" style="margin-top:10px">
-            <button id="startCam" type="button">Start Camera</button>
-            <button id="stopCam" class="secondary" type="button">Stop</button>
-            <button id="verifyBtn" class="secondary" type="button">Verify + Pay</button>
-          </div>
-        </div>
-        <div style="flex:1 1 420px">
-          <div id="reader"></div>
-        </div>
-      </div>
-      <div class="status" id="pickupResult" style="margin-top:12px">Waiting…</div>
-    </div>
+<div style="margin:20px 0;">
+  <button onclick="showTab('pickup')">Pickup Scan</button>
+  <button onclick="showTab('ops')">Pickup Ops</button>
+</div>
 
-    <!-- PAYOUTS -->
-    <div id="tab-payouts" class="card hidden">
-      <h3 style="margin:0 0 10px">Payouts</h3>
-      <div class="row">
-        <div style="min-width:180px">
-          <label>Status</label>
-          <select id="payoutStatus">
-            <option value="All">All</option>
-            <option value="Paid">Paid</option>
-            <option value="Failed">Failed</option>
-            <option value="Pending">Pending</option>
-          </select>
-        </div>
-        <div style="flex:1 1 260px">
-          <label>Search</label>
-          <input id="searchBox" placeholder="seller / item / transfer / record id" />
-        </div>
-        <div>
-          <label>&nbsp;</label>
-          <button id="refreshPayouts" type="button">Refresh</button>
-        </div>
-      </div>
+<div id="pickupTab">
+  <h2>Scan Pickup QR</h2>
+  <input id="payload" placeholder="SMK|recXXXX|token" style="width:420px;padding:10px;">
+  <button onclick="verify()">Verify & Pay</button>
+  <pre id="out" style="background:#111;color:#0f0;padding:12px;"></pre>
+</div>
 
-      <div class="status" id="payoutMsg" style="margin-top:12px">Waiting…</div>
+<div id="opsTab" style="display:none;">
+  <h2>Pickup Operations</h2>
+  <button onclick="loadOps()">Refresh</button>
+  <pre id="opsOut"></pre>
+</div>
 
-      <div style="overflow:auto;margin-top:10px">
-        <table>
-          <thead>
-            <tr>
-              <th>Actions</th>
-              <th>Payout</th>
-              <th>Seller</th>
-              <th>Item</th>
-              <th>Amount</th>
-              <th>Sent</th>
-              <th>Transfer</th>
-              <th>Pickup</th>
-              <th>Record</th>
-              <th>Error</th>
-            </tr>
-          </thead>
-          <tbody id="payoutRows"></tbody>
-        </table>
-      </div>
-    </div>
+<script>
+function saveToken() {
+  localStorage.setItem("ADMIN_TOKEN", document.getElementById("adminToken").value);
+  document.getElementById("tokenStatus").innerText = "Saved ✔";
+}
 
-    <!-- ONBOARDING -->
-    <div id="tab-onboarding" class="card hidden">
-      <h3 style="margin:0 0 10px">Seller Stripe Onboarding</h3>
-      <p style="margin:0 0 10px;opacity:.85">Enter a Listing record ID to create/reuse a Stripe Express account and generate an onboarding link.</p>
+function authedFetch(url, options={}) {
+  options.headers = {
+    ...(options.headers||{}),
+    "Content-Type":"application/json",
+    "Authorization":`Bearer ${localStorage.getItem("ADMIN_TOKEN")}`
+  };
+  return fetch(url, options);
+}
 
-      <div class="row">
-        <div>
-          <label>Listing Record ID</label>
-          <input id="onboardRecordId" class="mono" placeholder="recXXXXXXXXXXXXXX" />
-        </div>
-        <div>
-          <label>&nbsp;</label>
-          <button id="startOnboarding" type="button">Create Onboarding Link</button>
-        </div>
-      </div>
+function showTab(tab) {
+  document.getElementById("pickupTab").style.display = tab==="pickup"?"block":"none";
+  document.getElementById("opsTab").style.display = tab==="ops"?"block":"none";
+}
 
-      <div class="status" id="onboardMsg" style="margin-top:12px">Waiting…</div>
-    </div>
+async function verify() {
+  const payload = document.getElementById("payload").value;
+  const res = await authedFetch("/.netlify/functions/admin", {
+    method:"POST",
+    body:JSON.stringify({ action:"verify_pickup_and_payout", payload })
+  });
+  document.getElementById("out").textContent = JSON.stringify(await res.json(),null,2);
+}
 
-    <!-- LOAD LISTING -->
-    <div id="tab-listing" class="card hidden">
-      <h3 style="margin:0 0 10px">Load Listing</h3>
-      <div class="row">
-        <div>
-          <label>Listing Record ID</label>
-          <input id="listRecordId" class="mono" placeholder="recXXXXXXXXXXXXXX" />
-        </div>
-        <div>
-          <label>&nbsp;</label>
-          <button id="loadListing" type="button">Load</button>
-        </div>
-      </div>
-      <pre id="listingOut" class="status" style="margin-top:12px">Waiting…</pre>
-    </div>
-  </div>
+async function loadOps() {
+  const res = await authedFetch("/.netlify/functions/admin", {
+    method:"POST",
+    body:JSON.stringify({ action:"get_ops" })
+  });
+  document.getElementById("opsOut").textContent = JSON.stringify(await res.json(),null,2);
+}
+</script>
 
-  <script>
-    const TOKEN_KEY = "smk_admin_token";
-    const MODE_KEY  = "smk_stripe_mode";
-
-    const adminTokenEl = document.getElementById("adminToken");
-    const authStatusEl = document.getElementById("authStatus");
-    const msgEl = document.getElementById("msg");
-    const stripeModeEl = document.getElementById("stripeMode");
-
-    function setStatus(el, text, cls="") {
-      el.className = "status " + cls;
-      el.textContent = text;
-    }
-    function setMsg(text, cls=""){ setStatus(msgEl, text, cls); }
-
-    function getToken(){ return sessionStorage.getItem(TOKEN_KEY) || ""; }
-    function setToken(t){
-      if(!t) sessionStorage.removeItem(TOKEN_KEY);
-      else sessionStorage.setItem(TOKEN_KEY, t);
-      refreshAuthUI();
-    }
-    function refreshAuthUI(){
-      const tok = getToken();
-      if(tok){
-        authStatusEl.className = "status ok";
-        authStatusEl.textContent = "Unlocked ✅";
-      } else {
-        authStatusEl.className = "status";
-        authStatusEl.textContent = "Locked.";
-      }
-    }
-
-    function getStripeMode(){ return localStorage.getItem(MODE_KEY) || "live"; }
-    function setStripeMode(m){ localStorage.setItem(MODE_KEY, m); }
-
-    async function adminCall(payload){
-      const tok = getToken();
-      if(!tok) throw new Error("Locked: enter admin password.");
-      const res = await fetch("/.netlify/functions/admin", {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "Authorization": `Bearer ${tok}` },
-        body: JSON.stringify(payload),
-      });
-      const text = await res.text();
-      let data;
-      try { data = JSON.parse(text); } catch { data = { raw: text }; }
-      if(!res.ok) {
-        const err = new Error(data?.error || res.statusText);
-        err.detail = data;
-        throw err;
-      }
-      return data;
-    }
-
-    // Tabs
-    document.querySelectorAll(".tab").forEach(t => {
-      t.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-        t.classList.add("active");
-        const name = t.dataset.tab;
-        ["pickup","payouts","onboarding","listing"].forEach(n => {
-          document.getElementById("tab-"+n).classList.toggle("hidden", n !== name);
-        });
-      });
-    });
-
-    // Unlock/Lock
-    document.getElementById("unlockBtn").addEventListener("click", () => {
-      const t = adminTokenEl.value.trim();
-      if(!t) return;
-      setToken(t);
-      adminTokenEl.value = "";
-      setMsg("Unlocked. Use tabs above.", "ok");
-    });
-    document.getElementById("lockBtn").addEventListener("click", () => {
-      setToken("");
-      setMsg("Locked.", "");
-    });
-
-    // Stripe mode init
-    stripeModeEl.value = getStripeMode();
-    stripeModeEl.addEventListener("change", () => {
-      setStripeMode(stripeModeEl.value);
-      setMsg(`Stripe mode set to: ${stripeModeEl.value}`, "ok");
-      renderPayouts(); // update Stripe links
-    });
-
-    // -------------------------
-    // PICKUP SCAN
-    // -------------------------
-    const pickupResult = document.getElementById("pickupResult");
-    const payloadEl = document.getElementById("payload");
-
-    let html5QrCode = null;
-    let scanning = false;
-
-    async function verifyAndPay(){
-      try{
-        setStatus(pickupResult, "Verifying + paying…");
-        const data = await adminCall({ action:"verify_pickup_and_payout", payload: payloadEl.value });
-        setStatus(pickupResult, "✅ " + JSON.stringify(data, null, 2), "ok");
-      } catch(e){
-        setStatus(pickupResult, `❌ ${e.message}\n${JSON.stringify(e.detail || {}, null, 2)}`, "bad");
-      }
-    }
-
-    async function startCamera(){
-      if(scanning) return;
-      if(!getToken()){
-        setStatus(pickupResult, "Locked: enter admin password first.", "bad");
-        return;
-      }
-      if(!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-      scanning = true;
-      setStatus(pickupResult, "Starting camera…");
-      try{
-        const cams = await Html5Qrcode.getCameras();
-        const camId = cams?.[0]?.id;
-        if(!camId) throw new Error("No camera found");
-        await html5QrCode.start(
-          camId,
-          { fps: 10, qrbox: { width: 280, height: 280 } },
-          (decodedText) => {
-            payloadEl.value = decodedText;
-            verifyAndPay();
-          },
-          () => {}
-        );
-        setStatus(pickupResult, "Camera running. Scan QR…", "ok");
-      } catch(e){
-        scanning = false;
-        setStatus(pickupResult, "❌ Camera start failed: " + e.message, "bad");
-      }
-    }
-
-    async function stopCamera(){
-      if(!html5QrCode || !scanning) return;
-      try{ await html5QrCode.stop(); } catch {}
-      scanning = false;
-      setStatus(pickupResult, "Stopped.");
-    }
-
-    document.getElementById("startCam").addEventListener("click", startCamera);
-    document.getElementById("stopCam").addEventListener("click", stopCamera);
-    document.getElementById("verifyBtn").addEventListener("click", verifyAndPay);
-
-    // -------------------------
-    // PAYOUTS DASHBOARD
-    // -------------------------
-    const payoutMsg = document.getElementById("payoutMsg");
-    const payoutRows = document.getElementById("payoutRows");
-    const payoutStatus = document.getElementById("payoutStatus");
-    const searchBox = document.getElementById("searchBox");
-
-    let payouts = [];
-    const busy = new Set();
-
-    function pill(status){
-      const s = (status || "").toLowerCase();
-      if(s === "paid") return `<span class="pill paid">Paid</span>`;
-      if(s === "failed") return `<span class="pill failed">Failed</span>`;
-      if(["pending","ready","processing",""].includes(s)) return `<span class="pill pending">${status || "Pending"}</span>`;
-      return `<span class="pill">${status || ""}</span>`;
-    }
-    function fmtMoney(v){
-      const n = Number(v);
-      return Number.isFinite(n) ? "$" + n.toFixed(2) : "";
-    }
-    function stripeTransferUrl(id){
-      if(!id) return "";
-      const mode = getStripeMode();
-      return mode === "test"
-        ? `https://dashboard.stripe.com/test/transfers/${encodeURIComponent(id)}`
-        : `https://dashboard.stripe.com/transfers/${encodeURIComponent(id)}`;
-    }
-    function canRetry(r){
-      const s = (r.seller_payout_status || "").toLowerCase();
-      const hasTransfer = !!r.stripe_transfer_id;
-      const pickedUp = !!r.pickup_confirmed;
-      const allowed = ["failed","pending","ready",""];
-      return pickedUp && !hasTransfer && allowed.includes(s);
-    }
-
-    async function loadPayouts(){
-      try{
-        setStatus(payoutMsg, "Loading…");
-        const data = await adminCall({ action:"get_payout_history", status: payoutStatus.value, limit: 75 });
-        payouts = data.records || [];
-        setStatus(payoutMsg, `✅ Loaded ${payouts.length} record(s).`, "ok");
-        renderPayouts();
-      } catch(e){
-        setStatus(payoutMsg, `❌ ${e.message}\n${JSON.stringify(e.detail || {}, null, 2)}`, "bad");
-      }
-    }
-
-    async function retryPayout(recordId){
-      if(busy.has(recordId)) return;
-      if(!confirm("Retry payout? This will attempt a Stripe transfer.")) return;
-      busy.add(recordId);
-      renderPayouts();
-      try{
-        setStatus(payoutMsg, `Retrying payout for ${recordId}…`);
-        const data = await adminCall({ action:"retry_payout", recordId });
-        setStatus(payoutMsg, "✅ " + JSON.stringify(data, null, 2), "ok");
-        await loadPayouts();
-      } catch(e){
-        setStatus(payoutMsg, `❌ ${e.message}\n${JSON.stringify(e.detail || {}, null, 2)}`, "bad");
-      } finally {
-        busy.delete(recordId);
-        renderPayouts();
-      }
-    }
-    window.__retryPayout = retryPayout;
-
-    function renderPayouts(){
-      const q = (searchBox.value || "").trim().toLowerCase();
-      const filtered = payouts.filter(r => {
-        if(!q) return true;
-        const hay = [
-          r.id, r.sellerName, r.sellerEmail, r.itemTitle,
-          r.stripe_transfer_id, r.payout_error
-        ].join(" ").toLowerCase();
-        return hay.includes(q);
-      });
-
-      payoutRows.innerHTML = filtered.map(r => {
-        const disabled = !canRetry(r) || busy.has(r.id);
-        const transferId = r.stripe_transfer_id || "";
-        const transferHtml = transferId
-          ? `<div class="mono">${transferId}</div><div><a target="_blank" rel="noopener" href="${stripeTransferUrl(transferId)}">View in Stripe →</a></div>`
-          : `<div class="mono" style="opacity:.75">—</div>`;
-
-        return `
-          <tr>
-            <td>
-              <button class="danger" style="padding:8px 10px;font-size:12px;border-radius:9px"
-                ${disabled ? "disabled" : ""}
-                onclick="window.__retryPayout('${r.id}')">
-                ${busy.has(r.id) ? "Retrying…" : "Retry"}
-              </button>
-            </td>
-            <td>${pill(r.seller_payout_status)}</td>
-            <td>
-              <div>${r.sellerName || ""}</div>
-              <div style="opacity:.8">${r.sellerEmail || ""}</div>
-            </td>
-            <td>${r.itemTitle || ""}</td>
-            <td class="mono">${fmtMoney(r.seller_payout_amount)}</td>
-            <td class="mono">${r.payout_sent_at || ""}</td>
-            <td>${transferHtml}</td>
-            <td class="mono">${r.pickup_confirmed ? "✅" : "—"} ${r.pickup_confirmed_at || ""}</td>
-            <td class="mono">${r.id}</td>
-            <td class="mono">${r.payout_error || ""}</td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    document.getElementById("refreshPayouts").addEventListener("click", loadPayouts);
-    payoutStatus.addEventListener("change", loadPayouts);
-    searchBox.addEventListener("input", renderPayouts);
-
-    // -------------------------
-    // ONBOARDING
-    // -------------------------
-    const onboardMsg = document.getElementById("onboardMsg");
-    document.getElementById("startOnboarding").addEventListener("click", async () => {
-      const recordId = document.getElementById("onboardRecordId").value.trim();
-      if(!recordId) return;
-      try{
-        setStatus(onboardMsg, "Creating onboarding link…");
-        const data = await adminCall({ action:"start_onboarding", recordId });
-        setStatus(onboardMsg, `✅ Stripe account: ${data.stripe_account_id}\n\nOpen this link:\n${data.onboarding_url}`, "ok");
-        // clickable link
-        onboardMsg.innerHTML = `✅ Stripe account: <span class="mono">${data.stripe_account_id}</span><br><br>
-          <a href="${data.onboarding_url}" target="_blank" rel="noopener">Open onboarding link →</a>`;
-        onboardMsg.className = "status ok";
-      } catch(e){
-        setStatus(onboardMsg, `❌ ${e.message}\n${JSON.stringify(e.detail || {}, null, 2)}`, "bad");
-      }
-    });
-
-    // -------------------------
-    // LOAD LISTING
-    // -------------------------
-    const listingOut = document.getElementById("listingOut");
-    document.getElementById("loadListing").addEventListener("click", async () => {
-      const recordId = document.getElementById("listRecordId").value.trim();
-      if(!recordId) return;
-      try{
-        listingOut.textContent = "Loading…";
-        const data = await adminCall({ action:"get_listing", recordId });
-        listingOut.textContent = JSON.stringify(data.record, null, 2);
-        listingOut.className = "status ok";
-      } catch(e){
-        listingOut.textContent = `❌ ${e.message}\n${JSON.stringify(e.detail || {}, null, 2)}`;
-        listingOut.className = "status bad";
-      }
-    });
-
-    // init
-    refreshAuthUI();
-    setMsg("Ready.");
-  </script>
 </body>
 </html>
