@@ -1,21 +1,8 @@
 # Netlify Configuration for SHOWROOM MARKET
-# This file configures security headers, redirects, build settings, and scheduled functions
 
-# Build Settings
 [build]
   publish = "site"
   functions = "netlify/functions"
-
-# ===============================
-# 🔁 Scheduled Background Functions
-# ===============================
-
-[functions]
-  directory = "netlify/functions"
-
-# 💸 Auto-release seller payouts every 5 minutes
-[functions."autoReleasePayouts"]
-  schedule = "*/5 * * * *"
 
 # ===============================
 # 🔐 Security Headers
@@ -130,12 +117,3 @@
   from = "/*"
   to = "/404.html"
   status = 404
-
-# ===============================
-# 🔐 Environment variables (set in Netlify UI)
-# ===============================
-# RECAPTCHA_SECRET_KEY
-# STRIPE_SECRET_KEY
-# AIRTABLE_API_KEY
-# AIRTABLE_BASE_ID
-# AI
