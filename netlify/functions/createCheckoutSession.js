@@ -22,7 +22,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🔒 INVENTORY LOCK — Check Airtable before allowing checkout
+    // 🔒 INVENTORY + STATUS CHECK FROM AIRTABLE
     const airtableRes = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
       {
@@ -41,10 +41,20 @@ exports.handler = async (event) => {
       };
     }
 
-    const listingStatus = airtableData.fields.status;
+    const listing = airtableData.fields;
+
+    // 🚫 BLOCK IF LOCKED BY RISK SYSTEM
+    if (listing.locked === true) {
+      return {
+        statusCode: 403,
+        body: JSON.stringify({
+          error: "This listing is temporarily unavailable while under review.",
+        }),
+      };
+    }
 
     // ✅ Only listings with status "Active" can be purchased
-    if (listingStatus !== "Active") {
+    if (listing.status !== "Active") {
       return {
         statusCode: 409,
         body: JSON.stringify({
@@ -65,7 +75,7 @@ exports.handler = async (event) => {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Showroom Market Purchase",
+              name: listing.title || "Showroom Market Purchase",
             },
             unit_amount: price, // cents
           },
@@ -78,4 +88,18 @@ exports.handler = async (event) => {
       },
 
       success_url: "https://showroommarket.com/success.html",
-      cancel_url: "https://showroommarke_
+      cancel_url: "https://showroommarket.com/cancel.html",
+    });
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ url: session.url }),
+    };
+  } catch (err) {
+    console.error("Checkout error:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Checkout session failed" }),
+    };
+  }
+};
