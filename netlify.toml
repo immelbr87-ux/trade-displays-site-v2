@@ -1,16 +1,29 @@
 # Netlify Configuration for SHOWROOM MARKET
-# This file configures security headers, redirects, and build settings
+# This file configures security headers, redirects, build settings, and scheduled functions
 
 # Build Settings
 [build]
   publish = "site"
   functions = "netlify/functions"
 
-# Security Headers
+# ===============================
+# 🔁 Scheduled Background Functions
+# ===============================
+
+[functions]
+  directory = "netlify/functions"
+
+# 💸 Auto-release seller payouts every 5 minutes
+[functions."autoReleasePayouts"]
+  schedule = "*/5 * * * *"
+
+# ===============================
+# 🔐 Security Headers
+# ===============================
+
 [[headers]]
   for = "/*"
   [headers.values]
-    # Content Security Policy - Prevents XSS attacks
     Content-Security-Policy = """
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://cdn.jsdelivr.net https://www.google-analytics.com https://www.googletagmanager.com;
@@ -23,26 +36,12 @@
       base-uri 'self';
       form-action 'self';
     """
-    
-    # Prevent clickjacking attacks
     X-Frame-Options = "DENY"
-    
-    # Prevent MIME type sniffing
     X-Content-Type-Options = "nosniff"
-    
-    # Enable XSS protection in browsers
     X-XSS-Protection = "1; mode=block"
-    
-    # Control referrer information
     Referrer-Policy = "strict-origin-when-cross-origin"
-    
-    # Disable dangerous browser features
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=()"
-    
-    # Force HTTPS (HSTS) - 1 year
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    
-    # Cache control
     Cache-Control = "public, max-age=0, must-revalidate"
 
 # Cache static assets longer
@@ -77,7 +76,10 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Redirects
+# ===============================
+# 🔀 Redirects
+# ===============================
+
 [[redirects]]
   from = "/sell"
   to = "/pilot-program"
@@ -129,8 +131,11 @@
   to = "/404.html"
   status = 404
 
-# Environment variables (configure in Netlify UI)
-# RECAPTCHA_SECRET_KEY - Your reCAPTCHA secret
-# API_KEY - For securing admin functions
-# STRIPE_SECRET_KEY - Payment processing
-# SENDGRID_API_KEY - Email service
+# ===============================
+# 🔐 Environment variables (set in Netlify UI)
+# ===============================
+# RECAPTCHA_SECRET_KEY
+# STRIPE_SECRET_KEY
+# AIRTABLE_API_KEY
+# AIRTABLE_BASE_ID
+# AI
