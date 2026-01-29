@@ -19,11 +19,20 @@
 <h2>Seller Reliability</h2>
 <canvas id="sellerChart"></canvas>
 
-<h2>GMV Trend (Last 30 Days)</h2>
+<h2>GMV Trend</h2>
 <canvas id="gmvChart"></canvas>
 
-<h2>Pickup Delay Heatmap</h2>
+<h2>Pickup Delay Distribution</h2>
 <canvas id="delayChart"></canvas>
+
+<h2>Pickups by City</h2>
+<canvas id="geoChart"></canvas>
+
+<h2>Dispute Trend</h2>
+<canvas id="disputeChart"></canvas>
+
+<h2>High Risk Listings</h2>
+<ul id="riskList"></ul>
 
 <script>
 function saveToken(){
@@ -41,51 +50,58 @@ function authedFetch(body){
   }).then(r=>r.json());
 }
 
-let sellerChart, gmvChart, delayChart;
+let charts = {};
 
 async function loadDashboard(){
   const data = await authedFetch({});
-  const sellers = data.sellers;
-  const gmv = data.gmvByDay;
-  const delays = data.pickupDelays;
 
   // Seller Chart
-  if(sellerChart) sellerChart.destroy();
-  sellerChart = new Chart(document.getElementById("sellerChart"),{
+  charts.seller?.destroy();
+  charts.seller = new Chart(document.getElementById("sellerChart"),{
     type:"bar",
     data:{
-      labels:Object.keys(sellers),
-      datasets:[{
-        label:"Seller Score",
-        data:Object.values(sellers).map(s=>s.score)
-      }]
+      labels:Object.keys(data.sellers),
+      datasets:[{label:"Seller Score",data:Object.values(data.sellers).map(s=>s.score)}]
     }
   });
 
   // GMV Trend
-  if(gmvChart) gmvChart.destroy();
-  gmvChart = new Chart(document.getElementById("gmvChart"),{
+  charts.gmv?.destroy();
+  charts.gmv = new Chart(document.getElementById("gmvChart"),{
     type:"line",
-    data:{
-      labels:Object.keys(gmv),
-      datasets:[{
-        label:"GMV",
-        data:Object.values(gmv)
-      }]
-    }
+    data:{labels:Object.keys(data.gmvByDay),datasets:[{label:"GMV",data:Object.values(data.gmvByDay)}]}
   });
 
-  // Pickup Delay Heatmap (Histogram)
+  // Pickup Delay Histogram
   const bins = [0,1,2,3,4,5,7,10];
-  const counts = bins.map((b,i)=>delays.filter(d=>d>=b && d<(bins[i+1]||999)).length);
-
-  if(delayChart) delayChart.destroy();
-  delayChart = new Chart(document.getElementById("delayChart"),{
+  const counts = bins.map((b,i)=>data.pickupDelays.filter(d=>d>=b && d<(bins[i+1]||999)).length);
+  charts.delay?.destroy();
+  charts.delay = new Chart(document.getElementById("delayChart"),{
     type:"bar",
-    data:{
-      labels:["0-1d","1-2d","2-3d","3-4d","4-5d","5-7d","7-10d","10+d"],
-      datasets:[{label:"Pickup Delay Distribution",data:counts}]
-    }
+    data:{labels:["0-1d","1-2d","2-3d","3-4d","4-5d","5-7d","7-10d","10+d"],datasets:[{label:"Pickup Delays",data:counts}]}
+  });
+
+  // Geo Chart
+  charts.geo?.destroy();
+  charts.geo = new Chart(document.getElementById("geoChart"),{
+    type:"bar",
+    data:{labels:Object.keys(data.geoCounts),datasets:[{label:"Pickups",data:Object.values(data.geoCounts)}]}
+  });
+
+  // Disputes
+  charts.dispute?.destroy();
+  charts.dispute = new Chart(document.getElementById("disputeChart"),{
+    type:"line",
+    data:{labels:Object.keys(data.disputesByDay),datasets:[{label:"Disputes",data:Object.values(data.disputesByDay)}]}
+  });
+
+  // Risk List
+  const list = document.getElementById("riskList");
+  list.innerHTML = "";
+  data.riskyListings.forEach(r=>{
+    const li = document.createElement("li");
+    li.textContent = `${r.listing} – Seller: ${r.seller} (Risk ${r.riskScore})`;
+    list.appendChild(li);
   });
 }
 </script>
