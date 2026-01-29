@@ -1,86 +1,61 @@
-const Stripe = require("stripe");
 const {
   json,
   requireAdmin,
-  airtableGetRecord,
-  airtablePatchRecord,
-  canTransitionStatus,
-  isPayoutAllowed
+  airtableQuery
 } = require("./_lib");
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
   const auth = requireAdmin(event);
   if (!auth.ok) return json(auth.status, { error: auth.error });
 
-  const { action, recordId } = JSON.parse(event.body || "{}");
-  if (!recordId) return json(400, { error: "Missing recordId" });
+  const { action } = JSON.parse(event.body || "{}");
 
-  const rec = await airtableGetRecord({
-    baseId: process.env.AIRTABLE_BASE_ID,
+  if (action !== "get_metrics") return json(400, { error: "Unknown action" });
+
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const apiKey = process.env.AIRTABLE_API_KEY;
+
+  const data = await airtableQuery({
+    baseId,
     table: "Listings",
-    recordId,
-    apiKey: process.env.AIRTABLE_API_KEY
+    apiKey,
+    params: {}
   });
 
-  const f = rec.fields;
+  let sellers = {};
+  let latePickups = 0;
+  let totalPickups = 0;
+  let pickupDaysSum = 0;
 
-  /* ===============================
-     📦 CONFIRM PICKUP
-  =============================== */
-  if (action === "confirm_pickup") {
-    if (!canTransitionStatus(f.status, "Picked Up")) {
-      return json(400, { error: `Invalid transition from ${f.status}` });
+  data.records.forEach(r => {
+    const f = r.fields;
+    const seller = f.seller_name || "Unknown";
+
+    if (!sellers[seller]) sellers[seller] = { score: 100, sales: 0 };
+
+    sellers[seller].sales++;
+
+    if (f.pickup_confirmed_at && f.paid_at) {
+      const days = (new Date(f.pickup_confirmed_at) - new Date(f.paid_at)) / 86400000;
+      pickupDaysSum += days;
+      totalPickups++;
+
+      if (days > 3) {
+        latePickups++;
+        sellers[seller].score -= 5;
+      } else {
+        sellers[seller].score += 1;
+      }
     }
 
-    await airtablePatchRecord({
-      baseId: process.env.AIRTABLE_BASE_ID,
-      table: "Listings",
-      recordId,
-      apiKey: process.env.AIRTABLE_API_KEY,
-      fields: {
-        status: "Picked Up",
-        pickup_confirmed: true,
-        pickup_confirmed_at: new Date().toISOString(),
-      }
-    });
+    if (f.chargeback_flag) sellers[seller].score -= 25;
+  });
 
-    return json(200, { ok: true, message: "Pickup confirmed" });
-  }
+  const avgPickupDays = totalPickups ? (pickupDaysSum / totalPickups).toFixed(1) : 0;
 
-  /* ===============================
-     💸 RELEASE PAYOUT
-  =============================== */
-  if (action === "release_payout") {
-    const allowed = isPayoutAllowed(f);
-    if (!allowed.ok) return json(400, { error: allowed.reason });
-
-    if (!canTransitionStatus(f.status, "Payout Sent")) {
-      return json(400, { error: `Invalid transition from ${f.status}` });
-    }
-
-    const transfer = await stripe.transfers.create({
-      amount: Math.round(f.seller_payout_amount * 100),
-      currency: "usd",
-      destination: f.stripe_account_id,
-    });
-
-    await airtablePatchRecord({
-      baseId: process.env.AIRTABLE_BASE_ID,
-      table: "Listings",
-      recordId,
-      apiKey: process.env.AIRTABLE_API_KEY,
-      fields: {
-        status: "Payout Sent",
-        stripe_transfer_id: transfer.id,
-        seller_payout_status: "Paid",
-        payout_sent_at: new Date().toISOString()
-      }
-    });
-
-    return json(200, { ok: true, transferId: transfer.id });
-  }
-
-  return json(400, { error: "Unknown action" });
+  return json(200, {
+    avgPickupDays,
+    latePickupRate: totalPickups ? ((latePickups / totalPickups) * 100).toFixed(1) + "%" : "0%",
+    sellers
+  });
 };
