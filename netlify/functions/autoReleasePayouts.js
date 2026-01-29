@@ -26,31 +26,37 @@ exports.handler = async () => {
   for (const rec of records.records) {
     const f = rec.fields;
 
+    if (!f.seller_payout_amount || !f.stripe_account_id) continue;
+
     const allowed = isPayoutAllowed(f);
     if (!allowed.ok) continue;
 
     if (!canTransitionStatus(f.status, "Payout Sent")) continue;
 
-    const transfer = await stripe.transfers.create({
-      amount: Math.round(f.seller_payout_amount * 100),
-      currency: "usd",
-      destination: f.stripe_account_id,
-    });
+    try {
+      const transfer = await stripe.transfers.create({
+        amount: Math.round(f.seller_payout_amount * 100),
+        currency: "usd",
+        destination: f.stripe_account_id,
+      });
 
-    await airtablePatchRecord({
-      baseId,
-      table: "Listings",
-      recordId: rec.id,
-      apiKey,
-      fields: {
-        status: "Payout Sent",
-        seller_payout_status: "Paid",
-        stripe_transfer_id: transfer.id,
-        payout_sent_at: new Date().toISOString()
-      }
-    });
+      await airtablePatchRecord({
+        baseId,
+        table: "Listings",
+        recordId: rec.id,
+        apiKey,
+        fields: {
+          status: "Payout Sent",
+          seller_payout_status: "Paid",
+          stripe_transfer_id: transfer.id,
+          payout_sent_at: new Date().toISOString()
+        }
+      });
 
-    processed++;
+      processed++;
+    } catch (err) {
+      console.error("Payout failed:", rec.id, err.message);
+    }
   }
 
   return { statusCode: 200, body: `Processed ${processed} payouts` };
