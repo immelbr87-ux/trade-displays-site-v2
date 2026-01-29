@@ -161,6 +161,11 @@
     let html5QrCode = null;
     let scanning = false;
 
+    // ✅ Prevent multiple scan fires / multiple submits
+    let verifyInFlight = false;
+    let lastPayload = "";
+    let lastPayloadAt = 0;
+
     function setStatus(el, msg, cls="") {
       el.className = "status " + cls;
       el.textContent = msg;
@@ -201,6 +206,17 @@
         return;
       }
 
+      // ✅ Debounce duplicate scans within 2.5s
+      const now = Date.now();
+      if (normalized === lastPayload && (now - lastPayloadAt) < 2500) {
+        return;
+      }
+      lastPayload = normalized;
+      lastPayloadAt = now;
+
+      if (verifyInFlight) return;
+      verifyInFlight = true;
+
       setStatus(resultBox, "Verifying…", "");
 
       try {
@@ -214,25 +230,21 @@
         });
 
         const text = await res.text();
-        let json;
-        try { json = JSON.parse(text); } catch { json = { raw: text }; }
+        let parsed;
+        try { parsed = JSON.parse(text); } catch { parsed = { raw: text }; }
 
         if (!res.ok) {
-          setStatus(
-            resultBox,
-            `❌ ${res.status} ${res.statusText}\n${JSON.stringify(json, null, 2)}`,
-            "bad"
-          );
+          const msg = parsed?.error || parsed?.message || `${res.status} ${res.statusText}`;
+          setStatus(resultBox, `❌ ${msg}\n${JSON.stringify(parsed, null, 2)}`, "bad");
           return;
         }
 
-        setStatus(
-          resultBox,
-          `✅ SUCCESS\n${JSON.stringify(json, null, 2)}`,
-          "ok"
-        );
+        setStatus(resultBox, `✅ SUCCESS\n${JSON.stringify(parsed, null, 2)}`, "ok");
       } catch (e) {
         setStatus(resultBox, `❌ Network/Error: ${e.message}`, "bad");
+      } finally {
+        // ✅ allow next scan after a moment
+        setTimeout(() => { verifyInFlight = false; }, 1200);
       }
     }
 
@@ -257,10 +269,11 @@
         await html5QrCode.start(
           camId,
           { fps: 10, qrbox: { width: 280, height: 280 } },
-          (decodedText) => {
+          async (decodedText) => {
+            if (verifyInFlight) return; // ✅ don’t spam requests
             payloadEl.value = normalizePayload(decodedText);
             // Auto-verify immediately on scan:
-            verifyPayload(payloadEl.value);
+            await verifyPayload(payloadEl.value);
           },
           () => {}
         );
