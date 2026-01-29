@@ -1,0 +1,229 @@
+<!-- site/admin-payouts.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Showroom Market — Seller Payout History</title>
+  <style>
+    body{margin:0;background:#0b1220;color:#e8eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    h1{margin:0 0 10px;font-size:22px}
+    .card{background:#111b33;border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:16px;margin:14px 0}
+    label{display:block;margin:10px 0 6px;font-size:13px;opacity:.85}
+    input,select,button{border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0b1220;color:#e8eefc;padding:10px 12px;font-size:14px}
+    button{cursor:pointer;background:#2b6cff;border:none;font-weight:800}
+    button.secondary{background:#1f2b4d;border:1px solid rgba(255,255,255,.12);font-weight:700}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+    .status{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);white-space:pre-wrap}
+    .ok{background:rgba(0,200,120,.14);border-color:rgba(0,200,120,.35)}
+    .bad{background:rgba(255,80,80,.14);border-color:rgba(255,80,80,.35)}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.10);vertical-align:top}
+    th{font-size:12px;opacity:.85;text-align:left}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
+    .pill.paid{border-color:rgba(0,200,120,.35);background:rgba(0,200,120,.14)}
+    .pill.failed{border-color:rgba(255,80,80,.35);background:rgba(255,80,80,.14)}
+    .pill.pending{border-color:rgba(255,200,0,.35);background:rgba(255,200,0,.12)}
+    .muted{opacity:.8}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Seller Payout History</h1>
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Admin Password</label>
+          <input id="adminToken" type="password" placeholder="Enter ADMIN_SECRET_TOKEN…" />
+        </div>
+        <div>
+          <button id="unlockBtn" type="button">Unlock</button>
+          <button id="lockBtn" class="secondary" type="button">Lock</button>
+        </div>
+        <div style="flex:1 1 180px">
+          <label>Status</label>
+          <select id="statusSel">
+            <option value="All">All</option>
+            <option value="Paid">Paid</option>
+            <option value="Failed">Failed</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+        <div style="flex:1 1 240px">
+          <label>Search (seller/item/transfer/listing id)</label>
+          <input id="searchBox" placeholder="Type to filter…" />
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button id="refreshBtn" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="authStatus" class="status" style="margin-top:12px">Locked.</div>
+      <div id="msg" class="status" style="margin-top:10px">Waiting…</div>
+    </div>
+
+    <div class="card">
+      <div class="muted" id="countLine">0 records</div>
+      <div style="overflow:auto;margin-top:10px">
+        <table>
+          <thead>
+            <tr>
+              <th>Payout Status</th>
+              <th>Seller</th>
+              <th>Item</th>
+              <th>Amount</th>
+              <th>Payout Sent</th>
+              <th>Transfer ID</th>
+              <th>Pickup</th>
+              <th>Listing ID</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOKEN_KEY = "smk_admin_token"; // shared with pickup-scan.html
+    const adminTokenEl = document.getElementById("adminToken");
+    const authStatusEl = document.getElementById("authStatus");
+    const msgEl = document.getElementById("msg");
+    const statusSel = document.getElementById("statusSel");
+    const searchBox = document.getElementById("searchBox");
+    const rowsEl = document.getElementById("rows");
+    const countLine = document.getElementById("countLine");
+
+    let allRecords = [];
+
+    function setMsg(text, cls="") {
+      msgEl.className = "status " + cls;
+      msgEl.textContent = text;
+    }
+
+    function getToken(){ return sessionStorage.getItem(TOKEN_KEY) || ""; }
+    function setToken(t){
+      if(!t) sessionStorage.removeItem(TOKEN_KEY);
+      else sessionStorage.setItem(TOKEN_KEY, t);
+      refreshAuthUI();
+    }
+
+    function refreshAuthUI(){
+      const tok = getToken();
+      if(tok){
+        authStatusEl.className = "status ok";
+        authStatusEl.textContent = "Unlocked ✅";
+      } else {
+        authStatusEl.className = "status";
+        authStatusEl.textContent = "Locked.";
+      }
+    }
+
+    function fmtMoney(v){
+      const n = Number(v);
+      if(!Number.isFinite(n)) return "";
+      return "$" + n.toFixed(2);
+    }
+
+    function pill(status){
+      const s = (status || "").toLowerCase();
+      if(s === "paid") return `<span class="pill paid">Paid</span>`;
+      if(s === "failed") return `<span class="pill failed">Failed</span>`;
+      if(s === "pending" || s === "ready") return `<span class="pill pending">${status}</span>`;
+      return `<span class="pill">${status || ""}</span>`;
+    }
+
+    function render(){
+      const q = (searchBox.value || "").trim().toLowerCase();
+      const filtered = allRecords.filter(r => {
+        if(!q) return true;
+        const hay = [
+          r.sellerName, r.sellerEmail, r.itemTitle,
+          r.stripe_transfer_id, r.id, r.payout_error
+        ].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+
+      countLine.textContent = `${filtered.length} record(s)`;
+
+      rowsEl.innerHTML = filtered.map(r => `
+        <tr>
+          <td>${pill(r.seller_payout_status)}</td>
+          <td>
+            <div>${r.sellerName || ""}</div>
+            <div class="muted">${r.sellerEmail || ""}</div>
+          </td>
+          <td>${r.itemTitle || ""}</td>
+          <td class="mono">${fmtMoney(r.seller_payout_amount)}</td>
+          <td class="mono">${r.payout_sent_at || ""}</td>
+          <td class="mono">${r.stripe_transfer_id || ""}</td>
+          <td class="mono">${r.pickup_confirmed ? "✅" : "—"} ${r.pickup_confirmed_at || ""}</td>
+          <td class="mono">${r.id}</td>
+          <td class="mono">${r.payout_error || ""}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function refresh(){
+      const tok = getToken();
+      if(!tok){
+        setMsg("Locked. Enter admin password then Unlock.", "bad");
+        return;
+      }
+
+      const status = statusSel.value;
+      setMsg("Loading payout history…");
+
+      try{
+        const res = await fetch(`/.netlify/functions/getPayoutHistory?status=${encodeURIComponent(status)}&limit=75`, {
+          headers: { "Authorization": `Bearer ${tok}` }
+        });
+
+        const text = await res.text();
+        let data;
+        try{ data = JSON.parse(text); } catch { data = { raw: text }; }
+
+        if(!res.ok){
+          setMsg(`❌ ${res.status} ${res.statusText}\n${JSON.stringify(data, null, 2)}`, "bad");
+          return;
+        }
+
+        allRecords = data.records || [];
+        setMsg(`✅ Loaded ${allRecords.length} record(s).`, "ok");
+        render();
+
+      } catch(e){
+        setMsg(`❌ Network/Error: ${e.message}`, "bad");
+      }
+    }
+
+    // events
+    document.getElementById("unlockBtn").addEventListener("click", () => {
+      const t = adminTokenEl.value.trim();
+      if(!t) return;
+      setToken(t);
+      adminTokenEl.value = "";
+      setMsg("Unlocked. Click Refresh.", "ok");
+    });
+
+    document.getElementById("lockBtn").addEventListener("click", () => {
+      setToken("");
+      allRecords = [];
+      render();
+      setMsg("Locked.");
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", refresh);
+    statusSel.addEventListener("change", refresh);
+    searchBox.addEventListener("input", render);
+
+    // init
+    refreshAuthUI();
+    setMsg("Waiting…");
+  </script>
+</body>
+</html>
