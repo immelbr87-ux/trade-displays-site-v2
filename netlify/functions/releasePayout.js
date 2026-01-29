@@ -1,16 +1,28 @@
-// netlify/functions/releasePayout.js
+const fetch = require("node-fetch");
+const Stripe = require("stripe");
 
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE = process.env.AIRTABLE_TABLE;
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
+const ADMIN_TOKEN = process.env.ADMIN_SECRET_TOKEN;
 
 exports.handler = async (event) => {
   try {
-    // 🔒 SECURITY — Only allow POST
+    // 🔒 1️⃣ Admin protection
+    const authHeader = event.headers.authorization || "";
+    if (!authHeader || authHeader !== `Bearer ${ADMIN_TOKEN}`) {
+      return {
+        statusCode: 401,
+        body: JSON.stringify({ error: "Unauthorized" }),
+      };
+    }
+
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 405,
-        body: JSON.stringify({ error: "Method Not Allowed" }),
+        body: JSON.stringify({ error: "Method not allowed" }),
       };
     }
 
@@ -23,72 +35,43 @@ exports.handler = async (event) => {
       };
     }
 
-    // 📦 Fetch listing from Airtable
-    const recordRes = await fetch(
+    // 📥 2️⃣ Fetch listing from Airtable
+    const airtableRes = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE}/${recordId}`,
       {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        },
+        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
       }
     );
 
-    const recordData = await recordRes.json();
+    const record = await airtableRes.json();
 
-    if (!recordData.fields) {
+    if (!record.fields) {
       return {
         statusCode: 404,
         body: JSON.stringify({ error: "Listing not found" }),
       };
     }
 
-    const fields = recordData.fields;
+    const {
+      seller_payout_status,
+      stripe_transfer_id,
+      seller_payout_amount,
+      stripe_account_id,
+      pickup_confirmed,
+    } = record.fields;
 
-    // 🛑 VALIDATIONS
-    if (!fields.pickup_confirmed) {
+    // 🚫 3️⃣ Duplicate payout protection
+    if (seller_payout_status === "Paid" || stripe_transfer_id) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Payout already completed for this listing" }),
+      };
+    }
+
+    // ⚠️ 4️⃣ Optional safety — ensure pickup confirmed
+    if (!pickup_confirmed) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "Pickup not confirmed yet" }),
       };
     }
-
-    if (fields.seller_payout_status === "Paid") {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Payout already completed" }),
-      };
-    }
-
-    // 📝 Update Airtable: Mark payout approved + listing completed
-    await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE}/${recordId}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fields: {
-            seller_payout_status: "Approved",
-            status: "Completed",
-            payout_sent_at: new Date().toISOString(),
-          },
-        }),
-      }
-    );
-
-    console.log("💸 Seller payout approved for record:", recordId);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true }),
-    };
-  } catch (err) {
-    console.error("❌ releasePayout error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Server error" }),
-    };
-  }
-};
