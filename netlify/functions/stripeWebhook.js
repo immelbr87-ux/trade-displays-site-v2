@@ -18,9 +18,6 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: "Webhook signature failed" };
   }
 
-  /* ===============================
-     💰 PAYMENT COMPLETED
-  =============================== */
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
     const listingId = session.metadata?.listingId;
@@ -43,20 +40,26 @@ exports.handler = async (event) => {
             paid_at: now.toISOString(),
             payout_eligible_at: holdUntil.toISOString(),
             seller_payout_status: "Pending",
+            stripe_session_id: session.id
           },
         }),
       }
     );
   }
 
-  /* ===============================
-     🚨 DISPUTE CREATED
-  =============================== */
   if (stripeEvent.type === "charge.dispute.created") {
     const dispute = stripeEvent.data.object;
 
+    const search = await fetch(
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings?filterByFormula={stripe_session_id}='${dispute.payment_intent}'`,
+      { headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}` } }
+    );
+
+    const records = (await search.json()).records;
+    if (records.length === 0) return { statusCode: 200 };
+
     await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings`,
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${records[0].id}`,
       {
         method: "PATCH",
         headers: {
@@ -64,10 +67,7 @@ exports.handler = async (event) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fields: {
-            chargeback_flag: true,
-            seller_payout_status: "Blocked",
-          },
+          fields: { chargeback_flag: true, seller_payout_status: "Blocked" }
         }),
       }
     );
