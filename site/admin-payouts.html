@@ -14,6 +14,8 @@
     input,select,button{border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0b1220;color:#e8eefc;padding:10px 12px;font-size:14px}
     button{cursor:pointer;background:#2b6cff;border:none;font-weight:800}
     button.secondary{background:#1f2b4d;border:1px solid rgba(255,255,255,.12);font-weight:700}
+    button.danger{background:#d94b4b;border:none;font-weight:800}
+    button:disabled{opacity:.55;cursor:not-allowed}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
     .status{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);white-space:pre-wrap}
     .ok{background:rgba(0,200,120,.14);border-color:rgba(0,200,120,.35)}
@@ -27,11 +29,14 @@
     .pill.failed{border-color:rgba(255,80,80,.35);background:rgba(255,80,80,.14)}
     .pill.pending{border-color:rgba(255,200,0,.35);background:rgba(255,200,0,.12)}
     .muted{opacity:.8}
+    .btnInline{display:flex;gap:8px;flex-wrap:wrap}
+    .small{padding:8px 10px;font-size:12px;border-radius:9px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Seller Payout History</h1>
+
     <div class="card">
       <div class="row">
         <div>
@@ -71,6 +76,7 @@
         <table>
           <thead>
             <tr>
+              <th>Actions</th>
               <th>Payout Status</th>
               <th>Seller</th>
               <th>Item</th>
@@ -99,6 +105,7 @@
     const countLine = document.getElementById("countLine");
 
     let allRecords = [];
+    const busy = new Set(); // recordIds currently retrying
 
     function setMsg(text, cls="") {
       msgEl.className = "status " + cls;
@@ -133,8 +140,64 @@
       const s = (status || "").toLowerCase();
       if(s === "paid") return `<span class="pill paid">Paid</span>`;
       if(s === "failed") return `<span class="pill failed">Failed</span>`;
-      if(s === "pending" || s === "ready") return `<span class="pill pending">${status}</span>`;
+      if(s === "pending" || s === "ready" || s === "processing") return `<span class="pill pending">${status || "Pending"}</span>`;
       return `<span class="pill">${status || ""}</span>`;
+    }
+
+    function canRetry(r){
+      const s = (r.seller_payout_status || "").toLowerCase();
+      const hasTransfer = !!(r.stripe_transfer_id || "");
+      const pickedUp = !!r.pickup_confirmed;
+      // retry allowed when: failed/pending/ready/processing? (we'll allow failed/pending/ready)
+      const allowed = ["failed","pending","ready",""];
+      return pickedUp && !hasTransfer && allowed.includes(s);
+    }
+
+    async function retryPayout(recordId){
+      const tok = getToken();
+      if(!tok){
+        setMsg("Locked. Enter admin password then Unlock.", "bad");
+        return;
+      }
+      if(busy.has(recordId)) return;
+
+      const ok = confirm("Retry payout for this listing? This will attempt a Stripe transfer.");
+      if(!ok) return;
+
+      busy.add(recordId);
+      render();
+
+      setMsg(`Retrying payout for ${recordId}…`);
+
+      try{
+        const res = await fetch("/.netlify/functions/retryPayout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${tok}`
+          },
+          body: JSON.stringify({ recordId })
+        });
+
+        const text = await res.text();
+        let data;
+        try{ data = JSON.parse(text); } catch { data = { raw: text }; }
+
+        if(!res.ok){
+          setMsg(`❌ Retry failed\n${JSON.stringify(data, null, 2)}`, "bad");
+        } else {
+          setMsg(`✅ Retry success\n${JSON.stringify(data, null, 2)}`, "ok");
+        }
+
+        // Refresh list after retry
+        await refresh();
+
+      } catch(e){
+        setMsg(`❌ Network/Error: ${e.message}`, "bad");
+      } finally {
+        busy.delete(recordId);
+        render();
+      }
     }
 
     function render(){
@@ -150,22 +213,36 @@
 
       countLine.textContent = `${filtered.length} record(s)`;
 
-      rowsEl.innerHTML = filtered.map(r => `
-        <tr>
-          <td>${pill(r.seller_payout_status)}</td>
-          <td>
-            <div>${r.sellerName || ""}</div>
-            <div class="muted">${r.sellerEmail || ""}</div>
-          </td>
-          <td>${r.itemTitle || ""}</td>
-          <td class="mono">${fmtMoney(r.seller_payout_amount)}</td>
-          <td class="mono">${r.payout_sent_at || ""}</td>
-          <td class="mono">${r.stripe_transfer_id || ""}</td>
-          <td class="mono">${r.pickup_confirmed ? "✅" : "—"} ${r.pickup_confirmed_at || ""}</td>
-          <td class="mono">${r.id}</td>
-          <td class="mono">${r.payout_error || ""}</td>
-        </tr>
-      `).join("");
+      rowsEl.innerHTML = filtered.map(r => {
+        const disabled = !canRetry(r) || busy.has(r.id);
+        const btnLabel = busy.has(r.id) ? "Retrying…" : "Retry payout";
+        return `
+          <tr>
+            <td>
+              <div class="btnInline">
+                <button class="danger small" type="button"
+                  ${disabled ? "disabled" : ""}
+                  onclick="window.__retryPayout('${r.id}')">
+                  ${btnLabel}
+                </button>
+              </div>
+              <div class="muted mono" style="margin-top:6px">${r.id}</div>
+            </td>
+            <td>${pill(r.seller_payout_status)}</td>
+            <td>
+              <div>${r.sellerName || ""}</div>
+              <div class="muted">${r.sellerEmail || ""}</div>
+            </td>
+            <td>${r.itemTitle || ""}</td>
+            <td class="mono">${fmtMoney(r.seller_payout_amount)}</td>
+            <td class="mono">${r.payout_sent_at || ""}</td>
+            <td class="mono">${r.stripe_transfer_id || ""}</td>
+            <td class="mono">${r.pickup_confirmed ? "✅" : "—"} ${r.pickup_confirmed_at || ""}</td>
+            <td class="mono">${r.id}</td>
+            <td class="mono">${r.payout_error || ""}</td>
+          </tr>
+        `;
+      }).join("");
     }
 
     async function refresh(){
@@ -200,6 +277,9 @@
         setMsg(`❌ Network/Error: ${e.message}`, "bad");
       }
     }
+
+    // expose to onclick
+    window.__retryPayout = retryPayout;
 
     // events
     document.getElementById("unlockBtn").addEventListener("click", () => {
