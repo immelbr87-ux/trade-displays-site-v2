@@ -1,6 +1,6 @@
 const Stripe = require("stripe");
 const fetch = require("node-fetch");
-const { addHours, canTransitionStatus } = require("./_lib");
+const { addHours } = require("./_lib");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
