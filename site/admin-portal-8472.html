@@ -2,31 +2,28 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Showroom Market Ops OS</title>
+<title>Showroom Market Ops Dashboard</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body style="font-family:Arial;padding:24px;max-width:1200px;margin:auto;">
 
-<h1>Showroom Market Ops OS</h1>
+<h1>Showroom Market Operations Dashboard</h1>
 
 <input type="password" id="adminToken" placeholder="Admin Password">
 <button onclick="saveToken()">Unlock</button>
 <hr>
 
-<button onclick="loadMetrics()">Refresh Dashboard</button>
+<button onclick="loadDashboard()">Refresh Dashboard</button>
 
-<h2>Financial Overview</h2>
-<canvas id="financeChart"></canvas>
+<h2>Seller Reliability</h2>
+<canvas id="sellerChart"></canvas>
 
-<h2>Pickup Performance</h2>
-<canvas id="pickupChart"></canvas>
+<h2>GMV Trend (Last 30 Days)</h2>
+<canvas id="gmvChart"></canvas>
 
-<h2>Fraud & Failures</h2>
-<canvas id="fraudChart"></canvas>
-
-<h2>Seller Leaderboard</h2>
-<pre id="sellerStats"></pre>
+<h2>Pickup Delay Heatmap</h2>
+<canvas id="delayChart"></canvas>
 
 <script>
 function saveToken(){
@@ -44,38 +41,52 @@ function authedFetch(body){
   }).then(r=>r.json());
 }
 
-let financeChart,pickupChart,fraudChart;
+let sellerChart, gmvChart, delayChart;
 
-async function loadMetrics(){
-  const {metrics}=await authedFetch({action:"get_metrics"});
+async function loadDashboard(){
+  const data = await authedFetch({});
+  const sellers = data.sellers;
+  const gmv = data.gmvByDay;
+  const delays = data.pickupDelays;
 
-  if(financeChart)financeChart.destroy();
-  if(pickupChart)pickupChart.destroy();
-  if(fraudChart)fraudChart.destroy();
-
-  financeChart=new Chart(financeChart=document.getElementById("financeChart"),{
+  // Seller Chart
+  if(sellerChart) sellerChart.destroy();
+  sellerChart = new Chart(document.getElementById("sellerChart"),{
     type:"bar",
-    data:{labels:["GMV","Fees","Payouts Sent","Payouts Pending"],
-    datasets:[{data:[metrics.gmv,metrics.fees,metrics.payouts_sent,metrics.payouts_pending]}]}
+    data:{
+      labels:Object.keys(sellers),
+      datasets:[{
+        label:"Seller Score",
+        data:Object.values(sellers).map(s=>s.score)
+      }]
+    }
   });
 
-  pickupChart=new Chart(document.getElementById("pickupChart"),{
+  // GMV Trend
+  if(gmvChart) gmvChart.destroy();
+  gmvChart = new Chart(document.getElementById("gmvChart"),{
+    type:"line",
+    data:{
+      labels:Object.keys(gmv),
+      datasets:[{
+        label:"GMV",
+        data:Object.values(gmv)
+      }]
+    }
+  });
+
+  // Pickup Delay Heatmap (Histogram)
+  const bins = [0,1,2,3,4,5,7,10];
+  const counts = bins.map((b,i)=>delays.filter(d=>d>=b && d<(bins[i+1]||999)).length);
+
+  if(delayChart) delayChart.destroy();
+  delayChart = new Chart(document.getElementById("delayChart"),{
     type:"bar",
-    data:{labels:["Today Pickups","Week Pickups","Avg Pickup Days"],
-    datasets:[{data:[metrics.today_pickups,metrics.week_pickups,metrics.avg_pickup_days]}]}
+    data:{
+      labels:["0-1d","1-2d","2-3d","3-4d","4-5d","5-7d","7-10d","10+d"],
+      datasets:[{label:"Pickup Delay Distribution",data:counts}]
+    }
   });
-
-  fraudChart=new Chart(document.getElementById("fraudChart"),{
-    type:"doughnut",
-    data:{labels:["Fraud Attempts","Pickup Failures"],
-    datasets:[{data:[metrics.fraud_attempts,metrics.pickup_failures]}]}
-  });
-
-  let sellerText="";
-  Object.entries(metrics.sellers).forEach(([s,d])=>{
-    sellerText+=`${s}: ${d.sales} sales\n`;
-  });
-  document.getElementById("sellerStats").textContent=sellerText;
 }
 </script>
 
