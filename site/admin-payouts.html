@@ -31,11 +31,25 @@
     .muted{opacity:.8}
     .btnInline{display:flex;gap:8px;flex-wrap:wrap}
     .small{padding:8px 10px;font-size:12px;border-radius:9px}
+    a{color:#9fc0ff;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .topNote{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Seller Payout History</h1>
+    <div class="topNote">
+      <h1>Seller Payout History</h1>
+      <div class="row" style="margin:0">
+        <div style="min-width:180px">
+          <label>Stripe mode</label>
+          <select id="stripeMode">
+            <option value="live">Live</option>
+            <option value="test">Test</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
     <div class="card">
       <div class="row">
@@ -82,7 +96,7 @@
               <th>Item</th>
               <th>Amount</th>
               <th>Payout Sent</th>
-              <th>Transfer ID</th>
+              <th>Transfer</th>
               <th>Pickup</th>
               <th>Listing ID</th>
               <th>Error</th>
@@ -95,7 +109,9 @@
   </div>
 
   <script>
-    const TOKEN_KEY = "smk_admin_token"; // shared with pickup-scan.html
+    const TOKEN_KEY = "smk_admin_token";
+    const MODE_KEY  = "smk_stripe_mode";
+
     const adminTokenEl = document.getElementById("adminToken");
     const authStatusEl = document.getElementById("authStatus");
     const msgEl = document.getElementById("msg");
@@ -103,9 +119,10 @@
     const searchBox = document.getElementById("searchBox");
     const rowsEl = document.getElementById("rows");
     const countLine = document.getElementById("countLine");
+    const stripeModeEl = document.getElementById("stripeMode");
 
     let allRecords = [];
-    const busy = new Set(); // recordIds currently retrying
+    const busy = new Set();
 
     function setMsg(text, cls="") {
       msgEl.className = "status " + cls;
@@ -117,6 +134,13 @@
       if(!t) sessionStorage.removeItem(TOKEN_KEY);
       else sessionStorage.setItem(TOKEN_KEY, t);
       refreshAuthUI();
+    }
+
+    function getStripeMode(){
+      return localStorage.getItem(MODE_KEY) || "live";
+    }
+    function setStripeMode(m){
+      localStorage.setItem(MODE_KEY, m);
     }
 
     function refreshAuthUI(){
@@ -148,9 +172,15 @@
       const s = (r.seller_payout_status || "").toLowerCase();
       const hasTransfer = !!(r.stripe_transfer_id || "");
       const pickedUp = !!r.pickup_confirmed;
-      // retry allowed when: failed/pending/ready/processing? (we'll allow failed/pending/ready)
       const allowed = ["failed","pending","ready",""];
       return pickedUp && !hasTransfer && allowed.includes(s);
+    }
+
+    function stripeTransferUrl(transferId){
+      if(!transferId) return "";
+      const mode = getStripeMode();
+      if(mode === "test") return `https://dashboard.stripe.com/test/transfers/${encodeURIComponent(transferId)}`;
+      return `https://dashboard.stripe.com/transfers/${encodeURIComponent(transferId)}`;
     }
 
     async function retryPayout(recordId){
@@ -189,7 +219,6 @@
           setMsg(`✅ Retry success\n${JSON.stringify(data, null, 2)}`, "ok");
         }
 
-        // Refresh list after retry
         await refresh();
 
       } catch(e){
@@ -216,6 +245,13 @@
       rowsEl.innerHTML = filtered.map(r => {
         const disabled = !canRetry(r) || busy.has(r.id);
         const btnLabel = busy.has(r.id) ? "Retrying…" : "Retry payout";
+
+        const transferId = r.stripe_transfer_id || "";
+        const transferLink = transferId
+          ? `<div class="mono">${transferId}</div>
+             <div><a href="${stripeTransferUrl(transferId)}" target="_blank" rel="noopener">View in Stripe →</a></div>`
+          : `<div class="mono muted">—</div>`;
+
         return `
           <tr>
             <td>
@@ -236,7 +272,7 @@
             <td>${r.itemTitle || ""}</td>
             <td class="mono">${fmtMoney(r.seller_payout_amount)}</td>
             <td class="mono">${r.payout_sent_at || ""}</td>
-            <td class="mono">${r.stripe_transfer_id || ""}</td>
+            <td>${transferLink}</td>
             <td class="mono">${r.pickup_confirmed ? "✅" : "—"} ${r.pickup_confirmed_at || ""}</td>
             <td class="mono">${r.id}</td>
             <td class="mono">${r.payout_error || ""}</td>
@@ -278,7 +314,6 @@
       }
     }
 
-    // expose to onclick
     window.__retryPayout = retryPayout;
 
     // events
@@ -301,7 +336,14 @@
     statusSel.addEventListener("change", refresh);
     searchBox.addEventListener("input", render);
 
+    stripeModeEl.addEventListener("change", () => {
+      setStripeMode(stripeModeEl.value);
+      render();
+      setMsg(`Stripe mode set to: ${stripeModeEl.value}`, "ok");
+    });
+
     // init
+    stripeModeEl.value = getStripeMode();
     refreshAuthUI();
     setMsg("Waiting…");
   </script>
