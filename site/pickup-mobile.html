@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Showroom Market Pickup</title>
+</head>
+<body style="font-family:Arial;padding:20px;text-align:center">
+
+<h2>Pickup Verification</h2>
+
+<input type="password" id="adminToken" placeholder="Admin Password" style="width:90%;padding:10px;"><br><br>
+
+<input id="payload" placeholder="Scan or paste QR" style="width:90%;padding:15px;font-size:18px;"><br><br>
+
+<button onclick="verify()" style="padding:15px 25px;font-size:18px;background:#000;color:#fff;">Confirm Pickup</button>
+
+<pre id="out" style="margin-top:20px;background:#111;color:#0f0;padding:15px;"></pre>
+
+<script>
+function authedFetch(body){
+  return fetch("/.netlify/functions/admin",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":`Bearer ${document.getElementById("adminToken").value}`
+    },
+    body:JSON.stringify(body)
+  }).then(r=>r.json());
+}
+
+async function verify(){
+  const payload=document.getElementById("payload").value;
+  const res=await authedFetch({action:"verify_pickup_and_payout",payload});
+  document.getElementById("out").textContent=JSON.stringify(res,null,2);
+}
+</script>
+
+</body>
+</html>
