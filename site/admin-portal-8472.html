@@ -4,373 +4,56 @@
   <meta charset="UTF-8" />
   <title>Admin – Seller Onboarding + Payout</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 24px; max-width: 980px; margin: 0 auto; }
-    h1 { font-size: 22px; margin: 6px 0 10px; }
-    h2 { font-size: 18px; margin: 0 0 10px; }
-    .small { color:#666; font-size:14px; line-height:1.4; }
-    .card { border:1px solid #e5e5e5; border-radius:14px; padding:16px; margin-top:14px; background:#fff; }
-    label { display:block; font-weight:650; margin: 12px 0 6px; }
-    input { width:100%; max-width: 560px; padding:10px 12px; font-size:16px; border:1px solid #ddd; border-radius:10px; }
-    button { padding:10px 14px; font-size:16px; border:1px solid #111; border-radius:10px; background:#111; color:#fff; cursor:pointer; }
-    button.secondary { background:#fff; color:#111; }
-    button:disabled { opacity:0.5; cursor:not-allowed; }
-    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px; }
-    .status { margin-top:12px; padding:12px; border:1px solid #eee; border-radius:10px; background:#fafafa; white-space:pre-wrap; }
-    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px 18px; margin-top: 10px; }
-    .kv { padding:10px; border:1px solid #eee; border-radius:12px; background:#fcfcfc; }
-    .k { font-size:12px; color:#666; margin-bottom:4px; }
-    .v { font-size:15px; font-weight:650; overflow-wrap:anywhere; }
-    code { background:#f3f3f3; padding:2px 6px; border-radius:6px; }
-  </style>
 </head>
-<body>
+<body style="font-family: Arial; padding: 30px; max-width: 900px; margin:auto;">
 
-<!-- 🔐 PASSWORD GATE (server-validated; no secret stored here) -->
-<div id="gate" style="position:fixed;inset:0;background:#0b0b0b;display:flex;align-items:center;justify-content:center;z-index:99999;">
-  <div style="width:min(520px,92vw);background:#111;border:1px solid #2a2a2a;border-radius:16px;padding:18px;color:#fff;">
-    <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Admin Access Required</div>
-    <div style="color:#bdbdbd;font-size:14px;line-height:1.35;margin-bottom:10px;">
-      Enter the admin passcode (checked server-side). Token expires ~30 minutes.
-    </div>
-    <input id="gatePass" type="password" placeholder="Enter Admin Passcode"
-      style="width:100%;padding:12px;border-radius:12px;border:1px solid #333;background:#0b0b0b;color:#fff;font-size:16px;" />
-    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
-      <button id="gateBtn" style="padding:10px 14px;border-radius:12px;border:1px solid #fff;background:#fff;color:#111;font-weight:700;cursor:pointer;">Unlock</button>
-      <div id="gateMsg" style="color:#ffb4b4;font-size:14px;"></div>
-    </div>
-    <div style="margin-top:12px;color:#9a9a9a;font-size:12px;">
-      If you get “Session expired”, just re-enter passcode.
-    </div>
-  </div>
-</div>
-
-<div id="adminApp" style="display:none;">
-
-  <h1>Admin – Seller Onboarding + Payout</h1>
-  <p class="small">All admin actions are token-protected. No secrets are embedded in this file.</p>
-
-  <div class="card">
-    <h2>1) Load Listing Record</h2>
-    <p class="small">Paste Airtable <code>recordId</code> (starts with <code>rec</code>) then click Load.</p>
-
-    <label for="recordId">recordId</label>
-    <input id="recordId" placeholder="recXXXXXXXXXXXXXX" />
-
-    <div class="row">
-      <button id="loadRecordBtn" class="secondary">Load record</button>
-      <button id="saveRecordIdBtn" class="secondary">Save recordId</button>
-      <button id="clearSavedBtn" class="secondary">Clear saved</button>
-      <button id="logoutBtn" class="secondary">Logout</button>
-    </div>
-
-    <div id="recordStatus" class="status">Status: waiting…</div>
-
-    <div class="card" style="margin-top:14px;">
-      <h2 style="margin:0;">Record Summary</h2>
-      <div class="grid">
-        <div class="kv"><div class="k">Listing status</div><div class="v" id="sum_status">—</div></div>
-        <div class="kv"><div class="k">Pickup confirmed</div><div class="v" id="sum_pickup">—</div></div>
-        <div class="kv"><div class="k">Payout status</div><div class="v" id="sum_payout_status">—</div></div>
-        <div class="kv"><div class="k">Seller payout amount</div><div class="v" id="sum_payout_amount">—</div></div>
-        <div class="kv"><div class="k">Stripe account id</div><div class="v" id="sum_stripe_acct">—</div></div>
-        <div class="kv"><div class="k">Stripe transfer id</div><div class="v" id="sum_transfer">—</div></div>
-        <div class="kv"><div class="k">Payout sent at</div><div class="v" id="sum_sent_at">—</div></div>
-        <div class="kv"><div class="k">Seller</div><div class="v" id="sum_seller">—</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>2) Seller Stripe Onboarding</h2>
-    <p class="small">Creates a Stripe Connect Express account and saves <code>stripe_account_id</code> into Airtable for this record, then redirects to Stripe onboarding.</p>
-
-    <label for="sellerName">Seller name</label>
-    <input id="sellerName" placeholder="Showroom LLC" />
-
-    <label for="sellerEmail">Seller email</label>
-    <input id="sellerEmail" placeholder="seller@email.com" />
-
-    <div class="row">
-      <button id="startOnboardingBtn">Start Stripe Onboarding</button>
-    </div>
-
-    <div id="onboardingStatus" class="status">Status: waiting…</div>
-  </div>
-
-  <div class="card">
-    <h2>3) Send Seller Payout</h2>
-    <p class="small">Button disables automatically unless eligible.</p>
-
-    <label>Stripe account id (auto-filled)</label>
-    <input id="stripeAccountId" placeholder="acct_xxxxxxxxxx" />
-
-    <label>Payout amount USD (auto-filled)</label>
-    <input id="payoutAmount" placeholder="250.00" />
-
-    <div class="row">
-      <button id="sendPayoutBtn">Send Payout</button>
-      <button id="refreshEligibilityBtn" class="secondary">Refresh</button>
-    </div>
-
-    <div id="payoutStatus" class="status">Status: waiting…</div>
-  </div>
-
-</div>
+<h1>Admin – Seller Onboarding + Payout</h1>
 
 <script>
-  const $ = (id) => document.getElementById(id);
+const ADMIN_TOKEN = "showroommarket_admin_92XkL0pQ7z!"; // 🔐 MUST MATCH NETLIFY ENV
 
-  const gate = $("gate");
-  const adminApp = $("adminApp");
-  const gatePass = $("gatePass");
-  const gateBtn = $("gateBtn");
-  const gateMsg = $("gateMsg");
-
-  const recordStatus = $("recordStatus");
-  const onboardingStatus = $("onboardingStatus");
-  const payoutStatus = $("payoutStatus");
-
-  let cachedListing = null;
-
-  function setStatus(el, msg) { el.textContent = msg; }
-
-  function setSummary(data) {
-    $("sum_status").textContent = data?.status ?? "—";
-    $("sum_pickup").textContent = data ? (data.pickup_confirmed ? "Yes" : "No") : "—";
-    $("sum_payout_status").textContent = data?.seller_payout_status ?? "—";
-    $("sum_payout_amount").textContent = (typeof data?.seller_payout_amount === "number") ? `$${data.seller_payout_amount.toFixed(2)}` : "—";
-    $("sum_stripe_acct").textContent = data?.stripe_account_id ?? "—";
-    $("sum_transfer").textContent = data?.stripe_transfer_id ?? "—";
-    $("sum_sent_at").textContent = data?.payout_sent_at ?? "—";
-    $("sum_seller").textContent = [data?.seller_name, data?.seller_email].filter(Boolean).join(" • ") || "—";
-  }
-
-  function applyPayoutAutofill(data) {
-    $("stripeAccountId").value = data?.stripe_account_id || "";
-    $("payoutAmount").value = (typeof data?.seller_payout_amount === "number") ? data.seller_payout_amount.toFixed(2) : "";
-  }
-
-  function applyEligibility(data) {
-    const btn = $("sendPayoutBtn");
-
-    if (!data) { btn.disabled = true; return; }
-
-    const ok =
-      data.pickup_confirmed === true &&
-      data.seller_payout_status !== "Paid" &&
-      !!data.stripe_account_id &&
-      typeof data.seller_payout_amount === "number" &&
-      data.seller_payout_amount > 0;
-
-    btn.disabled = !ok;
-
-    if (ok) setStatus(payoutStatus, "Status: Eligible ✅");
-    else {
-      const reasons = [];
-      if (!data.pickup_confirmed) reasons.push("pickup_confirmed is false");
-      if (data.seller_payout_status === "Paid") reasons.push("already Paid");
-      if (!data.stripe_account_id) reasons.push("missing stripe_account_id");
-      if (!(typeof data.seller_payout_amount === "number" && data.seller_payout_amount > 0)) reasons.push("invalid seller_payout_amount");
-      setStatus(payoutStatus, "Status: Not eligible ❌\n" + reasons.join("\n"));
-    }
-  }
-
-  function getRecordId() {
-    const id = ($("recordId").value || "").trim();
-    if (!id.startsWith("rec")) throw new Error("Please enter a valid recordId (starts with rec…).");
-    return id;
-  }
-
-  function getToken() {
-    return sessionStorage.getItem("admin_token") || "";
-  }
-
-  async function authedFetch(url, options = {}) {
-    const token = getToken();
-    if (!token) throw new Error("Missing admin token. Please re-login.");
-
-    const headers = Object.assign({}, options.headers || {}, {
-      Authorization: `Bearer ${token}`
-    });
-
-    const res = await fetch(url, Object.assign({}, options, { headers }));
-
-    if (res.status === 403) {
-      sessionStorage.removeItem("admin_token");
-      sessionStorage.removeItem("admin_unlocked");
-      gate.style.display = "flex";
-      adminApp.style.display = "none";
-      throw new Error("Session expired. Please re-enter passcode.");
-    }
-
-    return res;
-  }
-
-  async function login(passcode) {
-    const res = await fetch("/.netlify/functions/issueAdminToken", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ passcode })
-    });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Login failed");
-
-    sessionStorage.setItem("admin_token", data.token);
-    sessionStorage.setItem("admin_unlocked", "1");
-  }
-
-  async function tryUnlock() {
-    try {
-      gateMsg.textContent = "";
-      const passcode = (gatePass.value || "").trim();
-      if (!passcode) { gateMsg.textContent = "Enter passcode."; return; }
-
-      gateMsg.textContent = "Checking…";
-      await login(passcode);
-
-      gate.style.display = "none";
-      adminApp.style.display = "block";
-      gatePass.value = "";
-      gateMsg.textContent = "";
-    } catch (e) {
-      gateMsg.textContent = e.message;
-      gatePass.value = "";
-      gatePass.focus();
-    }
-  }
-
-  gateBtn.addEventListener("click", tryUnlock);
-  gatePass.addEventListener("keydown", (e) => { if (e.key === "Enter") tryUnlock(); });
-
-  $("logoutBtn").addEventListener("click", () => {
-    sessionStorage.removeItem("admin_token");
-    sessionStorage.removeItem("admin_unlocked");
-    gate.style.display = "flex";
-    adminApp.style.display = "none";
-    setStatus(recordStatus, "Status: logged out");
-  });
-
-  // Restore saved recordId
-  (function init() {
-    const saved = localStorage.getItem("admin_recordId");
-    if (saved) $("recordId").value = saved;
-
-    setStatus(recordStatus, "Status: waiting…");
-    $("sendPayoutBtn").disabled = true;
-
-    if (sessionStorage.getItem("admin_unlocked") === "1" && getToken()) {
-      gate.style.display = "none";
-      adminApp.style.display = "block";
-    }
-  })();
-
-  $("saveRecordIdBtn").addEventListener("click", () => {
-    try {
-      const recordId = getRecordId();
-      localStorage.setItem("admin_recordId", recordId);
-      setStatus(recordStatus, `Status: saved recordId\n${recordId}`);
-    } catch(e) {
-      setStatus(recordStatus, "Status: ❌ " + e.message);
-    }
-  });
-
-  $("clearSavedBtn").addEventListener("click", () => {
-    localStorage.removeItem("admin_recordId");
-    $("recordId").value = "";
-    cachedListing = null;
-    setSummary(null);
-    applyPayoutAutofill(null);
-    applyEligibility(null);
-    setStatus(recordStatus, "Status: cleared saved recordId");
-  });
-
-  async function loadRecord() {
-    const recordId = getRecordId();
-    setStatus(recordStatus, "Status: Loading…");
-
-    const res = await authedFetch(`/.netlify/functions/getListingAdmin?recordId=${encodeURIComponent(recordId)}`, { method: "GET" });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `Load failed (${res.status})`);
-
-    cachedListing = data;
-    setStatus(recordStatus, "Status: Loaded ✅");
-    setSummary(data);
-    applyPayoutAutofill(data);
-    applyEligibility(data);
-  }
-
-  $("loadRecordBtn").addEventListener("click", () => loadRecord().catch(e => setStatus(recordStatus, "Status: ❌ " + e.message)));
-  $("refreshEligibilityBtn").addEventListener("click", () => loadRecord().catch(e => setStatus(recordStatus, "Status: ❌ " + e.message)));
-
-  // ✅ TOKEN-PROTECTED ONBOARDING (FULLY UPDATED)
-  $("startOnboardingBtn").addEventListener("click", async () => {
-    try {
-      const recordId = getRecordId();
-      const sellerName = ($("sellerName").value || "").trim();
-      const sellerEmail = ($("sellerEmail").value || "").trim();
-      if (!sellerEmail) throw new Error("Seller email is required.");
-
-      setStatus(onboardingStatus, "Status: Creating Stripe Connect account…");
-
-      const accountRes = await authedFetch("/.netlify/functions/createConnectAccount", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sellerName, sellerEmail, recordId })
-      });
-
-      const accountData = await accountRes.json().catch(() => ({}));
-      if (!accountRes.ok) throw new Error(accountData.error || `Failed (${accountRes.status})`);
-      if (!accountData.stripe_account_id) throw new Error("No stripe_account_id returned.");
-
-      setStatus(onboardingStatus, `Status: Account created + saved ✅\nstripe_account_id: ${accountData.stripe_account_id}\nGenerating onboarding link…`);
-
-      const linkRes = await authedFetch("/.netlify/functions/createOnboardingLink", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stripe_account_id: accountData.stripe_account_id })
-      });
-
-      const linkData = await linkRes.json().catch(() => ({}));
-      if (!linkRes.ok) throw new Error(linkData.error || `Failed (${linkRes.status})`);
-      if (!linkData.url) throw new Error("No onboarding URL returned.");
-
-      setStatus(onboardingStatus, "Status: Redirecting to Stripe onboarding…");
-      window.location.href = linkData.url;
-
-    } catch (err) {
-      console.error(err);
-      setStatus(onboardingStatus, "Status: ❌ " + err.message);
-    }
-  });
-
-  // Payout (token-protected)
-  $("sendPayoutBtn").addEventListener("click", async () => {
-    try {
-      const recordId = getRecordId();
-      if (!cachedListing) throw new Error("Load the record first.");
-      if ($("sendPayoutBtn").disabled) throw new Error("Not eligible for payout.");
-
-      setStatus(payoutStatus, "Status: Sending payout…");
-
-      const res = await authedFetch("/.netlify/functions/sendSellerPayout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recordId })
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || `Payout failed (${res.status})`);
-
-      setStatus(payoutStatus, `Status: ✅ Success\ntransferId: ${data.transferId || "—"}`);
-      await loadRecord();
-    } catch (err) {
-      console.error(err);
-      setStatus(payoutStatus, "Status: ❌ " + err.message);
-    }
-  });
+function authedFetch(url, options = {}) {
+  options.headers = {
+    ...(options.headers || {}),
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${ADMIN_TOKEN}`
+  };
+  return fetch(url, options);
+}
 </script>
 
-</body>
-</html>
+<hr>
+
+<h2>Load Listing</h2>
+<input id="recordId" placeholder="recXXXXXXXXXXXX" style="width:300px;">
+<button onclick="loadRecord()">Load</button>
+<pre id="recordOutput"></pre>
+
+<hr>
+
+<h2>Seller Onboarding</h2>
+<input id="sellerName" placeholder="Seller Name"><br><br>
+<input id="sellerEmail" placeholder="Seller Email"><br><br>
+<button onclick="startOnboarding()">Start Stripe Onboarding</button>
+<pre id="onboardingOutput"></pre>
+
+<hr>
+
+<h2>Send Seller Payout</h2>
+<button onclick="releasePayout()">Release Payout</button>
+<pre id="payoutOutput"></pre>
+
+<script>
+async function loadRecord() {
+  const id = document.getElementById("recordId").value;
+  const res = await authedFetch(`/.netlify/functions/getListingAdmin?recordId=${id}`);
+  const data = await res.json();
+  document.getElementById("recordOutput").textContent = JSON.stringify(data, null, 2);
+}
+
+async function startOnboarding() {
+  const recordId = document.getElementById("recordId").value;
+  const sellerName = document.getElementById("sellerName").value;
+  const sellerEmail = document.getElementById("sellerEmail").value;
+
+  const acco
