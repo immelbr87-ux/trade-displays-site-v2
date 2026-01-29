@@ -34,6 +34,7 @@
     let currentDisplay = null;
     let selectedDuration = 1; // weeks
     let currentImageIndex = 0;
+    let reserveInProgress = false; // ✅ prevents double-click
 
     // Get display ID from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -48,15 +49,25 @@
 
       try {
         const response = await fetch(`/.netlify/functions/listDisplays`);
+        if (!response.ok) throw new Error(`listDisplays failed: ${response.status}`);
         const data = await response.json();
-        
-        currentDisplay = data.displays.find(d => d.id === displayId);
-        
+
+        const list = Array.isArray(data.displays) ? data.displays : [];
+        currentDisplay = list.find(d => d.id === displayId);
+
         if (!currentDisplay) {
           showError();
           return;
         }
-        
+
+        // ✅ If backend includes status/locked, respect it
+        const status = String(currentDisplay.status || '').toLowerCase();
+        const locked = currentDisplay.locked === true;
+        if (locked || (status && status !== 'active')) {
+          showError();
+          return;
+        }
+
         renderDisplayDetails();
       } catch (error) {
         console.error('Error loading display:', error);
@@ -81,7 +92,7 @@
         <!-- Product Gallery -->
         <div class="product-gallery">
           <div class="main-image" id="mainImage">
-            <img src="${images[0]}" alt="${currentDisplay.name}">
+            <img src="${images[0]}" alt="${currentDisplay.name || ''}">
           </div>
           <div class="thumbnail-grid">
             ${images.map((img, index) => `
@@ -98,15 +109,15 @@
             ${currentDisplay.listingType === 'rent' ? 'Available for Rent' : 'For Sale'}
           </div>
           
-          <h1>${currentDisplay.name}</h1>
-          <p class="product-sku">SKU: ${currentDisplay.id}</p>
+          <h1>${currentDisplay.name || 'Unnamed Product'}</h1>
+          <p class="product-sku">SKU: ${currentDisplay.id || ''}</p>
           
           <!-- Price Box -->
           <div class="price-box">
             <div class="price-label">
               ${currentDisplay.listingType === 'rent' ? 'Weekly Rental Price' : 'Purchase Price'}
             </div>
-            <div class="price-amount">$${currentDisplay.price.toLocaleString()}</div>
+            <div class="price-amount">$${Number(currentDisplay.price || 0).toLocaleString()}</div>
             ${currentDisplay.listingType === 'buy' ? `
               <div class="price-trend">↑ 5% above market average</div>
             ` : ''}
@@ -117,22 +128,22 @@
             ${currentDisplay.listingType === 'rent' ? `
               <h3>Select Rental Duration</h3>
               <div class="rental-duration">
-                <button class="duration-btn active" onclick="selectDuration(1)">
+                <button class="duration-btn active" onclick="selectDuration(1, event)">
                   <div style="font-weight: 800; font-size: 1.25rem;">1 Week</div>
-                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${currentDisplay.price}</div>
+                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${Number(currentDisplay.price || 0)}</div>
                 </button>
-                <button class="duration-btn" onclick="selectDuration(2)">
+                <button class="duration-btn" onclick="selectDuration(2, event)">
                   <div style="font-weight: 800; font-size: 1.25rem;">2 Weeks</div>
-                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${(currentDisplay.price * 1.8).toLocaleString()}</div>
+                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${(Number(currentDisplay.price || 0) * 1.8).toLocaleString()}</div>
                 </button>
-                <button class="duration-btn" onclick="selectDuration(4)">
+                <button class="duration-btn" onclick="selectDuration(4, event)">
                   <div style="font-weight: 800; font-size: 1.25rem;">1 Month</div>
-                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${(currentDisplay.price * 3.5).toLocaleString()}</div>
+                  <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">$${(Number(currentDisplay.price || 0) * 3.5).toLocaleString()}</div>
                 </button>
               </div>
             ` : ''}
             
-            <button class="btn btn-primary w-full" onclick="handleReserve()" style="padding: 1.25rem; font-size: 1.125rem;">
+            <button id="reserveBtn" class="btn btn-primary w-full" onclick="handleReserve()" style="padding: 1.25rem; font-size: 1.125rem;">
               ${currentDisplay.listingType === 'rent' ? 'Reserve Display' : 'Make Offer'}
             </button>
             
@@ -147,11 +158,11 @@
             <div class="specs-grid">
               <div class="spec-item">
                 <div class="spec-label">Display Size</div>
-                <div class="spec-value">${currentDisplay.size}</div>
+                <div class="spec-value">${currentDisplay.size || 'N/A'}</div>
               </div>
               <div class="spec-item">
                 <div class="spec-label">Condition</div>
-                <div class="spec-value">${currentDisplay.condition}</div>
+                <div class="spec-value">${currentDisplay.condition || 'N/A'}</div>
               </div>
               <div class="spec-item">
                 <div class="spec-label">Type</div>
@@ -247,7 +258,7 @@
     function changeImage(index) {
       currentImageIndex = index;
       const mainImage = document.getElementById('mainImage');
-      mainImage.innerHTML = `<img src="${window.displayImages[index]}" alt="${currentDisplay.name}">`;
+      mainImage.innerHTML = `<img src="${window.displayImages[index]}" alt="${currentDisplay.name || ''}">`;
       
       // Update thumbnail active state
       document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
@@ -255,11 +266,12 @@
       });
     }
 
-    // Select rental duration
-    function selectDuration(weeks) {
+    // Select rental duration (✅ fixed: event passed explicitly)
+    function selectDuration(weeks, evt) {
       selectedDuration = weeks;
       document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.closest('.duration-btn').classList.add('active');
+      const targetBtn = (evt && evt.target) ? evt.target.closest('.duration-btn') : null;
+      if (targetBtn) targetBtn.classList.add('active');
     }
 
     // Switch tabs
@@ -272,9 +284,17 @@
       });
     }
 
-    // Handle reserve/buy
+    // Handle reserve/buy (✅ double-click guard)
     function handleReserve() {
       if (!currentDisplay) return;
+      if (reserveInProgress) return;
+      reserveInProgress = true;
+
+      const btn = document.getElementById('reserveBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = (currentDisplay.listingType === 'rent') ? 'Reserving…' : 'Preparing…';
+      }
       
       // Prepare reservation data
       const reservationData = {
@@ -302,7 +322,7 @@
         2: 1.8,
         4: 3.5
       };
-      return Math.round(weeklyPrice * (multipliers[weeks] || weeks));
+      return Math.round(Number(weeklyPrice || 0) * (multipliers[weeks] || weeks));
     }
 
     // Show error state
