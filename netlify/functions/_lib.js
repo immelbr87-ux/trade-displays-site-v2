@@ -1,6 +1,9 @@
 // netlify/functions/_lib.js
 const fetch = require("node-fetch");
 
+/* ===============================
+   📦 Standard JSON Response
+   =============================== */
 function json(statusCode, body) {
   return {
     statusCode,
@@ -12,6 +15,9 @@ function json(statusCode, body) {
   };
 }
 
+/* ===============================
+   🔐 Admin Authentication
+   =============================== */
 function getAuthToken(event) {
   const h = event.headers || {};
   const auth = h.authorization || h.Authorization || "";
@@ -27,6 +33,9 @@ function requireAdmin(event) {
   return { ok: true };
 }
 
+/* ===============================
+   📋 Airtable Helpers
+   =============================== */
 async function airtableGetRecord({ baseId, table, recordId, apiKey }) {
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}/${recordId}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } });
@@ -74,6 +83,9 @@ async function airtableQuery({ baseId, table, apiKey, params }) {
   return data;
 }
 
+/* ===============================
+   🧠 Field Helper
+   =============================== */
 function pick(fields, names, fallback = "") {
   for (const n of names) {
     const v = fields?.[n];
@@ -82,6 +94,48 @@ function pick(fields, names, fallback = "") {
   return fallback;
 }
 
+/* ===============================
+   🔐 Marketplace Safety Rules
+   =============================== */
+
+const ALLOWED_STATUS_TRANSITIONS = {
+  "Active": ["Reserved"],
+  "Reserved": ["Paid – Pending Pickup"],
+  "Paid – Pending Pickup": ["Picked Up"],
+  "Picked Up": ["Payout Sent"],
+};
+
+function canTransitionStatus(from, to) {
+  if (!from || !to) return false;
+  if (!ALLOWED_STATUS_TRANSITIONS[from]) return false;
+  return ALLOWED_STATUS_TRANSITIONS[from].includes(to);
+}
+
+function addHours(date, hours) {
+  return new Date(new Date(date).getTime() + hours * 60 * 60 * 1000);
+}
+
+function isPayoutAllowed(recordFields) {
+  if (!recordFields) return { ok: false, reason: "Missing record" };
+
+  if (recordFields.chargeback_flag)
+    return { ok: false, reason: "Chargeback exists" };
+
+  if (!recordFields.pickup_confirmed)
+    return { ok: false, reason: "Pickup not confirmed" };
+
+  if (!recordFields.payout_eligible_at)
+    return { ok: false, reason: "Missing payout hold date" };
+
+  if (new Date() < new Date(recordFields.payout_eligible_at))
+    return { ok: false, reason: "Hold window not complete" };
+
+  return { ok: true };
+}
+
+/* ===============================
+   📦 Exports
+   =============================== */
 module.exports = {
   json,
   requireAdmin,
@@ -89,4 +143,7 @@ module.exports = {
   airtablePatchRecord,
   airtableQuery,
   pick,
+  canTransitionStatus,
+  addHours,
+  isPayoutAllowed,
 };
