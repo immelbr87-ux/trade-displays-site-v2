@@ -10,9 +10,18 @@
 # ===============================
 # Scheduled Functions
 # ===============================
-# Runs every hour to auto-release eligible payouts
+
+# Existing payout release job (kept)
 [functions."autoReleasePayouts"]
   schedule = "0 * * * *"
+
+# NEW — Releases payouts after 24h fraud hold
+[functions."releaseHeldPayouts"]
+  schedule = "*/15 * * * *"
+
+# NEW — Refunds orders if pickup never confirmed
+[functions."refundUnclaimedOrders"]
+  schedule = "0 */6 * * *"
 
 # ===============================
 # Security Headers
