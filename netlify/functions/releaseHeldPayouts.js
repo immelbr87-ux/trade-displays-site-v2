@@ -1,14 +1,36 @@
 // netlify/functions/releaseHeldPayouts.js
 const Stripe = require("stripe");
 const fetch = require("node-fetch");
-const { json, airtableQuery, airtablePatchRecord, isPayoutAllowed, canTransitionStatus } = require("./_lib");
+const {
+  json,
+  airtableQuery,
+  airtablePatchRecord,
+  isPayoutAllowed,
+  canTransitionStatus,
+} = require("./_lib");
 
 console.log("releaseHeldPayouts loaded");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+function requireEnv(name) {
+  const v = process.env[name];
+  if (!v || String(v).trim() === "") throw new Error(`Missing env var: ${name}`);
+  return v;
+}
+
 exports.handler = async () => {
-  console.log("releaseHeldPayouts job start");
+  const startedAt = new Date().toISOString();
+  console.log("releaseHeldPayouts job start", { startedAt });
+
+  try {
+    requireEnv("STRIPE_SECRET_KEY");
+    requireEnv("AIRTABLE_BASE_ID");
+    requireEnv("AIRTABLE_API_KEY");
+  } catch (e) {
+    console.error("releaseHeldPayouts env error", e.message);
+    return json(500, { error: e.message });
+  }
 
   try {
     const records = await airtableQuery({
@@ -16,83 +38,126 @@ exports.handler = async () => {
       table: "Listings",
       apiKey: process.env.AIRTABLE_API_KEY,
       params: {
-        // eligible = pickup confirmed AND hold window complete AND not already paid
-        filterByFormula: `AND({pickup_confirmed}=TRUE(), {seller_payout_status}!='Paid')`
-      }
+        // Only Pending to avoid accidentally paying blocked/other states
+        filterByFormula: `AND({pickup_confirmed}=TRUE(), {seller_payout_status}='Pending')`,
+      },
     });
 
-    console.log("Candidates:", records.records?.length || 0);
+    const total = records.records?.length || 0;
+    console.log("releaseHeldPayouts candidates", { total });
+
+    let processed = 0;
+    let skipped = 0;
+    let failed = 0;
 
     for (const rec of records.records || []) {
       const f = rec.fields || {};
+      const listingId = rec.id;
 
-      if (!f.seller_payout_amount || !f.stripe_account_id) continue;
+      const payoutAmount = Number(f.seller_payout_amount);
+      const destination = String(f.stripe_account_id || "").trim();
+      const status = String(f.status || "").trim();
 
-      // Ensure hold complete + no chargeback + pickup confirmed + payout_eligible_at in past
+      if (!payoutAmount || isNaN(payoutAmount) || payoutAmount <= 0 || !destination) {
+        skipped++;
+        console.log("Skipping (missing payout data)", { listingId });
+        continue;
+      }
+
       const allowed = isPayoutAllowed(f);
       if (!allowed.ok) {
-        console.log("Skipping (not allowed):", rec.id, allowed.reason);
+        skipped++;
+        console.log("Skipping (not allowed)", { listingId, reason: allowed.reason });
         continue;
       }
 
-      // Ensure status transition is valid
-      if (!canTransitionStatus(f.status, "Payout Sent")) {
-        console.log("Skipping (bad status transition):", rec.id, f.status);
+      if (!canTransitionStatus(status, "Payout Sent")) {
+        skipped++;
+        console.log("Skipping (bad status transition)", { listingId, status });
         continue;
       }
 
-      console.log("Creating transfer:", rec.id);
+      const amountCents = Math.round(payoutAmount * 100);
+      const idempotencyKey = `payout_${listingId}_${destination}_${amountCents}`;
 
-      const transfer = await stripe.transfers.create({
-        amount: Math.round(Number(f.seller_payout_amount) * 100),
-        currency: "usd",
-        destination: f.stripe_account_id,
-        description: `Showroom Market payout for ${rec.id}`,
-        metadata: { listingId: rec.id },
-      });
+      try {
+        console.log("Creating transfer", { listingId, amountCents, destination, idempotencyKey });
 
-      // Optional: seller email notification
-      if (process.env.MAILERSEND_API_KEY && (f.seller_email || f.showroom_email)) {
-        const toEmail = f.seller_email || f.showroom_email;
-        const fromEmail = process.env.MAILERSEND_FROM_EMAIL || "payouts@showroommarket.com";
-        const fromName = process.env.MAILERSEND_FROM_NAME || "Showroom Market";
-
-        console.log("Emailing seller payout notice:", toEmail);
-
-        await fetch("https://api.mailersend.com/v1/email", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
-            "Content-Type": "application/json",
+        const transfer = await stripe.transfers.create(
+          {
+            amount: amountCents,
+            currency: "usd",
+            destination,
+            description: `Showroom Market payout for ${listingId}`,
+            transfer_group: `listing_${listingId}`,
+            metadata: { listingId, airtableRecordId: listingId },
           },
-          body: JSON.stringify({
-            from: { email: fromEmail, name: fromName },
-            to: [{ email: toEmail }],
-            subject: "You’ve been paid 🎉",
-            text: `Your item has been picked up and payout of $${f.seller_payout_amount} has been sent.`,
-          }),
+          { idempotencyKey }
+        );
+
+        // Optional email notification
+        if (process.env.MAILERSEND_API_KEY && (f.seller_email || f.showroom_email)) {
+          const toEmail = f.seller_email || f.showroom_email;
+          const fromEmail = process.env.MAILERSEND_FROM_EMAIL || "payouts@showroommarket.com";
+          const fromName = process.env.MAILERSEND_FROM_NAME || "Showroom Market";
+
+          console.log("Emailing seller payout notice", { listingId, toEmail });
+
+          await fetch("https://api.mailersend.com/v1/email", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: { email: fromEmail, name: fromName },
+              to: [{ email: toEmail }],
+              subject: "You’ve been paid 🎉",
+              text: `Your item has been picked up and payout of $${payoutAmount} has been sent.`,
+            }),
+          });
+        }
+
+        await airtablePatchRecord({
+          baseId: process.env.AIRTABLE_BASE_ID,
+          table: "Listings",
+          recordId: listingId,
+          apiKey: process.env.AIRTABLE_API_KEY,
+          fields: {
+            status: "Payout Sent",
+            seller_payout_status: "Paid",
+            stripe_transfer_id: transfer.id,
+            payout_sent_at: new Date().toISOString(),
+          },
+        });
+
+        processed++;
+        console.log("Payout complete", { listingId, transferId: transfer.id });
+      } catch (err) {
+        failed++;
+        console.error("releaseHeldPayouts payout failed", {
+          listingId,
+          message: err?.message,
+          type: err?.type,
+          code: err?.code,
         });
       }
-
-      await airtablePatchRecord({
-        baseId: process.env.AIRTABLE_BASE_ID,
-        table: "Listings",
-        recordId: rec.id,
-        apiKey: process.env.AIRTABLE_API_KEY,
-        fields: {
-          status: "Payout Sent",
-          seller_payout_status: "Paid",
-          stripe_transfer_id: transfer.id,
-          payout_sent_at: new Date().toISOString(),
-        },
-      });
-
-      console.log("Payout complete:", rec.id);
     }
 
-    return json(200, { message: "Held payouts processed" });
+    const finishedAt = new Date().toISOString();
+    console.log("releaseHeldPayouts job end", { finishedAt, processed, skipped, failed });
+
+    return json(200, {
+      ok: true,
+      processed,
+      skipped,
+      failed,
+      totalCandidates: total,
+      startedAt,
+      finishedAt,
+    });
   } catch (err) {
-    console.error("releaseHeldPayouts error:", err);
-    return json(500, { error: "Payout release failed" });
+    console.error("releaseHeldPayouts fatal error", err?.message || err);
+    return json(500, { error: "Payout release failed", detail: err?.message || String(err) });
   }
 };
