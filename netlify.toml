@@ -11,15 +11,16 @@
 # Scheduled Functions
 # ===============================
 
-# Existing payout release job (kept)
+# PRIMARY payout release job (single source of truth)
+# Runs every 15 minutes to release seller payouts once eligible
 [functions."autoReleasePayouts"]
-  schedule = "0 * * * *"
-
-# NEW — Releases payouts after 24h fraud hold
-[functions."releaseHeldPayouts"]
   schedule = "*/15 * * * *"
 
-# NEW — Refunds orders if pickup never confirmed
+# releaseHeldPayouts intentionally NOT scheduled
+# This function still exists and can be run manually if needed,
+# but scheduling both payout jobs risks duplicate Stripe transfers.
+
+# Refunds orders if pickup never confirmed
 [functions."refundUnclaimedOrders"]
   schedule = "0 */6 * * *"
 
