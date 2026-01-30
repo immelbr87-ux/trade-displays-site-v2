@@ -1,45 +1,72 @@
-const Stripe = require("stripe");
-const {
-  json,
-  airtableQuery,
-  airtablePatchRecord
-} = require("./_lib");
+// netlify/functions/sendBuyerPickupEmail.js
+const fetch = require("node-fetch");
+const { json, requireAdmin } = require("./_lib");
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+console.log("sendBuyerPickupEmail loaded");
 
-exports.handler = async () => {
+exports.handler = async (event) => {
+  console.log("sendBuyerPickupEmail invoked", { method: event.httpMethod });
+
+  // Protect this endpoint so it can't be abused to spam emails
+  const auth = requireAdmin(event);
+  if (!auth.ok) return json(auth.status, { error: auth.error });
+
+  if (event.httpMethod !== "POST") {
+    return json(405, { error: "Method not allowed" });
+  }
+
   try {
-    const now = new Date();
-    const cutoff = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString(); // 5 days
+    const {
+      buyerEmail,
+      buyerName,
+      sellerName,
+      pickupStart,
+      pickupEnd,
+      address,
+      qrCodeUrl,
+    } = JSON.parse(event.body || "{}");
 
-    const records = await airtableQuery({
-      baseId: process.env.AIRTABLE_BASE_ID,
-      table: "Listings",
-      apiKey: process.env.AIRTABLE_API_KEY,
-      params: {
-        filterByFormula: `AND({status}='Paid – Pending Pickup', {paid_at} <= '${cutoff}')`
-      }
-    });
+    console.log("Payload received", { buyerEmail, hasQr: !!qrCodeUrl });
 
-    for (const rec of records.records) {
-      const f = rec.fields;
-      if (!f.stripe_session_id) continue;
-
-      await stripe.refunds.create({ payment_intent: f.stripe_session_id });
-
-      await airtablePatchRecord({
-        baseId: process.env.AIRTABLE_BASE_ID,
-        table: "Listings",
-        recordId: rec.id,
-        apiKey: process.env.AIRTABLE_API_KEY,
-        fields: { status: "Refunded", seller_payout_status: "Refunded" }
-      });
+    if (!buyerEmail || !address || !qrCodeUrl) {
+      return json(400, { error: "Missing required fields (buyerEmail, address, qrCodeUrl)" });
     }
 
-    return json(200, { message: "Refunds processed" });
+    const fromEmail = process.env.MAILERSEND_FROM_EMAIL || "payouts@showroommarket.com";
+    const fromName = process.env.MAILERSEND_FROM_NAME || "Showroom Market";
 
+    const response = await fetch("https://api.mailersend.com/v1/email", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: { email: fromEmail, name: fromName },
+        to: [{ email: buyerEmail, name: buyerName || "" }],
+        subject: "Your Pickup Details – Showroom Market",
+        html: `
+          <h2>Your Order is Ready for Pickup 🎉</h2>
+          ${sellerName ? `<p><strong>Seller:</strong> ${sellerName}</p>` : ""}
+          ${pickupStart || pickupEnd ? `<p><strong>Pickup Window:</strong> ${pickupStart || ""} – ${pickupEnd || ""}</p>` : ""}
+          <p><strong>Pickup Address:</strong><br>${address}</p>
+          <p>Please show this QR code when you arrive:</p>
+          <img src="${qrCodeUrl}" width="200" />
+          <p>Thank you for using Showroom Market!</p>
+        `,
+      }),
+    });
+
+    const text = await response.text();
+    console.log("MailerSend response", { status: response.status, body: text.slice(0, 200) });
+
+    if (!response.ok) {
+      return json(500, { error: "Failed to send email", detail: text });
+    }
+
+    return json(200, { ok: true, message: "Buyer email sent" });
   } catch (err) {
-    console.error(err);
-    return json(500, { error: "Refund job failed" });
+    console.error("sendBuyerPickupEmail error", err);
+    return json(500, { error: "Buyer email failed" });
   }
 };
