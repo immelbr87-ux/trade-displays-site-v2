@@ -2,12 +2,8 @@ const {
   json,
   requireAdmin,
   airtableGetRecord,
-  airtablePatchRecord,
-  pick
+  airtablePatchRecord
 } = require("./_lib");
-
-const Stripe = require("stripe");
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -45,26 +41,10 @@ exports.handler = async (event) => {
       return json(400, { error: "Seller already paid" });
     }
 
-    // 💰 Calculate payout
-    const payoutAmount = Math.round(f.seller_payout_amount || 0);
-    const stripeAccountId = f.stripe_account_id;
+    // 🕒 Start 24-hour fraud protection hold
+    const now = new Date();
+    const holdUntil = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    if (!stripeAccountId) {
-      return json(400, { error: "Seller not onboarded" });
-    }
-
-    // 💳 Transfer funds to seller
-    const transfer = await stripe.transfers.create({
-      amount: payoutAmount * 100, // dollars → cents
-      currency: "usd",
-      destination: stripeAccountId,
-      description: `Showroom Market payout for listing ${listingId}`,
-      metadata: { listingId }
-    });
-
-    console.log("💸 Seller paid:", transfer.id);
-
-    // 🗂 Update Airtable
     await airtablePatchRecord({
       baseId: process.env.AIRTABLE_BASE_ID,
       table: "Listings",
@@ -72,21 +52,20 @@ exports.handler = async (event) => {
       apiKey: process.env.AIRTABLE_API_KEY,
       fields: {
         pickup_confirmed: true,
-        pickup_confirmed_at: new Date().toISOString(),
-        status: "Picked Up",
-        seller_payout_status: "Paid",
-        stripe_transfer_id: transfer.id,
-        payout_sent_at: new Date().toISOString()
+        pickup_confirmed_at: now.toISOString(),
+        payout_hold_until: holdUntil.toISOString(),
+        seller_payout_status: "Pending",
+        status: "Pickup Confirmed – Hold Period"
       }
     });
 
     return json(200, {
       success: true,
-      message: "Pickup confirmed and seller paid"
+      message: "Pickup confirmed. 24-hour payout hold started."
     });
 
   } catch (err) {
-    console.error("❌ Pickup + payout error:", err);
+    console.error("❌ Pickup confirmation error:", err);
     return json(500, { error: "Pickup verification failed" });
   }
 };
