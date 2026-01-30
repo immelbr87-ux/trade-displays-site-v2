@@ -1,41 +1,54 @@
 const Stripe = require("stripe");
 const fetch = require("node-fetch");
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const config = require("./_config");
+const { ok, error } = require("./_response");
+
+console.log("createCheckoutSession function loaded");
+
+const stripe = new Stripe(config.stripeSecretKey);
 
 exports.handler = async (event) => {
+  console.log("createCheckoutSession start", { method: event.httpMethod });
+
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return error("Method Not Allowed", 405);
   }
 
   try {
-    const { listingId } = JSON.parse(event.body);
+    const { listingId } = JSON.parse(event.body || "{}");
+    console.log("Incoming listingId:", listingId);
 
     if (!listingId) {
-      return { statusCode: 400, body: JSON.stringify({ error: "Missing listingId" }) };
+      return error("Missing listingId");
     }
 
-    const airtableRes = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`,
-      { headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}` } }
-    );
+    const airtableUrl = `https://api.airtable.com/v0/${config.airtableBaseId}/Listings/${listingId}`;
+    console.log("Fetching Airtable record:", airtableUrl);
+
+    const airtableRes = await fetch(airtableUrl, {
+      headers: { Authorization: `Bearer ${config.airtableApiKey}` }
+    });
 
     const airtableData = await airtableRes.json();
+    console.log("Airtable response received");
+
     if (!airtableData.fields) {
-      return { statusCode: 404, body: JSON.stringify({ error: "Listing not found" }) };
+      return error("Listing not found", 404);
     }
 
     const listing = airtableData.fields;
 
     if (listing.locked) {
-      return { statusCode: 403, body: JSON.stringify({ error: "Listing under review." }) };
+      return error("Listing under review.", 403);
     }
 
     if (listing.status !== "Active") {
-      return { statusCode: 409, body: JSON.stringify({ error: "Item not available." }) };
+      return error("Item not available.", 409);
     }
 
     const priceCents = Math.round(Number(listing.price) * 100);
+    console.log("Calculated price (cents):", priceCents);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -49,14 +62,16 @@ exports.handler = async (event) => {
         quantity: 1
       }],
       metadata: { listingId },
-      success_url: "https://showroommarket.com/success.html",
-      cancel_url: "https://showroommarket.com/cancel.html",
+      success_url: `${config.siteUrl}/success.html`,
+      cancel_url: `${config.siteUrl}/cancel.html`,
     });
 
-    return { statusCode: 200, body: JSON.stringify({ url: session.url }) };
+    console.log("Stripe session created:", session.id);
+
+    return ok({ url: session.url });
 
   } catch (err) {
-    console.error(err);
-    return { statusCode: 500, body: JSON.stringify({ error: "Checkout failed" }) };
+    console.error("Checkout error:", err);
+    return error("Checkout failed", 500);
   }
 };
