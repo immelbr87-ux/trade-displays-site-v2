@@ -2,6 +2,7 @@
 const Stripe = require("stripe");
 const calculateCommission = require("./calculateCommission");
 const { json, airtablePatchRecord } = require("./_lib");
+const { sendEmail } = require("./_email");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -22,27 +23,16 @@ exports.handler = async (event) => {
 
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
-
     const listingId = session.metadata?.listing_id;
     const salePrice = session.amount_total / 100;
 
-    if (!listingId) {
-      console.error("Missing listing_id in metadata");
-      return json(400, { error: "Missing listing_id" });
-    }
+    if (!listingId) return json(400, { error: "Missing listing_id" });
 
     const {
       commission_rate,
       commission_amount,
       seller_payout_amount,
     } = calculateCommission(salePrice);
-
-    console.log("Commission calculated", {
-      salePrice,
-      commission_rate,
-      commission_amount,
-      seller_payout_amount,
-    });
 
     await airtablePatchRecord({
       baseId: process.env.AIRTABLE_BASE_ID,
@@ -62,6 +52,14 @@ exports.handler = async (event) => {
         paid_at: new Date().toISOString()
       },
     });
+
+    const siteUrl = process.env.SITE_URL;
+
+    await sendEmail(session.customer_details?.email, "Your pickup is ready 🎉",
+      `Your order is confirmed. Schedule pickup: ${siteUrl}/pickup/${listingId}`);
+
+    await sendEmail(process.env.SUPPORT_EMAIL, "New sale on Showroom Market",
+      `Listing ${listingId} sold for $${salePrice}`);
   }
 
   return json(200, { received: true });
