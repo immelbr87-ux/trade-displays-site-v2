@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment Confirmed • Showroom Market</title>
+  <link rel="stylesheet" href="/app.css" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/market.html">
+          <div class="brand-mark">S</div>
+          <div class="brand-text">
+            <div class="brand-name">Showroom Market</div>
+            <div class="brand-sub">Verified Pickup Marketplace</div>
+          </div>
+        </a>
+        <div class="header-cta-group">
+          <a class="btn-grey" href="/market.html">Browse</a>
+          <a class="btn-black" href="/pickup-pass.html">Pickup Pass</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="section" style="max-width: 900px;">
+    <div class="card">
+      <div class="hero-badge">Payment Confirmed</div>
+      <h2 style="margin-bottom: 8px;">You're all set.</h2>
+      <p id="summary" style="margin-bottom: 24px;">Loading your order details…</p>
+
+      <div class="grid grid-2" style="gap: 16px; align-items: start;">
+        <div class="card" style="background: var(--bg);">
+          <h4 style="margin-bottom: 10px;">Pickup Pass</h4>
+          <p style="margin-bottom: 12px;">Show this QR code at pickup. The showroom scans and confirms acceptance.</p>
+          <div style="display:flex; justify-content:center; padding: 16px; background:#fff; border:1px solid var(--border); border-radius: 12px;">
+            <canvas id="qrCanvas" width="240" height="240"></canvas>
+          </div>
+          <div style="margin-top: 14px; display:flex; gap: 10px; flex-wrap: wrap;">
+            <a id="openPass" class="btn btn-primary" href="#">Open Pickup Pass</a>
+            <button id="copyPayload" class="btn btn-outline" type="button">Copy QR Payload</button>
+          </div>
+        </div>
+
+        <div class="card" style="background: var(--bg);">
+          <h4 style="margin-bottom: 10px;">Pickup Location</h4>
+          <p id="pickupLocation" style="margin-bottom: 10px;">—</p>
+          <h5 style="margin-top: 16px; margin-bottom: 8px;">Instructions</h5>
+          <p id="pickupInstructions">—</p>
+          <div class="alert alert-warning" style="margin-top: 16px;">
+            Keep this page handy until pickup is confirmed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+(function(){
+  const qs = new URLSearchParams(location.search);
+  const sessionId = qs.get("session_id");
+  const summaryEl = document.getElementById("summary");
+  const pickupLocationEl = document.getElementById("pickupLocation");
+  const pickupInstructionsEl = document.getElementById("pickupInstructions");
+  const openPassEl = document.getElementById("openPass");
+  const copyBtn = document.getElementById("copyPayload");
+  let qrPayload = "";
+  let listingId = "";
+
+  if(!sessionId){
+    summaryEl.textContent = "Missing session id. If you just paid, check your email receipt.";
+    return;
+  }
+
+  fetch(`/.netlify/functions/getCheckoutSummary?session_id=${encodeURIComponent(sessionId)}`)
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data.ok){
+        summaryEl.textContent = data.error || "Unable to load order.";
+        return;
+      }
+      listingId = data.listingId;
+      qrPayload = data.qr_payload;
+      summaryEl.textContent = `Order confirmed for: ${data.title || "your listing"} (ID: ${listingId}).`;
+      pickupLocationEl.textContent = data.pickup_location || "Pickup location will be provided by the showroom.";
+      pickupInstructionsEl.textContent = data.pickup_instructions || "Bring your pickup pass and a photo ID.";
+      openPassEl.href = `/pickup-pass.html?listingId=${encodeURIComponent(listingId)}&qr=${encodeURIComponent(qrPayload)}`;
+      // Render QR
+      const canvas = document.getElementById("qrCanvas");
+      QRCode.toCanvas(canvas, qrPayload, { width: 240, margin: 1 }, function (error) {
+        if (error) console.error(error);
+      });
+    })
+    .catch(err=>{
+      console.error(err);
+      summaryEl.textContent = "Unable to load order details. Please refresh.";
+    });
+
+  copyBtn.addEventListener("click", async ()=>{
+    if(!qrPayload) return;
+    try{
+      await navigator.clipboard.writeText(qrPayload);
+      copyBtn.textContent = "Copied!";
+      setTimeout(()=>copyBtn.textContent="Copy QR Payload", 1200);
+    }catch(e){
+      alert("Copy failed. You can screenshot the QR instead.");
+    }
+  });
+})();
+</script>
+</body>
+</html>
