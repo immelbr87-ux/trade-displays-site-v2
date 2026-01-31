@@ -1906,3 +1906,46 @@ footer {
 canvas {
   max-width: 100%;
 }
+
+
+
+/* ===============================
+   ADMIN DASHBOARD STYLES
+=============================== */
+
+.admin-container {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 32px;
+}
+
+.table-wrap { overflow-x: auto; }
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.admin-table th, .admin-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-table th {
+  background: var(--bg);
+  font-weight: 700;
+}
+
+.admin-table tr:hover { background: #f9fafb; }
+
+.badge-error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
