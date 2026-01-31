@@ -1,65 +1,74 @@
 // netlify/functions/calculateCommission.js
-// Computes platform fee + seller payout for a given sale amount.
-// Defaults can be overridden via env vars:
-//   PLATFORM_FEE_PCT (e.g. 0.15 for 15%)
-//   PLATFORM_FEE_FLAT (e.g. 50 for $50 flat fee)
-//   PLATFORM_FEE_MIN / PLATFORM_FEE_MAX (optional caps)
+// Commission utility for Showroom Market
+// - Reads PLATFORM_FEE_PERCENT or PLATFORM_FEE_BPS from env
+// - Computes platform fee and seller payout in dollars & cents-safe integers
 
-function num(v, d=0) {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : d;
-}
+function getCommissionConfig() {
+  const percentRaw = process.env.PLATFORM_FEE_PERCENT;
+  const bpsRaw = process.env.PLATFORM_FEE_BPS;
 
-function clamp(n, lo, hi) {
-  if (Number.isFinite(lo)) n = Math.max(lo, n);
-  if (Number.isFinite(hi)) n = Math.min(hi, n);
-  return n;
-}
+  let percent = null;
 
-function calculateCommission(amountUsd, overrides = {}) {
-  const amount = num(amountUsd, 0);
-  if (amount <= 0) {
-    return {
-      ok: false,
-      reason: "Invalid amount",
-      sale_amount: amount,
-      platform_fee: 0,
-      seller_payout: 0,
-      effective_pct: 0
-    };
+  if (bpsRaw != null && String(bpsRaw).trim() !== "") {
+    const bps = Number(bpsRaw);
+    if (!Number.isFinite(bps) || bps < 0 || bps > 10000) {
+      throw new Error("Invalid PLATFORM_FEE_BPS (0-10000)");
+    }
+    percent = bps / 100;
+  } else if (percentRaw != null && String(percentRaw).trim() !== "") {
+    const p = Number(percentRaw);
+    if (!Number.isFinite(p) || p < 0 || p > 100) {
+      throw new Error("Invalid PLATFORM_FEE_PERCENT (0-100)");
+    }
+    percent = p;
+  } else {
+    // Default is intentionally conservative; override with env vars.
+    percent = 10;
   }
 
-  const pct = overrides.pct ?? process.env.PLATFORM_FEE_PCT;
-  const flat = overrides.flat ?? process.env.PLATFORM_FEE_FLAT;
-  const minFee = overrides.minFee ?? process.env.PLATFORM_FEE_MIN;
-  const maxFee = overrides.maxFee ?? process.env.PLATFORM_FEE_MAX;
+  // Optional minimum fee (in cents)
+  const minFeeCentsRaw = process.env.PLATFORM_FEE_MIN_CENTS;
+  const minFeeCents =
+    minFeeCentsRaw != null && String(minFeeCentsRaw).trim() !== ""
+      ? Math.max(0, Math.floor(Number(minFeeCentsRaw)))
+      : 0;
 
-  const pctNum = num(pct, 0.15);     // default 15%
-  const flatNum = num(flat, 0);      // default $0
-  const minNum = (minFee === undefined || minFee === null || minFee === "") ? null : num(minFee, 0);
-  const maxNum = (maxFee === undefined || maxFee === null || maxFee === "") ? null : num(maxFee, 0);
+  return { percent, minFeeCents };
+}
 
-  let fee = amount * pctNum + flatNum;
-  fee = Math.round(fee * 100) / 100;
+function toCents(amountDollars) {
+  const n = Number(amountDollars);
+  if (!Number.isFinite(n)) return null;
+  return Math.round(n * 100);
+}
 
-  if (minNum !== null || maxNum !== null) {
-    fee = clamp(fee, minNum, maxNum);
-    fee = Math.round(fee * 100) / 100;
+function computeCommissionFromCents(grossCents) {
+  const { percent, minFeeCents } = getCommissionConfig();
+
+  if (!Number.isFinite(grossCents) || grossCents < 0) {
+    throw new Error("Invalid grossCents");
   }
 
-  // Never allow fee > sale
-  fee = Math.min(fee, amount);
+  // Fee = gross * percent, rounded to nearest cent
+  let feeCents = Math.round((grossCents * percent) / 100);
 
-  const seller = Math.round((amount - fee) * 100) / 100;
-  const effPct = amount > 0 ? Math.round((fee / amount) * 10000) / 10000 : 0;
+  if (feeCents < minFeeCents) feeCents = minFeeCents;
+  if (feeCents > grossCents) feeCents = grossCents;
+
+  const payoutCents = grossCents - feeCents;
 
   return {
-    ok: true,
-    sale_amount: amount,
-    platform_fee: fee,
-    seller_payout: seller,
-    effective_pct: effPct
+    percent,
+    feeCents,
+    payoutCents,
+    feeDollars: feeCents / 100,
+    payoutDollars: payoutCents / 100,
+    grossDollars: grossCents / 100,
   };
 }
 
-module.exports = { calculateCommission };
+module.exports = {
+  getCommissionConfig,
+  toCents,
+  computeCommissionFromCents,
+};

@@ -1,188 +1,401 @@
 // netlify/functions/stripeWebhook.js
-// Stripe webhook → updates Airtable after successful checkout + dispute flags.
-// Adds commission calculation + richer logging.
-//
-// Required env vars:
-//   STRIPE_SECRET_KEY
-//   STRIPE_WEBHOOK_SECRET
-//   AIRTABLE_BASE_ID
-//   AIRTABLE_API_KEY
-//
-// Optional env vars (commission):
-//   PLATFORM_FEE_PCT (default 0.15)
-//   PLATFORM_FEE_FLAT (default 0)
-//   PLATFORM_FEE_MIN / PLATFORM_FEE_MAX (optional caps)
-
 const Stripe = require("stripe");
-const {
-  json,
-  airtableGetRecord,
-  airtablePatchRecord,
-  addHours,
-  pick
-} = require("./_lib");
-const { calculateCommission } = require("./calculateCommission");
+const { computeCommissionFromCents } = require("./calculateCommission");
+const fetch = require("node-fetch");
+const { addHours } = require("./_lib");
 
 console.log("stripeWebhook loaded");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-function getRawBody(event) {
-  if (!event) return "";
-  if (event.isBase64Encoded) {
-    try {
-      return Buffer.from(event.body || "", "base64").toString("utf8");
-    } catch (e) {
-      console.error("stripeWebhook: failed to decode base64 body", e?.message || e);
-      return event.body || "";
-    }
+function env(name, optional = false) {
+  const v = process.env[name];
+  if (!optional && (!v || String(v).trim() === "")) {
+    throw new Error(`Missing env var: ${name}`);
   }
-  return event.body || "";
+  return v;
+}
+
+async function sendEmail(to, subject, text) {
+  // Email is best-effort: log if missing config
+  if (!process.env.MAILERSEND_API_KEY || !process.env.MAILERSEND_FROM_EMAIL) {
+    console.log("Email skipped (missing MailerSend env).", { to, subject });
+    return { ok: false, skipped: true };
+  }
+
+  console.log("Sending email", { to, subject });
+
+  const res = await fetch("https://api.mailersend.com/v1/email", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: {
+        email: process.env.MAILERSEND_FROM_EMAIL,
+        name: process.env.MAILERSEND_FROM_NAME || "Showroom Market",
+      },
+      to: [{ email: to }],
+      subject,
+      text,
+    }),
+  });
+
+  const body = await res.text();
+  if (!res.ok) {
+    console.error("Email send failed", { status: res.status, body });
+    return { ok: false, status: res.status, body };
+  }
+  return { ok: true };
+}
+
+async function airtableFindListingByPaymentIntent(paymentIntentId) {
+  const baseId = env("AIRTABLE_BASE_ID");
+  const apiKey = env("AIRTABLE_API_KEY");
+
+  const url =
+    `https://api.airtable.com/v0/${baseId}/Listings?` +
+    `filterByFormula=${encodeURIComponent(`{stripe_payment_intent}='${paymentIntentId}'`)}`;
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  });
+
+  const data = await res.json();
+  const record = data?.records?.[0];
+  return record || null;
+}
+
+async function airtablePatchListing(recordId, fields) {
+  const baseId = env("AIRTABLE_BASE_ID");
+  const apiKey = env("AIRTABLE_API_KEY");
+
+  const res = await fetch(`https://api.airtable.com/v0/${baseId}/Listings/${recordId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ fields }),
+  });
+
+  const text = await res.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = { raw: text };
+  }
+
+  if (!res.ok) {
+    console.error("Airtable patch failed", { status: res.status, data });
+    throw new Error(`Airtable patch failed (${res.status})`);
+  }
+  return data;
+}
+
+function safeJsonParse(str) {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return null;
+  }
 }
 
 exports.handler = async (event) => {
-  const requestId = event?.headers?.["x-request-id"] || event?.headers?.["X-Request-Id"] || "";
-  const sig = event?.headers?.["stripe-signature"] || event?.headers?.["Stripe-Signature"];
+  console.log("Webhook received");
 
-  if (!sig) {
-    console.error("stripeWebhook: missing stripe-signature header", { requestId });
-    return json(400, { error: "Missing stripe-signature header" });
+  // Validate required env for webhook verification + Stripe operations
+  try {
+    env("STRIPE_SECRET_KEY");
+    env("STRIPE_WEBHOOK_SECRET");
+    env("AIRTABLE_BASE_ID");
+    env("AIRTABLE_API_KEY");
+  } catch (e) {
+    console.error("stripeWebhook env error", e.message);
+    return { statusCode: 500, body: "Missing server configuration" };
   }
+
+  const sig =
+    event.headers["stripe-signature"] ||
+    event.headers["Stripe-Signature"] ||
+    event.headers["STRIPE-SIGNATURE"];
 
   let stripeEvent;
   try {
-    const rawBody = getRawBody(event);
-    stripeEvent = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    // IMPORTANT: Stripe requires the raw body string for signature verification.
+    stripeEvent = stripe.webhooks.constructEvent(
+      event.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
   } catch (err) {
-    console.error("stripeWebhook signature failed:", err?.message || err, { requestId });
-    return json(400, { error: "Webhook signature failed" });
+    console.error("Webhook signature failed:", err.message);
+    return { statusCode: 400, body: "Webhook signature failed" };
   }
 
-  const baseId = process.env.AIRTABLE_BASE_ID;
-  const apiKey = process.env.AIRTABLE_API_KEY;
+  console.log("Stripe event type:", stripeEvent.type);
 
-  console.log("stripeWebhook event received", {
-    requestId,
-    type: stripeEvent?.type,
-    id: stripeEvent?.id
-  });
+  // =========================
+  // PAYMENT COMPLETED
+  // =========================
+  if (stripeEvent.type === "checkout.session.completed") {
+    const session = stripeEvent.data.object;
+    const listingId = session.metadata?.listingId;
 
-  try {
-    // 1) Checkout completed → mark listing as paid, set hold window, compute commission, store buyer email.
-    if (stripeEvent.type === "checkout.session.completed") {
-      const session = stripeEvent.data.object || {};
-      const listingId = session?.metadata?.listingId;
-
-      if (!listingId) {
-        console.log("stripeWebhook: checkout.session.completed missing listingId metadata");
-        return json(200, { ok: true });
-      }
-
-      // Fetch Airtable listing to get price + seller payout destination fields
-      const record = await airtableGetRecord({
-        baseId,
-        table: "Listings",
-        recordId: listingId,
-        apiKey
-      });
-
-      const f = record?.fields || {};
-      const priceUsd = Number(pick(f, ["price", "Price", "sale_price"], 0)) || 0;
-
-      // Commission calc
-      const comm = calculateCommission(priceUsd);
-      if (!comm.ok) {
-        console.warn("stripeWebhook: commission calc not ok, using full price payout", comm);
-      }
-
-      const now = new Date();
-      const holdUntil = addHours(now, 24);
-
-      const buyerEmail =
-        session?.customer_details?.email ||
-        session?.customer_email ||
-        null;
-
-      const buyerName =
-        session?.customer_details?.name ||
-        null;
-
-      const paymentIntent = session?.payment_intent || null;
-
-      const fieldsToPatch = {
-        status: "Paid – Pending Pickup",
-        paid_at: now.toISOString(),
-        payout_eligible_at: holdUntil.toISOString(),
-        seller_payout_status: "Pending",
-        stripe_session_id: session?.id || null,
-        stripe_payment_intent: paymentIntent,
-        // Buyer details for receipts + pickup pass
-        buyer_email: buyerEmail,
-        buyer_name: buyerName,
-        // Commission fields
-        sale_price: priceUsd || null,
-        platform_fee: comm.ok ? comm.platform_fee : null,
-        seller_payout_amount: comm.ok ? comm.seller_payout : priceUsd || null,
-        platform_fee_pct_effective: comm.ok ? comm.effective_pct : null
-      };
-
-      console.log("stripeWebhook: patching listing for paid status", {
-        listingId,
-        priceUsd,
-        platform_fee: fieldsToPatch.platform_fee,
-        seller_payout_amount: fieldsToPatch.seller_payout_amount,
-        buyerEmail,
-        paymentIntent
-      });
-
-      await airtablePatchRecord({
-        baseId,
-        table: "Listings",
-        recordId: listingId,
-        apiKey,
-        fields: fieldsToPatch
-      });
-
-      return json(200, { ok: true });
+    if (!listingId) {
+      console.log("checkout.session.completed missing listingId metadata");
+      return { statusCode: 200, body: "OK" };
     }
 
-    // 2) Dispute created → mark chargeback flag + block payout
-    if (stripeEvent.type === "charge.dispute.created") {
-      const dispute = stripeEvent.data.object || {};
-      const paymentIntent = dispute?.payment_intent || null;
+    const now = new Date();
+    const holdUntil = addHours(now, 24);
+    const pickupCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-      console.log("stripeWebhook: dispute created", { paymentIntent, disputeId: dispute?.id });
+    console.log("Processing payment", {
+      listingId,
+      sessionId: session.id,
+      paymentIntent: session.payment_intent,
+      holdUntil: holdUntil.toISOString(),
+    });
 
-      if (!paymentIntent) return json(200, { ok: true });
+    // Update Airtable listing record
+    // Compute commission + seller payout from Stripe session total
+    const grossCents = Number(session.amount_total || 0);
+    const commission = computeCommissionFromCents(grossCents);
 
-      // Find listing by stripe_payment_intent (preferred) or stripe_session_id (fallback)
-      const query = await require("node-fetch")(
-        `https://api.airtable.com/v0/${baseId}/Listings?` +
-          new URLSearchParams({
-            filterByFormula: `OR({stripe_payment_intent}='${paymentIntent}', {stripe_session_id}='${paymentIntent}')`
-          }).toString(),
-        { headers: { Authorization: `Bearer ${apiKey}` } }
+    const patchFields = {
+      status: "Paid – Pending Pickup",
+      paid_at: now.toISOString(),
+      payout_eligible_at: holdUntil.toISOString(),
+      seller_payout_status: "Pending",
+      stripe_session_id: session.id,
+      stripe_payment_intent: session.payment_intent,
+      pickup_code: pickupCode,
+      // Required for payout jobs
+      seller_payout_amount: commission.payoutDollars,
+      // Optional bookkeeping fields (will be attempted; safe fallback below)
+      sale_amount: commission.grossDollars,
+      platform_fee_amount: commission.feeDollars,
+      platform_fee_percent: commission.percent,
+    };
+
+    // Update Airtable listing record (safe: retries without optional fields if Airtable rejects unknown fields)
+    const airtableUrl = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Listings/${listingId}`;
+
+    let recordRes = await fetch(airtableUrl, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fields: patchFields }),
+    });
+
+    // If Airtable schema lacks optional fields, retry with minimum required fields
+    if (!recordRes.ok) {
+      const errText = await recordRes.text();
+      const errObj = safeJsonParse(errText) || {};
+      const msg = (errObj?.error?.message || errObj?.error || errText || "").toString();
+      console.log("Airtable PATCH failed (first attempt):", msg);
+
+      const likelyUnknownField = /unknown field/i.test(msg) || /UNKNOWN_FIELD_NAME/i.test(msg);
+      if (likelyUnknownField) {
+        const minimalFields = {
+          status: patchFields.status,
+          paid_at: patchFields.paid_at,
+          payout_eligible_at: patchFields.payout_eligible_at,
+          seller_payout_status: patchFields.seller_payout_status,
+          stripe_session_id: patchFields.stripe_session_id,
+          stripe_payment_intent: patchFields.stripe_payment_intent,
+          pickup_code: patchFields.pickup_code,
+          seller_payout_amount: patchFields.seller_payout_amount,
+        };
+
+        recordRes = await fetch(airtableUrl, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fields: minimalFields }),
+        });
+      } else {
+        // Re-throw a real error if it wasn't a schema mismatch
+        throw new Error(`Airtable PATCH failed: ${msg}`);
+      }
+    }
+
+    const listingData = safeJsonParse(await recordRes.text()) || {};
+    const listing = listingData.fields || {};
+
+    // Buyer email
+    if (listing.buyer_email) {
+      await sendEmail(
+        listing.buyer_email,
+        "Your Showroom Market Purchase",
+        `Thanks for your purchase of "${listing.title}". Your pickup code is ${pickupCode}.`
       );
-
-      const data = await query.json();
-      const rec = (data.records || [])[0];
-      if (!rec) return json(200, { ok: true });
-
-      await airtablePatchRecord({
-        baseId,
-        table: "Listings",
-        recordId: rec.id,
-        apiKey,
-        fields: { chargeback_flag: true, seller_payout_status: "Blocked", dispute_id: dispute?.id || null }
-      });
-
-      return json(200, { ok: true });
     }
 
-    // Other event types: acknowledge
-    return json(200, { ok: true });
-  } catch (err) {
-    console.error("stripeWebhook error:", err?.message || err, err?.stack);
-    return json(500, { error: "Webhook handler failed" });
+    // Seller email
+    if (listing.showroom_email) {
+      await sendEmail(
+        listing.showroom_email,
+        "Your showroom item has sold 🎉",
+        `Your listing "${listing.title}" has sold. Buyer will schedule pickup soon.`
+      );
+    }
+
+    return { statusCode: 200, body: "OK" };
   }
+
+  // =========================
+  // DISPUTE / CHARGEBACK MONITORING
+  // =========================
+  const disputeTypes = new Set([
+    "charge.dispute.created",
+    "charge.dispute.updated",
+    "charge.dispute.closed",
+  ]);
+
+  if (disputeTypes.has(stripeEvent.type)) {
+    const dispute = stripeEvent.data.object;
+
+    // Stripe dispute object often has dispute.payment_intent
+    const paymentIntentId = dispute.payment_intent;
+    const disputeId = dispute.id;
+    const disputeStatus = dispute.status; // needs_response, under_review, won, lost
+    const amount = dispute.amount;
+    const reason = dispute.reason;
+
+    console.log("Dispute event", {
+      type: stripeEvent.type,
+      disputeId,
+      disputeStatus,
+      paymentIntentId,
+      amount,
+      reason,
+    });
+
+    if (!paymentIntentId) {
+      console.log("Dispute missing payment_intent; nothing to do");
+      return { statusCode: 200, body: "OK" };
+    }
+
+    const record = await airtableFindListingByPaymentIntent(paymentIntentId);
+
+    if (!record) {
+      console.log("No listing found for dispute payment_intent", { paymentIntentId });
+      // Still alert admin because this is suspicious
+      if (process.env.ALERT_EMAIL) {
+        await sendEmail(
+          process.env.ALERT_EMAIL,
+          "⚠️ Stripe dispute with no matching listing",
+          `Dispute ${disputeId} (${disputeStatus}) for payment_intent ${paymentIntentId} had no matching Airtable listing.`
+        );
+      }
+      return { statusCode: 200, body: "OK" };
+    }
+
+    const listingId = record.id;
+    const listing = record.fields || {};
+    const alreadyPaid = String(listing.seller_payout_status || "").toLowerCase() === "paid";
+
+    // Decision:
+    // - If dispute is WON -> clear chargeback_flag and (optionally) re-enable payout if it was pending/blocked.
+    // - Otherwise -> set chargeback_flag true and block payout immediately.
+    const isWon = disputeStatus === "won";
+    const block = !isWon;
+
+    const patchFields = {
+      dispute_flag: true,
+      dispute_id: disputeId,
+      dispute_status: disputeStatus,
+      dispute_reason: reason || "",
+      dispute_amount: amount ? amount / 100 : null, // store dollars if you want
+      dispute_last_event: stripeEvent.type,
+      dispute_updated_at: new Date().toISOString(),
+
+      // Core freeze logic
+      chargeback_flag: block,
+      seller_payout_status: block ? "Blocked" : (alreadyPaid ? "Paid" : "Pending"),
+    };
+
+    // If payout was already sent, we cannot undo it here—so alert admin loudly.
+    if (alreadyPaid && block) {
+      patchFields.payout_risk_flag = true;
+      patchFields.payout_risk_note = "Dispute occurred after payout was marked Paid.";
+    }
+
+    await airtablePatchListing(listingId, patchFields);
+
+    // Alert email (instant visibility)
+    if (process.env.ALERT_EMAIL) {
+      const statusLine = block
+        ? "PAYOUT FROZEN (seller_payout_status=Blocked)"
+        : "DISPUTE WON (payout may resume if eligible)";
+
+      await sendEmail(
+        process.env.ALERT_EMAIL,
+        `⚠️ Stripe dispute: ${disputeStatus} (${stripeEvent.type})`,
+        `Listing: ${listing.title || listingId}\n` +
+          `Airtable ID: ${listingId}\n` +
+          `Dispute: ${disputeId}\n` +
+          `Payment Intent: ${paymentIntentId}\n` +
+          `Status: ${disputeStatus}\n` +
+          `Reason: ${reason || "n/a"}\n` +
+          `${statusLine}\n`
+      );
+    }
+
+    return { statusCode: 200, body: "OK" };
+  }
+
+  // =========================
+  // REFUND SAFETY (optional but strongly recommended)
+  // =========================
+  // If a charge is refunded, freeze payout immediately.
+  // You can remove this block if you never refund.
+  if (stripeEvent.type === "charge.refunded") {
+    const charge = stripeEvent.data.object;
+    const paymentIntentId = charge.payment_intent;
+
+    console.log("charge.refunded", {
+      chargeId: charge.id,
+      paymentIntentId,
+      refunded: charge.refunded,
+      amountRefunded: charge.amount_refunded,
+    });
+
+    if (paymentIntentId) {
+      const record = await airtableFindListingByPaymentIntent(paymentIntentId);
+      if (record) {
+        const listingId = record.id;
+        await airtablePatchListing(listingId, {
+          refund_flag: true,
+          refunded_at: new Date().toISOString(),
+          chargeback_flag: true, // treat refunds as payout-blocking
+          seller_payout_status: "Blocked",
+        });
+
+        if (process.env.ALERT_EMAIL) {
+          await sendEmail(
+            process.env.ALERT_EMAIL,
+            "⚠️ Stripe refund detected — payout frozen",
+            `Refund detected for listing ${record.fields?.title || listingId}\n` +
+              `Airtable ID: ${listingId}\n` +
+              `Payment Intent: ${paymentIntentId}\n` +
+              `Charge: ${charge.id}\n`
+          );
+        }
+      }
+    }
+
+    return { statusCode: 200, body: "OK" };
+  }
+
+  // Ignore other event types
+  return { statusCode: 200, body: "OK" };
 };
