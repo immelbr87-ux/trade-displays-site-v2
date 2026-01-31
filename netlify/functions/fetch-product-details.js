@@ -1,6 +1,11 @@
 // netlify/functions/fetch-product-details.js
 // SKU Auto-Fill System using Claude API
 // CommonJS-safe Netlify Function (repo is "type": "commonjs")
+//
+// Logging upgrade:
+// - Adds requestId + timing + structured logs
+// - Never logs API keys
+// - Returns safe found:false responses when AI is unavailable
 
 let AnthropicMod;
 try {
@@ -13,7 +18,42 @@ const Anthropic = AnthropicMod ? (AnthropicMod.default || AnthropicMod) : null;
 
 console.log("fetch-product-details loaded");
 
+function makeReqId() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function safeJsonParse(str, fallback) {
+  try { return JSON.parse(str); } catch { return fallback; }
+}
+
+function extractFirstJsonObject(text) {
+  // Tries:
+  // 1) direct parse
+  // 2) strip code fences
+  // 3) find first {...} block (best-effort)
+  const raw = String(text || "");
+
+  // direct
+  try { return JSON.parse(raw); } catch {}
+
+  // strip fences
+  const stripped = raw.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
+  try { return JSON.parse(stripped); } catch {}
+
+  // best-effort first object
+  const start = stripped.indexOf("{");
+  const end = stripped.lastIndexOf("}");
+  if (start >= 0 && end > start) {
+    const candidate = stripped.slice(start, end + 1);
+    try { return JSON.parse(candidate); } catch {}
+  }
+  return null;
+}
+
 exports.handler = async (event) => {
+  const requestId = makeReqId();
+  const t0 = Date.now();
+
   // CORS headers
   const headers = {
     "Access-Control-Allow-Origin": "*",
@@ -32,81 +72,110 @@ exports.handler = async (event) => {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ error: "Method not allowed" }),
+      body: JSON.stringify({ error: "Method not allowed", requestId }),
+    };
+  }
+
+  const bodyObj = safeJsonParse(event.body || "{}", {});
+  const sku = bodyObj.sku;
+  const brand = bodyObj.brand;
+
+  // Validate input
+  if (!sku || !brand) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        error: "SKU and brand are required",
+        found: false,
+        requestId,
+      }),
+    };
+  }
+
+  const searchUrl = getManufacturerSearchUrl(brand, sku);
+
+  console.log(JSON.stringify({
+    tag: "fetch_product_details_start",
+    requestId,
+    sku,
+    brand,
+    hasSearchUrl: Boolean(searchUrl),
+    hasAnthropicSDK: Boolean(Anthropic),
+  }));
+
+  if (!searchUrl) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        error: "Unsupported brand",
+        found: false,
+        message: "This brand is not yet supported. Please enter details manually.",
+        requestId,
+      }),
+    };
+  }
+
+  // Support both ANTHROPIC_API_KEY (your current Netlify var in screenshot) and ANTHROPIC_API_KEY (typo-proof)
+  const anthropicKey =
+    process.env.ANTHROPIC_API_KEY ||
+    process.env.ANTHROPIC_KEY ||
+    process.env.ANTHROPIC_TOKEN ||
+    null;
+
+  // If Anthropic SDK isn't installed or key is missing, fail safely
+  if (!Anthropic) {
+    console.log(JSON.stringify({
+      tag: "fetch_product_details_ai_unavailable",
+      requestId,
+      reason: "missing_sdk",
+      ms: Date.now() - t0
+    }));
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        found: false,
+        message: "AI auto-fill unavailable (missing SDK). Please enter details manually.",
+        search_url: searchUrl,
+        requestId,
+      }),
+    };
+  }
+
+  if (!anthropicKey) {
+    console.log(JSON.stringify({
+      tag: "fetch_product_details_ai_unavailable",
+      requestId,
+      reason: "missing_api_key",
+      ms: Date.now() - t0
+    }));
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        found: false,
+        message: "AI auto-fill unavailable (missing API key). Please enter details manually.",
+        search_url: searchUrl,
+        requestId,
+      }),
     };
   }
 
   try {
-    const { sku, brand } = JSON.parse(event.body || "{}");
-
-    // Validate input
-    if (!sku || !brand) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          error: "SKU and brand are required",
-          found: false,
-        }),
-      };
-    }
-
-    console.log("Fetching product details", { sku, brand });
-
-    // Step 1: Check cache first (if you have a database)
-    // const cached = await checkCache(sku);
-    // if (cached) return { statusCode: 200, headers, body: JSON.stringify(cached) };
-
-    // Step 2: Get manufacturer search URL
-    const searchUrl = getManufacturerSearchUrl(brand, sku);
-
-    if (!searchUrl) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-          error: "Unsupported brand",
-          found: false,
-          message: "This brand is not yet supported. Please enter details manually.",
-        }),
-      };
-    }
-
-    // If Anthropic SDK isn't installed or key is missing, fail safely
-    if (!Anthropic) {
-      console.log("Anthropic SDK not available (missing dependency).");
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          found: false,
-          message: "AI auto-fill unavailable (missing SDK). Please enter details manually.",
-          search_url: searchUrl,
-        }),
-      };
-    }
-
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.log("Missing ANTHROPIC_API_KEY.");
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          found: false,
-          message: "AI auto-fill unavailable (missing API key). Please enter details manually.",
-          search_url: searchUrl,
-        }),
-      };
-    }
-
-    // Step 3: Use Claude to assist with extraction
-    // IMPORTANT: Claude cannot actually browse/visit URLs. We must instruct it not to claim it did.
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
+    const anthropic = new Anthropic({ apiKey: anthropicKey });
 
     const model = "claude-sonnet-4-20250514"; // keep your selected model
-    console.log("Calling Anthropic model", { model, searchUrl });
+
+    console.log(JSON.stringify({
+      tag: "fetch_product_details_call_anthropic",
+      requestId,
+      model,
+      searchUrl,
+    }));
 
     const message = await anthropic.messages.create({
       model,
@@ -147,10 +216,7 @@ Required JSON format:
   "weight": 0,
   "finish": "Product finish/color",
   "material": "Primary material",
-  "specifications": {
-    "key1": "value1",
-    "key2": "value2"
-  },
+  "specifications": {},
   "model_number": "${sku}",
   "upc": "UPC if available",
   "warranty": "Warranty info if available",
@@ -166,21 +232,22 @@ If product not found / low confidence, return:
       ],
     });
 
-    // Extract JSON from Claude's response
-    let productData;
-    try {
-      const responseText = message?.content?.[0]?.text || "";
-      console.log("Claude response length", { chars: responseText.length });
+    const responseText = message?.content?.[0]?.text || "";
+    console.log(JSON.stringify({
+      tag: "fetch_product_details_anthropic_returned",
+      requestId,
+      chars: responseText.length,
+    }));
 
-      // Remove markdown code blocks if present
-      const jsonText = responseText
-        .replace(/```json\n?/gi, "")
-        .replace(/```\n?/g, "")
-        .trim();
+    const productData = extractFirstJsonObject(responseText);
 
-      productData = JSON.parse(jsonText);
-    } catch (parseError) {
-      console.error("Failed to parse Claude response:", parseError);
+    if (!productData || typeof productData !== "object") {
+      console.error(JSON.stringify({
+        tag: "fetch_product_details_parse_failed",
+        requestId,
+        ms: Date.now() - t0
+      }));
+
       return {
         statusCode: 500,
         headers,
@@ -189,12 +256,20 @@ If product not found / low confidence, return:
           found: false,
           message: "Unable to extract product details. Please try again or enter manually.",
           search_url: searchUrl,
+          requestId,
         }),
       };
     }
 
     // If product not found, return 404 (keep your behavior)
     if (!productData.found) {
+      console.log(JSON.stringify({
+        tag: "fetch_product_details_not_found",
+        requestId,
+        message: productData.message || null,
+        ms: Date.now() - t0
+      }));
+
       return {
         statusCode: 404,
         headers,
@@ -203,6 +278,7 @@ If product not found / low confidence, return:
           message: productData.message || `Product not found for SKU: ${sku}`,
           suggestion: "Double-check the SKU or try entering details manually.",
           search_url: searchUrl,
+          requestId,
         }),
       };
     }
@@ -212,24 +288,25 @@ If product not found / low confidence, return:
     productData.source = "claude_api";
     productData.search_url = searchUrl;
     productData.confidence = productData.confidence || "medium";
-
-    // Step 4: Cache the result (if you have a database)
-    // await cacheProduct(sku, productData);
+    productData.requestId = requestId;
 
     // Step 5: Calculate suggested pricing (50% off retail)
     if (productData.retail_price) {
-      productData.suggested_price = Math.round(productData.retail_price * 0.5);
+      productData.suggested_price = Math.round(Number(productData.retail_price) * 0.5);
       productData.suggested_range = {
-        min: Math.round(productData.retail_price * 0.3),
-        max: Math.round(productData.retail_price * 0.6),
+        min: Math.round(Number(productData.retail_price) * 0.3),
+        max: Math.round(Number(productData.retail_price) * 0.6),
       };
       productData.savings_percentage = 50;
     }
 
-    console.log("Successfully produced product data", {
-      product_name: productData.product_name,
-      found: productData.found,
-    });
+    console.log(JSON.stringify({
+      tag: "fetch_product_details_success",
+      requestId,
+      found: true,
+      product_name: productData.product_name || null,
+      ms: Date.now() - t0
+    }));
 
     return {
       statusCode: 200,
@@ -237,7 +314,12 @@ If product not found / low confidence, return:
       body: JSON.stringify(productData),
     };
   } catch (error) {
-    console.error("Error fetching product details:", error);
+    console.error(JSON.stringify({
+      tag: "fetch_product_details_error",
+      requestId,
+      message: error?.message || String(error),
+      ms: Date.now() - t0
+    }));
 
     return {
       statusCode: 500,
@@ -246,7 +328,8 @@ If product not found / low confidence, return:
         error: "Internal server error",
         found: false,
         message: "An error occurred while fetching product details. Please try again.",
-        details: process.env.NODE_ENV === "development" ? error.message : undefined,
+        details: process.env.NODE_ENV === "development" ? (error?.message || String(error)) : undefined,
+        requestId,
       }),
     };
   }
@@ -283,30 +366,4 @@ function getManufacturerSearchUrl(brand, sku) {
   };
 
   return urls[brandLower] || null;
-}
-
-/**
- * Cache product data (implement with your database)
- */
-async function cacheProduct(sku, data) {
-  // TODO: Implement database caching
-  // Example with PostgreSQL:
-  // await db.query(
-  //   'INSERT INTO product_cache (sku, data, created_at) VALUES ($1, $2, NOW())',
-  //   [sku, JSON.stringify(data)]
-  // );
-}
-
-/**
- * Check cache for existing product data
- */
-async function checkCache(sku) {
-  // TODO: Implement database cache lookup
-  // Example with PostgreSQL:
-  // const result = await db.query(
-  //   'SELECT data FROM product_cache WHERE sku = $1 AND created_at > NOW() - INTERVAL \'30 days\'',
-  //   [sku]
-  // );
-  // return result.rows[0]?.data || null;
-  return null;
 }

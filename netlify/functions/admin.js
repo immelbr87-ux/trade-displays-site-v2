@@ -7,33 +7,45 @@ const LISTINGS = "Listings";
 
 /* ===============================
    🔄 Fetch ALL Airtable Records
-=============================== */
+   =============================== */
 async function fetchAllListings() {
   let all = [];
   let offset = null;
 
   do {
-    const url = `https://api.airtable.com/v0/${baseId}/${LISTINGS}${
-      offset ? `?offset=${offset}` : ""
-    }`;
+    const url = `https://api.airtable.com/v0/${baseId}/${LISTINGS}${offset ? `?offset=${offset}` : ""}`;
 
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${apiKey}` },
     });
 
     const data = await res.json();
-    all = all.concat(data.records);
+    if (!res.ok) {
+      console.error("Airtable fetch failed:", res.status, data);
+      throw new Error(`Airtable fetch failed (${res.status})`);
+    }
+
+    all = all.concat(data.records || []);
     offset = data.offset;
   } while (offset);
 
   return all;
 }
 
+function isoDay(d) {
+  try {
+    return new Date(d).toISOString().split("T")[0];
+  } catch {
+    return null;
+  }
+}
+
 /* ===============================
    🧠 Dashboard Logic
-=============================== */
+   =============================== */
 exports.handler = async (event) => {
-  if (!requireAdmin(event).ok) {
+  const auth = requireAdmin(event);
+  if (!auth.ok) {
     return json(401, { error: "Unauthorized" });
   }
 
@@ -44,21 +56,14 @@ exports.handler = async (event) => {
     const gmvByDay = {};
     const pickupDelays = [];
     const geoCounts = {};
-    const disputesByDay = {};
+    const disputesByDay = {}; // { YYYY-MM-DD: count }
+    const disputes = [];      // list of dispute/chargeback flagged listings
     const riskListings = [];
     const slaBreaches = [];
 
-    /* 🆕 Dispute Dashboard */
-    const disputes = [];
-    const blockedPayouts = [];
-    let totalDisputes = 0;
-    let openDisputes = 0;
-    let wonDisputes = 0;
-    let lostDisputes = 0;
-
     records.forEach((r) => {
       const f = r.fields || {};
-      const seller = f.seller_name || "Unknown Seller";
+      const seller = f.seller_name || f.showroom_name || "Unknown Seller";
       const price = Number(f.price || 0);
 
       if (!sellers[seller]) {
@@ -71,84 +76,68 @@ exports.handler = async (event) => {
         };
       }
 
-      sellers[seller].sales++;
-      sellers[seller].gmv += price;
-
-      /* GMV Trend */
-      if (f.paid_at) {
-        const day = new Date(f.paid_at).toISOString().split("T")[0];
-        gmvByDay[day] = (gmvByDay[day] || 0) + price;
+      // Treat a "sale" as a paid item (paid_at exists OR status indicates paid)
+      const isPaid = Boolean(f.paid_at) || String(f.status || "").toLowerCase().includes("paid");
+      if (isPaid) {
+        sellers[seller].sales++;
+        sellers[seller].gmv += price;
       }
 
-      /* SLA Breaches */
+      // GMV Trend (paid date)
+      if (f.paid_at) {
+        const day = isoDay(f.paid_at);
+        if (day) gmvByDay[day] = (gmvByDay[day] || 0) + price;
+      }
+
+      // Pickup Delay + SLA Breach (paid but not picked up)
       if (f.paid_at && !f.pickup_confirmed_at) {
-        const daysSincePaid =
-          (Date.now() - new Date(f.paid_at)) / 86400000;
+        const daysSincePaid = (Date.now() - new Date(f.paid_at)) / 86400000;
 
         if (daysSincePaid > 4) {
           slaBreaches.push({
             listing: f.title || r.id,
+            listingId: r.id,
             seller,
             daysOpen: Math.floor(daysSincePaid),
           });
         }
       }
 
-      /* Pickup Delay */
+      // Pickup delays (paid + picked up)
       if (f.paid_at && f.pickup_confirmed_at) {
-        const days =
-          (new Date(f.pickup_confirmed_at) - new Date(f.paid_at)) /
-          86400000;
+        const days = (new Date(f.pickup_confirmed_at) - new Date(f.paid_at)) / 86400000;
         pickupDelays.push(days);
         sellers[seller].pickupDays.push(days);
         if (days > 3) sellers[seller].latePickups++;
       }
 
-      /* Geo Analytics */
+      // Geo Analytics
       if (f.pickup_city) {
-        geoCounts[f.pickup_city] =
-          (geoCounts[f.pickup_city] || 0) + 1;
+        geoCounts[f.pickup_city] = (geoCounts[f.pickup_city] || 0) + 1;
       }
 
-      /* ===============================
-         ⚠️ DISPUTE DASHBOARD LOGIC
-      =============================== */
-
+      // Disputes / Chargebacks
       if (f.chargeback_flag) {
-        totalDisputes++;
         sellers[seller].disputes++;
 
-        if (f.dispute_status === "won") wonDisputes++;
-        else if (f.dispute_status === "lost") lostDisputes++;
-        else openDisputes++;
+        const day = isoDay(f.paid_at || f.updated_at || f.created_at || Date.now());
+        if (day) disputesByDay[day] = (disputesByDay[day] || 0) + 1;
 
         disputes.push({
           listing: f.title || r.id,
+          listingId: r.id,
           seller,
-          amount: price,
-          disputeStatus: f.dispute_status || "open",
-          created: f.dispute_created_at || f.paid_at,
-        });
-
-        if (f.paid_at) {
-          disputesByDay[
-            new Date(f.paid_at).toISOString().split("T")[0]
-          ] = (disputesByDay[
-            new Date(f.paid_at).toISOString().split("T")[0]
-          ] || 0) + 1;
-        }
-      }
-
-      if (f.seller_payout_status === "Blocked") {
-        blockedPayouts.push({
-          listing: f.title || r.id,
-          seller,
-          amount: f.seller_payout_amount || 0,
-          reason: "Dispute or fraud review",
+          price: price,
+          status: f.status || "",
+          paid_at: f.paid_at || null,
+          pickup_confirmed_at: f.pickup_confirmed_at || null,
+          stripe_session_id: f.stripe_session_id || null,
+          stripe_payment_intent: f.stripe_payment_intent || null,
+          notes: f.chargeback_notes || f.dispute_notes || null,
         });
       }
 
-      /* Risk Model */
+      // Listing Risk
       let risk = 0;
       if (price > 2000) risk += 2;
       if (f.chargeback_flag) risk += 5;
@@ -157,19 +146,21 @@ exports.handler = async (event) => {
       if (risk >= 4) {
         riskListings.push({
           listing: f.title || r.id,
+          listingId: r.id,
           seller,
           riskScore: risk,
+          status: f.status || "",
+          price,
         });
       }
     });
 
-    /* Seller Scorecards */
+    /* ===============================
+       🧾 Seller Report Cards
+       =============================== */
     const sellerCards = Object.entries(sellers).map(([name, s]) => {
       const avgPickup =
-        s.pickupDays.length > 0
-          ? s.pickupDays.reduce((a, b) => a + b, 0) /
-            s.pickupDays.length
-          : 0;
+        s.pickupDays.length > 0 ? s.pickupDays.reduce((a, b) => a + b, 0) / s.pickupDays.length : 0;
 
       let score = 100;
       score -= s.latePickups * 5;
@@ -192,15 +183,22 @@ exports.handler = async (event) => {
       };
     });
 
-    /* GMV Forecast */
+    /* ===============================
+       📈 GMV Forecast (Simple Linear)
+       =============================== */
     const daysCount = Object.keys(gmvByDay).length || 1;
-    const dailyAvg =
-      Object.values(gmvByDay).reduce((a, b) => a + b, 0) / daysCount;
+    const dailyAvg = Object.values(gmvByDay).reduce((a, b) => a + b, 0) / daysCount;
 
     const forecast = {
       d30: Math.round(dailyAvg * 30),
       d60: Math.round(dailyAvg * 60),
       d90: Math.round(dailyAvg * 90),
+    };
+
+    // Dispute summary
+    const disputeSummary = {
+      total: disputes.length,
+      open: disputes.filter((d) => String(d.status || "").toLowerCase().includes("dispute") || String(d.status || "").toLowerCase().includes("chargeback")).length,
     };
 
     return json(200, {
@@ -209,19 +207,11 @@ exports.handler = async (event) => {
       pickupDelays,
       geoCounts,
       disputesByDay,
+      disputes,
+      disputeSummary,
       riskListings,
       slaBreaches,
       forecast,
-
-      /* 🆕 DISPUTE PANEL DATA */
-      disputeDashboard: {
-        totalDisputes,
-        openDisputes,
-        wonDisputes,
-        lostDisputes,
-        disputes,
-        blockedPayouts,
-      },
     });
   } catch (err) {
     console.error("Admin dashboard error:", err);
