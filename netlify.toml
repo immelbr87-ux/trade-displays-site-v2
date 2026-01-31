@@ -154,3 +154,8 @@
 # SITE_URL
 # SUPPORT_EMAIL
 # FROM_EMAIL
+
+
+# Auto-flag sellers with repeated disputes
+[functions."flagRiskySellers"]
+  schedule = "0 */12 * * *"
