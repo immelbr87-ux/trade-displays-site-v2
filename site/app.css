@@ -1907,45 +1907,239 @@ canvas {
   max-width: 100%;
 }
 
+/* =========================================================
+   ADMIN REVENUE DASHBOARD (Totals + Charts)
+   Safe append — no removals
+   ========================================================= */
 
-
-/* ===============================
-   ADMIN DASHBOARD STYLES
-=============================== */
-
-.admin-container {
-  max-width: 1400px;
-  margin: 40px auto;
-  padding: 0 32px;
+.revenue-dashboard {
+  margin-top: 28px;
+  display: grid;
+  gap: 18px;
 }
 
-.table-wrap { overflow-x: auto; }
+.revenue-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
 
-.admin-table {
+.revenue-toolbar .toolbar-left,
+.revenue-toolbar .toolbar-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.revenue-range {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.revenue-range label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.revenue-range select,
+.revenue-range input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.revenue-range select:focus,
+.revenue-range input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.revenue-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.kpi-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.kpi-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+}
+
+.kpi-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.kpi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.kpi-badge.success {
+  border-color: rgba(0, 184, 92, 0.35);
+  background: rgba(0, 184, 92, 0.08);
+}
+
+.kpi-badge.warning {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.10);
+}
+
+.kpi-badge.error {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.revenue-charts {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+.chart-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: var(--text);
+}
+
+.chart-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.chart-canvas {
+  width: 100%;
+  height: 320px;
+  position: relative;
+}
+
+.chart-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.revenue-table {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.revenue-table .table-head {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.revenue-table .table-head h3 {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.revenue-table .table-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.revenue-table table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
-.admin-table th, .admin-table td {
+.revenue-table th,
+.revenue-table td {
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
   text-align: left;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.admin-table th {
+.revenue-table th {
   background: var(--bg);
-  font-weight: 700;
+  font-weight: 800;
 }
 
-.admin-table tr:hover { background: #f9fafb; }
+.revenue-table tr:hover td {
+  background: rgba(0,0,0,0.02);
+}
 
-.badge-error {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 12px;
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@media (max-width: 1024px) {
+  .revenue-kpis { grid-template-columns: repeat(2, 1fr); }
+  .revenue-charts { grid-template-columns: 1fr; }
+  .chart-canvas { height: 280px; }
+}
+
+@media (max-width: 768px) {
+  .revenue-kpis { grid-template-columns: 1fr; }
+  .revenue-toolbar { justify-content: flex-start; }
+  .chart-canvas { height: 260px; }
 }
