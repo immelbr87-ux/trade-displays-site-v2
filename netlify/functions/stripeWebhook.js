@@ -59,6 +59,7 @@ exports.handler = async (event) => {
         stripe_payment_intent: session.payment_intent,
         payout_eligible_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         buyer_email: session.customer_details?.email || "",
+        paid_at: new Date().toISOString()
       },
     });
   }
