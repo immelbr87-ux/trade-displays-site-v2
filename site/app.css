@@ -1866,3 +1866,43 @@ footer {
     display: none;
   }
 }
+
+
+/* =========================================================
+   ADMIN PORTAL (Dispute Dashboard Panel + Tables)
+   Appended safely (does not remove existing styles)
+   ========================================================= */
+
+.admin-shell code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+}
+
+.admin-card .muted {
+  color: var(--text-muted);
+}
+
+.admin-table td strong {
+  color: var(--text);
+}
+
+.admin-table td .muted {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.admin-table tr:hover td {
+  background: rgba(0,0,0,0.02);
+}
+
+#disputePanel .admin-table td:nth-child(8) {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Make charts behave in dark mode browsers (Chart.js canvas) */
+canvas {
+  max-width: 100%;
+}
