@@ -1,4 +1,3 @@
-// netlify/functions/_lib.js
 const fetch = require("node-fetch");
 
 /* ===============================
@@ -115,13 +114,17 @@ function addHours(date, hours) {
   return new Date(new Date(date).getTime() + hours * 60 * 60 * 1000);
 }
 
+function normalizeBool(val) {
+  return val === true || val === "true" || val === 1 || val === "1";
+}
+
 function isPayoutAllowed(recordFields) {
   if (!recordFields) return { ok: false, reason: "Missing record" };
 
-  if (recordFields.chargeback_flag)
+  if (normalizeBool(recordFields.chargeback_flag))
     return { ok: false, reason: "Chargeback exists" };
 
-  if (!recordFields.pickup_confirmed)
+  if (!normalizeBool(recordFields.pickup_confirmed))
     return { ok: false, reason: "Pickup not confirmed" };
 
   if (!recordFields.payout_eligible_at)
