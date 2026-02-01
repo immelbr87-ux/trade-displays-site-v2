@@ -1,0 +1,253 @@
+/* ===== SHOWROOM MARKET - COMPREHENSIVE BRANDING FIXES V2 ===== */
+
+/* ===== HEADER: TEXT-ONLY LOGO (NO BOX, NO SUBTITLE) ===== */
+.brand-text-only {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-name-only {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.8px !important;
+  color: #111827 !important;
+  line-height: 1 !important;
+}
+
+.brand-green {
+  color: #00b85c !important;
+}
+
+/* Hide any square boxes or subtitles */
+.brand-mark,
+.brand-sub,
+.footer-logo-mark {
+  display: none !important;
+}
+
+/* ===== EXPANDED SEARCH BAR ===== */
+.search-large {
+  position: relative;
+  flex: 1;
+  max-width: 550px !important; /* Bigger search bar */
+}
+
+.search-large input {
+  width: 100% !important;
+  padding: 11px 18px 11px 44px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+  transition: all 0.2s !important;
+}
+
+.search-large input:focus {
+  border-color: #00b85c !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(0, 184, 92, 0.1) !important;
+}
+
+.search-icon {
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #6b7280 !important;
+  pointer-events: none !important;
+}
+
+/* ===== COMPACT CTA BUTTONS ===== */
+.header-cta-group {
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.btn-header {
+  display: inline-block !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 13px !important; /* Smaller text */
+  padding: 8px 16px !important; /* Smaller padding */
+  border-radius: 6px !important;
+  transition: all 0.2s !important;
+  border: 1px solid !important;
+  white-space: nowrap !important;
+}
+
+/* Sign In - Grey */
+.btn-grey-sm,
+.btn-header[href*="signin"] {
+  background: #f3f4f6 !important;
+  color: #111827 !important;
+  border-color: #e5e7eb !important;
+}
+
+.btn-grey-sm:hover {
+  background: #e5e7eb !important;
+  border-color: #d1d5db !important;
+}
+
+/* Create Account - Black */
+.btn-black-sm,
+.btn-header[href*="signup"] {
+  background: #111827 !important;
+  color: #ffffff !important;
+  border-color: #111827 !important;
+}
+
+.btn-black-sm:hover {
+  background: #1f2937 !important;
+  border-color: #1f2937 !important;
+}
+
+/* Start Pilot - Green */
+.btn-green-sm,
+.btn-header[href*="pilot"] {
+  background: #00b85c !important;
+  color: #ffffff !important;
+  border-color: #00b85c !important;
+}
+
+.btn-green-sm:hover {
+  background: #009648 !important;
+  border-color: #009648 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 184, 92, 0.25) !important;
+}
+
+/* ===== NAVIGATION - FIX GREEN HIGHLIGHTS ===== */
+.topnav a,
+nav.topnav a {
+  color: #111827 !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: color 0.2s !important;
+  background: transparent !important;
+}
+
+.topnav a:hover {
+  color: #00b85c !important;
+  background: transparent !important;
+}
+
+/* Fix "For Showrooms" - should NOT be green */
+.topnav a[href*="pilot"],
+.topnav a[href*="showroom"] {
+  color: #111827 !important;
+  background: transparent !important;
+}
+
+.topnav a[href*="pilot"]:hover,
+.topnav a[href*="showroom"]:hover {
+  color: #00b85c !important;
+}
+
+/* ===== CATEGORY BAR - NO GREEN HIGHLIGHTS ===== */
+.cat,
+.catbar a {
+  color: #6b7280 !important;
+  background: transparent !important;
+}
+
+.cat:hover,
+.catbar a:hover {
+  color: #111827 !important;
+  background: #ffffff !important;
+}
+
+.cat.active {
+  color: #111827 !important;
+  background: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* ===== FOOTER TEXT-ONLY LOGO ===== */
+.footer-brand-name,
+.footer-logo-text .footer-brand-name {
+  color: #ffffff !important;
+}
+
+.footer-brand-name span {
+  color: #00b85c !important;
+}
+
+/* ===== REMOVE GREEN FROM FOOTER LINKS ===== */
+.footer-nav a,
+.footer-links a,
+.site-footer a,
+.site-footer-v2 a {
+  color: #cbd5e1 !important;
+  text-decoration: none !important;
+  transition: all 0.2s !important;
+}
+
+.footer-nav a:hover,
+.footer-links a:hover,
+.site-footer a:hover,
+.site-footer-v2 a:hover {
+  color: #ffffff !important;
+  transform: translateX(2px) !important;
+}
+
+/* Footer legal links should never be green */
+.footer-legal-links a,
+.footer-bottom a {
+  color: #94a3b8 !important;
+}
+
+.footer-legal-links a:hover,
+.footer-bottom a:hover {
+  color: #ffffff !important;
+}
+
+/* ===== ENSURE WHITE HEADER BACKGROUND ===== */
+.topbar,
+.topbar-inner,
+.site-header,
+header.site-header {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+/* ===== HERO HEADLINES - SOLID BLACK ===== */
+.hero h1,
+.hero h1 *,
+section h1 {
+  color: #111827 !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 1200px) {
+  .search-large {
+    max-width: 400px !important;
+  }
+  
+  .btn-header {
+    font-size: 12px !important;
+    padding: 7px 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-cta-group {
+    display: none !important;
+  }
+  
+  .search-large {
+    max-width: 100% !important;
+  }
+}

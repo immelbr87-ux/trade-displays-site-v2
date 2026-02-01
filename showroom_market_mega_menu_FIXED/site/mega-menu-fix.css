@@ -1,0 +1,60 @@
+/* ===== MEGA MENU FIX - Ensure dropdowns are hidden by default ===== */
+
+/* Force hide old header if it's still showing */
+.site-header .topbar,
+.site-header .catbar {
+  display: none !important;
+}
+
+/* Ensure mega dropdowns are hidden by default */
+.mega-dropdown {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+  padding: 20px !important;
+  min-width: 800px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: 1000 !important;
+  display: block !important;
+}
+
+/* Only show dropdown when active */
+.mega-dropdown.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+  top: 100% !important;
+}
+
+/* Make sure navigation triggers are inline */
+.mega-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.mega-nav-item {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.mega-nav-trigger {
+  background: none !important;
+  border: none !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #1f2937 !important;
+  cursor: pointer !important;
+  border-radius: 6px !important;
+  transition: all 0.2s !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+}

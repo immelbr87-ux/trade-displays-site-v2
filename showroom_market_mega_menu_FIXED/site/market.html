@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Products - SHOWROOM MARKET | Kitchen & Bath Floor Models</title>
+  <meta name="description" content="Browse premium kitchen and bath showroom floor models. Cabinetry, vanities, appliances, fixtures from top brands. Wholesale prices for trade professionals.">
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="fixes.css">
+</head>
+<body>
+  
+  <!-- Header inserted via include.js -->
+  
+  <section class="container" style="padding: 3rem 0;">
+    <h1 style="margin-bottom: 1rem;">Browse Premium Products</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Kitchen and bath floor models from top showrooms nationwide.</p>
+    
+    <!-- Filters -->
+    <div class="filters">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search kitchen & bath products...">
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Category:</label>
+        <select class="form-select" id="categoryFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Categories</option>
+          <option value="cabinetry">Kitchen Cabinetry</option>
+          <option value="vanities">Bathroom Vanities</option>
+          <option value="faucets">Luxury Faucets</option>
+          <option value="sinks">Kitchen Sinks</option>
+          <option value="appliances">High-End Appliances</option>
+          <option value="shower-tub">Shower & Tub Systems</option>
+          <option value="countertops">Countertops & Surfaces</option>
+          <option value="hardware">Hardware & Fixtures</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Condition:</label>
+        <select class="form-select" id="conditionFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Conditions</option>
+          <option value="grade-a">Grade A - Like New</option>
+          <option value="grade-b">Grade B - Excellent</option>
+          <option value="grade-c">Grade C - Good</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Brand:</label>
+        <select class="form-select" id="brandFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Brands</option>
+          <option value="kohler">Kohler</option>
+          <option value="sub-zero">Sub-Zero</option>
+          <option value="wolf">Wolf</option>
+          <option value="miele">Miele</option>
+          <option value="thermador">Thermador</option>
+          <option value="other">Other Premium Brands</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Price Range:</label>
+        <select class="form-select" id="priceFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Prices</option>
+          <option value="0-1000">Under $1,000</option>
+          <option value="1000-5000">$1,000 - $5,000</option>
+          <option value="5000-10000">$5,000 - $10,000</option>
+          <option value="10000-25000">$10,000 - $25,000</option>
+          <option value="25000+">$25,000+</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Location:</label>
+        <select class="form-select" id="locationFilter" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="all">All Locations</option>
+          <option value="california">California</option>
+          <option value="new-york">New York</option>
+          <option value="illinois">Illinois</option>
+          <option value="texas">Texas</option>
+          <option value="florida">Florida</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label style="font-weight: 600; margin-right: 0.5rem;">Sort:</label>
+        <select class="form-select" id="sortSelect" style="width: auto; padding: 0.625rem 1rem;">
+          <option value="newest">Newest First</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Premium Buyer Alerts (90-mile default radius) -->
+    <section class="alert-card" id="alertCard">
+      <div class="alert-card__head">
+        <h3>Get new listing alerts</h3>
+        <p class="muted">Tell us what you want and we’ll email you when matching floor models are listed within 90 miles.</p>
+      </div>
+      <form id="alertForm" class="alert-form">
+        <div class="alert-grid">
+          <div class="form-group">
+            <label class="form-label" for="alertEmail">Email</label>
+            <input class="form-input" id="alertEmail" type="email" placeholder="you@company.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alertZip">ZIP Code</label>
+            <input class="form-input" id="alertZip" type="text" inputmode="numeric" placeholder="53092" required />
+            <div class="form-helper">Used for distance matching (90 miles)</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alertCategory">Category</label>
+            <select class="form-select" id="alertCategory" required>
+              <option value="">Select…</option>
+              <option value="Vanity">Vanity</option>
+              <option value="Faucet">Faucet</option>
+              <option value="Toilet">Toilet</option>
+              <option value="Shower">Shower</option>
+              <option value="Tub">Tub</option>
+              <option value="Sink">Sink</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alertSku">SKU (optional)</label>
+            <input class="form-input" id="alertSku" type="text" placeholder="Exact SKU (optional)" />
+            <div class="form-helper">Leave blank to match similar listings</div>
+          </div>
+        </div>
+
+        <div class="alert-options">
+          <label class="check">
+            <input type="checkbox" id="alertSimilar" checked />
+            <span>Notify me of similar listings (brand/model/category)</span>
+          </label>
+          <div class="alert-radius">Radius: <strong>90 miles</strong></div>
+        </div>
+
+        <div class="alert-actions">
+          <button class="btn btn-primary" type="submit">Create alert</button>
+          <div id="alertMsg" class="muted"></div>
+        </div>
+      </form>
+    </section>
+    
+    <div id="resultsCount" style="margin: 2rem 0 1rem; color: var(--text-muted); font-weight: 500;">
+      Loading...
+    </div>
+    
+    <!-- Displays Grid -->
+    <div id="displaysGrid" class="product-grid">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading products...</p>
+      </div>
+    </div>
+    
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden" style="text-align: center; padding: 4rem 2rem;">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+      <h3>No products found</h3>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Try adjusting your filters or search criteria.</p>
+      <button onclick="resetFilters()" class="btn btn-outline" style="margin-top: 1.5rem;">Reset Filters</button>
+    </div>
+  </section>
+
+  <!-- Footer inserted via include.js -->
+  
+  <script src="shared/include.js"></script>
+  <script>
+    let allDisplays = [];
+    let currentCategory = 'all';
+    let currentCondition = 'all';
+    let currentBrand = 'all';
+    let currentPrice = 'all';
+    let currentLocation = 'all';
+    let currentSort = 'newest';
+    let searchQuery = '';
+
+    // ✅ Race-condition guard for loadDisplays()
+    let isLoadingDisplays = false;
+    let loadAbortController = null;
+
+    // Buyer alert signup
+    async function handleAlertSubmit(e) {
+      e.preventDefault();
+      const msg = document.getElementById('alertMsg');
+      msg.textContent = 'Creating alert...';
+      const payload = {
+        email: document.getElementById('alertEmail').value.trim(),
+        zip: document.getElementById('alertZip').value.trim(),
+        category: document.getElementById('alertCategory').value,
+        sku: document.getElementById('alertSku').value.trim(),
+        similar: document.getElementById('alertSimilar').checked,
+        radius_miles: 90,
+      };
+      try {
+        const res = await fetch('/.netlify/functions/createAlert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || 'Failed');
+        msg.textContent = 'Alert created. Check your email to confirm.';
+        document.getElementById('alertForm').reset();
+        document.getElementById('alertSimilar').checked = true;
+      } catch (err) {
+        msg.textContent = 'Could not create alert: ' + (err.message || 'error');
+      }
+    }
+
+    // Fetch displays from Netlify Function
+    async function loadDisplays() {
+      if (isLoadingDisplays) return;
+      isLoadingDisplays = true;
+
+      // cancel any in-flight request if this is called again
+      if (loadAbortController) {
+        try { loadAbortController.abort(); } catch {}
+      }
+      loadAbortController = new AbortController();
+
+      try {
+        const response = await fetch('/.netlify/functions/listDisplays', {
+          signal: loadAbortController.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`listDisplays failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        allDisplays = Array.isArray(data.displays) ? data.displays : [];
+
+        filterAndRenderDisplays();
+      } catch (error) {
+        if (error?.name === "AbortError") {
+          // ignore aborted requests
+        } else {
+          console.error('Error loading displays:', error);
+          document.getElementById('displaysGrid').innerHTML = `
+            <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+              <p style="color: var(--error);">Unable to load products. Please try again later.</p>
+            </div>
+          `;
+          document.getElementById('resultsCount').textContent = "Unable to load products.";
+        }
+      } finally {
+        isLoadingDisplays = false;
+      }
+    }
+
+    // Filter and render displays
+    function filterAndRenderDisplays() {
+      let filtered = [...allDisplays];
+      
+      // Apply category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(d => {
+          const category = String(d.category || '').toLowerCase();
+          const name = String(d.name || '').toLowerCase();
+          return category.includes(currentCategory.toLowerCase()) ||
+                 name.includes(currentCategory.toLowerCase());
+        });
+      }
+      
+      // Apply condition filter
+      if (currentCondition !== 'all') {
+        filtered = filtered.filter(d => {
+          const condition = String(d.condition || '').toLowerCase().replace(/\s/g, '-') || '';
+          return condition.includes(currentCondition);
+        });
+      }
+      
+      // Apply brand filter
+      if (currentBrand !== 'all') {
+        filtered = filtered.filter(d => {
+          const brand = String(d.brand || '').toLowerCase();
+          return brand.includes(currentBrand.toLowerCase());
+        });
+      }
+      
+      // Apply price filter
+      if (currentPrice !== 'all') {
+        filtered = filtered.filter(d => {
+          const price = Number(d.price || 0);
+          if (currentPrice === '0-1000') return price < 1000;
+          if (currentPrice === '1000-5000') return price >= 1000 && price < 5000;
+          if (currentPrice === '5000-10000') return price >= 5000 && price < 10000;
+          if (currentPrice === '10000-25000') return price >= 10000 && price < 25000;
+          if (currentPrice === '25000+') return price >= 25000;
+          return true;
+        });
+      }
+      
+      // Apply location filter
+      if (currentLocation !== 'all') {
+        filtered = filtered.filter(d => {
+          const location = String(d.location || '').toLowerCase();
+          return location.includes(currentLocation.toLowerCase());
+        });
+      }
+      
+      // Apply search (✅ null safe)
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(d => {
+          const n = String(d.name || '').toLowerCase();
+          const desc = String(d.description || '').toLowerCase();
+          const b = String(d.brand || '').toLowerCase();
+          return n.includes(q) || desc.includes(q) || b.includes(q);
+        });
+      }
+      
+      // Sort
+      switch(currentSort) {
+        case 'price-low':
+          filtered.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+          break;
+        case 'price-high':
+          filtered.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
+          break;
+        case 'popular':
+          filtered.sort((a, b) => Number(b.views || 0) - Number(a.views || 0));
+          break;
+        case 'newest':
+        default:
+          filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      }
+      
+      renderDisplays(filtered);
+      updateResultsCount(filtered.length);
+    }
+
+    // Render displays
+    function renderDisplays(displays) {
+      const grid = document.getElementById('displaysGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (displays.length === 0) {
+        grid.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      
+      grid.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+      
+      grid.innerHTML = displays.map(display => {
+        const location = display.location || 'Location TBD';
+        const cityOnly = location.split(',').slice(-2).join(',').trim() || location;
+        const grade = display.condition || 'Grade A';
+        const availability = display.availability || 'Available Now';
+
+        // ✅ UX guard: if data includes status/locked, stop navigation on clearly unavailable items
+        const status = String(display.status || '').toLowerCase();
+        const locked = display.locked === true;
+        const unavailableByStatus = status && status !== 'active';
+        const unavailableByAvailability = String(availability).toLowerCase().includes('unavailable') ||
+                                         String(availability).toLowerCase().includes('sold') ||
+                                         String(availability).toLowerCase().includes('pending');
+
+        const isUnavailable = locked || unavailableByStatus || unavailableByAvailability;
+
+        return `
+        <div class="product-card ${isUnavailable ? 'is-unavailable' : ''}"
+             onclick="${isUnavailable ? "return false" : `window.location.href='listing-details.html?id=${display.id}'`}"
+             style="${isUnavailable ? "opacity:0.55; cursor:not-allowed;" : ""}">
+          <div class="product-image" style="background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);">
+            <div class="product-badges">
+              <span class="badge badge-grade">${grade}</span>
+              <span class="badge badge-pickup">${availability}</span>
+            </div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${display.name || 'Unnamed Product'}</div>
+            
+            <ul class="product-specs">
+              <li><strong>Condition:</strong> ${display.condition || 'N/A'}</li>
+              <li><strong>Brand:</strong> ${display.brand || 'Various'}</li>
+              <li><strong>Location:</strong> ${cityOnly}</li>
+              <li><strong>Available:</strong> ${availability}</li>
+            </ul>
+            
+            <div class="product-price">$${Number(display.price || 0).toLocaleString()}</div>
+            <div class="product-actions">
+              <a href="reserve-confirmation.html?id=${display.id}" class="btn btn-primary btn-small"
+                 onclick="${isUnavailable ? "event.preventDefault(); event.stopPropagation(); alert('This listing is not currently available.');" : "event.stopPropagation()"}">
+                 Reserve
+              </a>
+              <a href="listing-details.html?id=${display.id}" class="btn btn-secondary btn-small"
+                 onclick="${isUnavailable ? "event.preventDefault(); event.stopPropagation(); alert('This listing is not currently available.');" : "event.stopPropagation()"}">
+                 Details
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    // Update results count
+    function updateResultsCount(count) {
+      document.getElementById('resultsCount').textContent = 
+        `Showing ${count} ${count === 1 ? 'product' : 'products'}`;
+    }
+
+    // Reset filters
+    function resetFilters() {
+      currentCategory = 'all';
+      currentCondition = 'all';
+      currentBrand = 'all';
+      currentPrice = 'all';
+      currentLocation = 'all';
+      currentSort = 'newest';
+      searchQuery = '';
+      
+      document.getElementById('categoryFilter').value = 'all';
+      document.getElementById('conditionFilter').value = 'all';
+      document.getElementById('brandFilter').value = 'all';
+      document.getElementById('priceFilter').value = 'all';
+      document.getElementById('locationFilter').value = 'all';
+      document.getElementById('sortSelect').value = 'newest';
+      document.getElementById('searchInput').value = '';
+      
+      window.history.replaceState({}, '', 'market.html');
+      filterAndRenderDisplays();
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Category filter
+      document.getElementById('categoryFilter').addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Condition filter
+      document.getElementById('conditionFilter').addEventListener('change', (e) => {
+        currentCondition = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Brand filter
+      document.getElementById('brandFilter').addEventListener('change', (e) => {
+        currentBrand = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Price filter
+      document.getElementById('priceFilter').addEventListener('change', (e) => {
+        currentPrice = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Location filter
+      document.getElementById('locationFilter').addEventListener('change', (e) => {
+        currentLocation = e.target.value;
+        filterAndRenderDisplays();
+      });
+      
+      // Sort select
+      document.getElementById('sortSelect').addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        filterAndRenderDisplays();
+      });
+
+      // Buyer alert signup
+      const alertForm = document.getElementById('alertForm');
+      if (alertForm) alertForm.addEventListener('submit', handleAlertSubmit);
+      
+      // Search input with debounce
+      let searchTimeout;
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          searchQuery = e.target.value;
+          filterAndRenderDisplays();
+        }, 300);
+      });
+      
+      // Check URL parameters for filters
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoryParam = urlParams.get('category');
+      if (categoryParam) {
+        currentCategory = categoryParam;
+        document.getElementById('categoryFilter').value = categoryParam;
+      }
+      
+      loadDisplays();
+    });
+  </script>
+</body>
+</html>
