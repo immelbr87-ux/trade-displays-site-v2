@@ -9,6 +9,7 @@
 
 const fetch = require("node-fetch");
 const { json } = require("./_lib");
+const { matchAndNotifyAlerts } = require('./_alerts');
 
 function getToken(event) {
   const h = event.headers || {};
@@ -58,6 +59,7 @@ exports.handler = async (event) => {
       price: body.price != null ? Number(body.price) : null,
       condition_grade: body.condition_grade || body.condition || "",
       pickup_location: body.pickup_location || body.location || "",
+      pickup_zip: body.pickup_zip || body.zip || body.postal_code || "",
       pickup_instructions: body.pickup_instructions || "",
       showroom_name: body.showroom_name || "",
       showroom_email: body.showroom_email || body.seller_email || "",
@@ -97,6 +99,16 @@ exports.handler = async (event) => {
     if (!res.ok) {
       console.error("createListing Airtable error:", data);
       return { statusCode: res.status, headers, body: JSON.stringify({ error: "Airtable create failed", detail: data }) };
+    }
+
+    // Fire-and-forget alert matching (do not fail listing creation if alerts error)
+    try {
+      await matchAndNotifyAlerts({
+        listingId: data.id,
+        listingFields: { ...fields, id: data.id },
+      });
+    } catch (e) {
+      console.error('Alert match error (non-blocking):', e?.message || e);
     }
 
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, id: data.id }) };

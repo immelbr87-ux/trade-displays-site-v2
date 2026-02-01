@@ -15,7 +15,8 @@ function calculateCommission(salePrice) {
   let commissionAmount = salePrice * rate;
 
   // Minimum platform fee floor
-  const MIN_PLATFORM_FEE = 40;
+  // Minimum platform fee floor (requested)
+  const MIN_PLATFORM_FEE = 99;
   if (commissionAmount < MIN_PLATFORM_FEE) {
     commissionAmount = MIN_PLATFORM_FEE;
   }
