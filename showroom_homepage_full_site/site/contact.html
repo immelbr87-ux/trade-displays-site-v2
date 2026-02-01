@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - SHOWROOM MARKET</title>
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="fixes.css">
+  <style>
+    /* Premium Contact Page Styling */
+    .contact-wrapper {
+      min-height: calc(100vh - 140px);
+      background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+      padding: 6rem 0;
+    }
+    
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    
+    /* Left Side - Info */
+    .contact-info {
+      position: sticky;
+      top: 120px;
+    }
+    
+    .contact-title {
+      font-size: 48px;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 1rem;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+    }
+    
+    .contact-subtitle {
+      font-size: 18px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+    
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .contact-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #00b85c;
+    }
+    
+    .contact-method-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.25rem;
+    }
+    
+    .contact-method-content p {
+      font-size: 15px;
+      color: #6b7280;
+      margin: 0;
+    }
+    
+    .contact-method-content a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    .contact-method-content a:hover {
+      color: #009648;
+    }
+    
+    /* Right Side - Form */
+    .contact-form-wrapper {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: 3rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    }
+    
+    .form-header {
+      margin-bottom: 2.5rem;
+    }
+    
+    .form-header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-header p {
+      font-size: 15px;
+      color: #6b7280;
+      margin: 0;
+    }
+    
+    .premium-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      padding: 14px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fafafa;
+      transition: all 0.2s;
+    }
+    
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none;
+      border-color: #00b85c;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 184, 92, 0.08);
+    }
+    
+    .form-field textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+    
+    .char-count {
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: right;
+      margin-top: -0.5rem;
+    }
+    
+    .form-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    
+    .form-checkbox input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    
+    .form-checkbox label {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.6;
+      cursor: pointer;
+    }
+    
+    .form-checkbox label a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .form-checkbox label a:hover {
+      color: #009648;
+    }
+    
+    .submit-btn {
+      padding: 16px;
+      background: #111827;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      margin-top: 0.5rem;
+    }
+    
+    .submit-btn:hover {
+      background: #1f2937;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(17, 24, 39, 0.2);
+    }
+    
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    
+    .form-footer {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+    
+    .form-footer a {
+      color: #00b85c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .contact-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      
+      .contact-info {
+        position: static;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .contact-wrapper {
+        padding: 3rem 0;
+      }
+      
+      .contact-title {
+        font-size: 36px;
+      }
+      
+      .contact-form-wrapper {
+        padding: 2rem;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header inserted via include.js -->
+  
+  <div class="contact-wrapper">
+    <div class="contact-container">
+      <!-- Left Side - Contact Info -->
+      <div class="contact-info">
+        <h1 class="contact-title">Get in Touch</h1>
+        <p class="contact-subtitle">
+          Have questions about listing your showroom inventory or buying premium K&B products? We're here to help.
+        </p>
+        
+        <div class="contact-methods">
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div class="contact-method-content">
+              <h3>Email Support</h3>
+              <p>General inquiries and support</p>
+              <a href="mailto:support@showroommarket.com">support@showroommarket.com</a>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <div class="contact-method-content">
+              <h3>For Showrooms</h3>
+              <p>Questions about listing inventory</p>
+              <a href="mailto:sellers@showroommarket.com">sellers@showroommarket.com</a>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <div class="contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div class="contact-method-content">
+              <h3>Response Time</h3>
+              <p>We typically respond within 24 hours during business days (Monday-Friday, 9am-6pm EST)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Side - Contact Form -->
+      <div class="contact-form-wrapper">
+        <div class="form-header">
+          <h2>Send us a Message</h2>
+          <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+        </div>
+        
+        <form class="premium-form" action="/netlify/functions/contact" method="POST">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="name">Name *</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                placeholder="Your full name" 
+                required
+              />
+            </div>
+            
+            <div class="form-field">
+              <label for="email">Email *</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="your@email.com" 
+                required
+              />
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-field">
+              <label for="phone">Phone (Optional)</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                placeholder="(555) 123-4567"
+              />
+            </div>
+            
+            <div class="form-field">
+              <label for="inquiry-type">Inquiry Type *</label>
+              <select id="inquiry-type" name="inquiry-type" required>
+                <option value="">Select one...</option>
+                <option value="buyer">Buyer Inquiry</option>
+                <option value="seller">Showroom / Seller</option>
+                <option value="support">Technical Support</option>
+                <option value="partnership">Partnership</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-field">
+            <label for="subject">Subject *</label>
+            <input 
+              type="text" 
+              id="subject" 
+              name="subject" 
+              placeholder="Brief description of your inquiry" 
+              required
+            />
+          </div>
+          
+          <div class="form-field">
+            <label for="message">Message *</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              placeholder="Tell us more about your inquiry..."
+              maxlength="2000"
+              required
+              oninput="updateCharCount()"
+            ></textarea>
+            <div class="char-count">
+              <span id="char-count">0</span> / 2000 characters
+            </div>
+          </div>
+          
+          <div class="form-checkbox">
+            <input 
+              type="checkbox" 
+              id="privacy-agree" 
+              name="privacy-agree" 
+              required
+            />
+            <label for="privacy-agree">
+              I agree to the <a href="/privacy">Privacy Policy</a> and consent to SHOWROOM MARKET storing my information to respond to this inquiry.
+            </label>
+          </div>
+          
+          <button type="submit" class="submit-btn">Send Message</button>
+          
+          <div class="form-footer">
+            This site is protected by reCAPTCHA and the Google 
+            <a href="/privacy">Privacy Policy</a> and 
+            <a href="/terms">Terms of Service</a> apply.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer inserted via include.js -->
+  
+  <script src="shared/include.js"></script>
+  <script>
+    function updateCharCount() {
+      const textarea = document.getElementById('message');
+      const charCount = document.getElementById('char-count');
+      charCount.textContent = textarea.value.length;
+    }
+  </script>
+</body>
+</html>

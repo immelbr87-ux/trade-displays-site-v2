@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reserve • Showroom Market</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/market.html">
+          <div class="brand-mark">S</div>
+          <div class="brand-text">
+            <div class="brand-name">Showroom Market</div>
+            <div class="brand-sub">Verified Pickup Marketplace</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section" style="max-width: 900px;">
+    <div class="card">
+      <h2 style="margin-bottom: 8px;">Reserve this listing</h2>
+      <p style="margin-bottom: 18px;">
+        Confirm your details, then you’ll be redirected to secure checkout. Pickup is verified in-person.
+      </p>
+
+      <form id="reserveForm">
+        <div class="grid grid-2" style="gap: 16px;">
+          <div class="form-group">
+            <label class="form-label" for="customer_name">Full Name</label>
+            <input class="form-input" id="customer_name" type="text" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="buyer_company">Company (optional)</label>
+            <input class="form-input" id="buyer_company" type="text" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="customer_email">Email</label>
+            <input class="form-input" id="customer_email" type="email" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="customer_phone">Phone (optional)</label>
+            <input class="form-input" id="customer_phone" type="tel" />
+          </div>
+        </div>
+
+        <div class="alert alert-warning" style="margin-top: 12px;">
+          You will not be charged if you cancel on the Stripe checkout page.
+        </div>
+
+        <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+          <button class="btn btn-primary" type="submit" id="payBtn">Continue to Checkout</button>
+          <a class="btn btn-outline" id="backBtn" href="/market.html">Back</a>
+        </div>
+      </form>
+
+      <div class="loading hidden" id="loading">
+        <div class="spinner"></div>
+        Redirecting to checkout…
+      </div>
+
+      <div class="alert alert-error hidden" id="errorBox"></div>
+    </div>
+  </main>
+
+<script>
+(function(){
+  const qs = new URLSearchParams(location.search);
+  const listingId = qs.get("displayId") || qs.get("id") || qs.get("listingId");
+  const backBtn = document.getElementById("backBtn");
+  if (listingId) backBtn.href = `/listing-details.html?id=${encodeURIComponent(listingId)}`;
+
+  const form = document.getElementById("reserveForm");
+  const loading = document.getElementById("loading");
+  const errBox = document.getElementById("errorBox");
+  const payBtn = document.getElementById("payBtn");
+
+  if(!listingId){
+    errBox.classList.remove("hidden");
+    errBox.textContent = "Missing listing id. Return to the market and try again.";
+    payBtn.disabled = true;
+    return;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errBox.classList.add("hidden");
+    payBtn.disabled = true;
+    loading.classList.remove("hidden");
+
+    const payload = {
+      listingId,
+      origin: location.origin,
+      customer_name: document.getElementById("customer_name").value.trim(),
+      buyer_company: document.getElementById("buyer_company").value.trim(),
+      customer_email: document.getElementById("customer_email").value.trim(),
+      customer_phone: document.getElementById("customer_phone").value.trim()
+    };
+
+    try{
+      const res = await fetch("/.netlify/functions/createCheckoutSession", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if(!res.ok || !data.url){
+        throw new Error(data.error || "Checkout session failed");
+      }
+      window.location.href = data.url;
+    }catch(err){
+      console.error(err);
+      loading.classList.add("hidden");
+      errBox.classList.remove("hidden");
+      errBox.textContent = err.message || "Checkout failed. Please try again.";
+      payBtn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
