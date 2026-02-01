@@ -1908,6 +1908,73 @@ canvas {
 }
 
 /* =========================================================
+   PREMIUM BUYER ALERT CARD (Market)
+   ========================================================= */
+
+.alert-card {
+  margin: 24px 0 32px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.alert-card__head {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.alert-card__head h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.alert-card__form {
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr 1.1fr 1.2fr;
+  gap: 12px;
+  align-items: end;
+}
+
+.alert-card__form .form-group {
+  margin-bottom: 0;
+}
+
+.alert-card__checks {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.alert-card__checks label {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.alert-msg {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+@media (max-width: 1024px) {
+  .alert-card__form { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .alert-card__form { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
    ADMIN REVENUE DASHBOARD (Totals + Charts)
    Safe append — no removals
    ========================================================= */
