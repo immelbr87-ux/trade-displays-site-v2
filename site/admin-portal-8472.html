@@ -1,419 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Showroom Market — Admin Portal</title>
-  <link rel="stylesheet" href="/app.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Small admin-page-only tweaks (main styles live in app.css) */
-    .admin-shell { max-width: 1200px; margin: 0 auto; padding: 48px 20px; }
-    .admin-top { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; }
-    .admin-top h1 { font-size: 28px; margin:0; }
-    .admin-kicker { color: var(--text-muted); margin: 0 0 22px; }
-    .admin-grid { display:grid; grid-template-columns: 1fr; gap: 18px; }
-    .admin-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-sm); }
-    .admin-card h2 { font-size: 18px; margin: 0 0 12px; }
-    .admin-row { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
-    .admin-input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; width: 260px; }
-    .admin-btn { padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: #111827; color: #fff; cursor: pointer; font-weight: 700; }
-    .admin-btn.secondary { background: #f3f4f6; color: #111827; }
-    .admin-btn:disabled { opacity: .6; cursor: not-allowed; }
-    .admin-stats { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
-    .admin-stat { border: 1px solid var(--border); border-radius: 12px; padding: 14px; background: #fff; }
-    .admin-stat .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
-    .admin-stat .value { font-size: 22px; font-weight: 900; margin-top: 6px; }
-    .admin-table { width: 100%; border-collapse: collapse; }
-    .admin-table th, .admin-table td { text-align:left; padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 14px; }
-    .admin-table th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
-    .pill { display:inline-flex; align-items:center; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; border: 1px solid var(--border); }
-    .pill.gold { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
-    .pill.silver { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
-    .pill.watch { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
-    .pill.danger { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
-    .muted { color: var(--text-muted); }
-    .split { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 900px) { .admin-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } .split{ grid-template-columns: 1fr; } }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Showroom Market Admin Portal</title>
+<link rel="stylesheet" href="/app.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="admin-shell">
-    <div class="admin-top">
-      <h1>Admin Portal</h1>
-      <div class="admin-row">
-        <input id="adminKey" class="admin-input" type="password" placeholder="Admin key (ADMIN_SECRET_TOKEN)" />
-        <button id="saveKey" class="admin-btn secondary">Save</button>
-        <button id="refresh" class="admin-btn">Refresh</button>
-      </div>
-    </div>
+<div class="admin-container">
+<h1>📊 Showroom Market Admin Dashboard</h1>
 
-    <p class="admin-kicker">Analytics pulled from Airtable via <code>/.netlify/functions/admin</code>. If the data looks empty, confirm the admin key and Airtable env vars.</p>
+<div class="card">
+  <h2>Revenue & Disputes Trend</h2>
+  <canvas id="gmvChart" height="100"></canvas>
+</div>
 
-    <div class="admin-grid">
-      <!-- KPI STATS -->
-      <section class="admin-card">
-        <h2>KPIs</h2>
-        <div class="admin-stats">
-          <div class="admin-stat">
-            <div class="label">30d GMV (forecast)</div>
-            <div id="kpi_gmv30" class="value">—</div>
-          </div>
-          <div class="admin-stat">
-            <div class="label">Active Sellers</div>
-            <div id="kpi_sellers" class="value">—</div>
-          </div>
-          <div class="admin-stat">
-            <div class="label">High-Risk Listings</div>
-            <div id="kpi_risk" class="value">—</div>
-          </div>
-          <div class="admin-stat">
-            <div class="label">Disputes</div>
-            <div id="kpi_disputes" class="value">—</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CHARTS -->
-      <section class="admin-card">
-        <h2>Trends</h2>
-        <div class="split">
-          <div>
-            <div class="muted" style="margin-bottom:8px;">GMV by day</div>
-            <canvas id="gmvChart" height="140"></canvas>
-          </div>
-          <div>
-            <div class="muted" style="margin-bottom:8px;">Disputes by day</div>
-            <canvas id="disputeChart" height="140"></canvas>
-          </div>
-        </div>
-      </section>
-
-      <!-- SELLERS -->
-      <section class="admin-card">
-        <h2>Sellers</h2>
-        <table class="admin-table" id="sellerTable">
-          <thead>
-            <tr>
-              <th>Seller</th>
-              <th>Badge</th>
-              <th>Score</th>
-              <th>Sales</th>
-              <th>GMV</th>
-              <th>Avg Pickup Days</th>
-              <th>Late Pickups</th>
-              <th>Disputes</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-
-      <!-- DISPUTE DASHBOARD PANEL -->
-      <section class="admin-card" id="disputePanel">
-        <h2>Dispute Dashboard</h2>
-        <div class="admin-row" style="justify-content: space-between; margin-bottom: 10px;">
-          <div class="muted">Listings with <code>chargeback_flag</code> set to true.</div>
-          <div class="admin-row">
-            <button id="copyDisputesCsv" class="admin-btn secondary">Copy CSV</button>
-          </div>
-        </div>
-
-        <table class="admin-table" id="disputeTable">
-          <thead>
-            <tr>
-              <th>Listing</th>
-              <th>Seller</th>
-              <th>Status</th>
-              <th>Price</th>
-              <th>Paid At</th>
-              <th>Picked Up</th>
-              <th>Stripe</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-
-      <!-- RISK LISTINGS -->
-      <section class="admin-card">
-        <h2>Risk Listings</h2>
-        <table class="admin-table" id="riskTable">
-          <thead>
-            <tr>
-              <th>Listing</th>
-              <th>Seller</th>
-              <th>Status</th>
-              <th>Price</th>
-              <th>Risk Score</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-
-      <!-- SLA BREACHES -->
-      <section class="admin-card">
-        <h2>SLA Breaches</h2>
-        <table class="admin-table" id="slaTable">
-          <thead>
-            <tr>
-              <th>Listing</th>
-              <th>Seller</th>
-              <th>Days Open</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-    </div>
+<div class="card">
+  <h2>🚨 Active Payment Disputes</h2>
+  <button id="refreshDisputes" class="btn btn-outline">Refresh</button>
+  <button id="copyDisputes" class="btn btn-outline">Copy CSV</button>
+  <div class="table-wrap">
+    <table class="admin-table" id="disputesTable">
+      <thead>
+        <tr>
+          <th>Listing</th>
+          <th>Seller</th>
+          <th>Price</th>
+          <th>Paid Date</th>
+          <th>Status</th>
+          <th>Risk</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
+</div>
+</div>
 
 <script>
-(function () {
-  const $ = (id) => document.getElementById(id);
+const ADMIN_TOKEN = localStorage.getItem("admin_token") || prompt("Enter Admin Token:");
 
-  const state = {
-    charts: {
-      gmv: null,
-      disputes: null
+async function fetchDisputes() {
+  const res = await fetch("/.netlify/functions/admin-get-disputes", {
+    headers: { Authorization: "Bearer " + ADMIN_TOKEN }
+  });
+  return res.json();
+}
+
+async function resolveDispute(recordId) {
+  if (!confirm("Mark dispute resolved and re-enable payout?")) return;
+  await fetch("/.netlify/functions/admin-resolve-dispute", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + ADMIN_TOKEN
     },
-    lastData: null
-  };
-
-  function money(n) {
-    const v = Number(n || 0);
-    return v.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-  }
-
-  function pillClass(badge) {
-    const b = String(badge || "").toLowerCase();
-    if (b.includes("gold")) return "pill gold";
-    if (b.includes("silver")) return "pill silver";
-    if (b.includes("watch")) return "pill watch";
-    return "pill";
-  }
-
-  function safeText(v) {
-    return (v === null || v === undefined) ? "" : String(v);
-  }
-
-  function toISODate(v) {
-    if (!v) return "";
-    try { return new Date(v).toISOString().split("T")[0]; } catch { return ""; }
-  }
-
-  function destroyChart(which) {
-    try {
-      if (state.charts[which]) {
-        state.charts[which].destroy();
-        state.charts[which] = null;
-      }
-    } catch (_) {}
-  }
-
-  function renderCharts(data) {
-    // GMV by day
-    const gmvLabels = Object.keys(data.gmvByDay || {}).sort();
-    const gmvValues = gmvLabels.map((k) => Number(data.gmvByDay[k] || 0));
-    destroyChart("gmv");
-    state.charts.gmv = new Chart($("gmvChart"), {
-      type: "line",
-      data: {
-        labels: gmvLabels,
-        datasets: [{ label: "GMV", data: gmvValues }]
-      },
-      options: { responsive: true, plugins: { legend: { display: false } } }
-    });
-
-    // Disputes by day
-    const dLabels = Object.keys(data.disputesByDay || {}).sort();
-    const dValues = dLabels.map((k) => Number(data.disputesByDay[k] || 0));
-    destroyChart("disputes");
-    state.charts.disputes = new Chart($("disputeChart"), {
-      type: "bar",
-      data: {
-        labels: dLabels,
-        datasets: [{ label: "Disputes", data: dValues }]
-      },
-      options: { responsive: true, plugins: { legend: { display: false } } }
-    });
-  }
-
-  function renderSellers(data) {
-    const tbody = $("sellerTable").querySelector("tbody");
-    tbody.innerHTML = "";
-
-    (data.sellerCards || [])
-      .sort((a, b) => (b.gmv || 0) - (a.gmv || 0))
-      .forEach((s) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${safeText(s.seller)}</td>
-          <td><span class="${pillClass(s.badge)}">${safeText(s.badge)}</span></td>
-          <td>${safeText(s.score)}</td>
-          <td>${safeText(s.sales)}</td>
-          <td>${money(s.gmv)}</td>
-          <td>${safeText(s.avgPickupDays)}</td>
-          <td>${safeText(s.latePickups)}</td>
-          <td>${safeText(s.disputes)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-  }
-
-  function renderRisk(data) {
-    const tbody = $("riskTable").querySelector("tbody");
-    tbody.innerHTML = "";
-
-    (data.riskListings || [])
-      .sort((a, b) => (b.riskScore || 0) - (a.riskScore || 0))
-      .slice(0, 50)
-      .forEach((r) => {
-        const tr = document.createElement("tr");
-        const riskPill = (r.riskScore >= 7) ? "pill danger" : "pill watch";
-        tr.innerHTML = `
-          <td>${safeText(r.listing)}</td>
-          <td>${safeText(r.seller)}</td>
-          <td>${safeText(r.status)}</td>
-          <td>${money(r.price)}</td>
-          <td><span class="${riskPill}">${safeText(r.riskScore)}</span></td>
-        `;
-        tbody.appendChild(tr);
-      });
-  }
-
-  function renderSLA(data) {
-    const tbody = $("slaTable").querySelector("tbody");
-    tbody.innerHTML = "";
-
-    (data.slaBreaches || [])
-      .sort((a, b) => (b.daysOpen || 0) - (a.daysOpen || 0))
-      .slice(0, 50)
-      .forEach((s) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${safeText(s.listing)}</td>
-          <td>${safeText(s.seller)}</td>
-          <td>${safeText(s.daysOpen)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-  }
-
-  function renderDisputes(data) {
-    const tbody = $("disputeTable").querySelector("tbody");
-    tbody.innerHTML = "";
-
-    (data.disputes || [])
-      .sort((a, b) => {
-        const ad = a.paid_at ? new Date(a.paid_at).getTime() : 0;
-        const bd = b.paid_at ? new Date(b.paid_at).getTime() : 0;
-        return bd - ad;
-      })
-      .slice(0, 200)
-      .forEach((d) => {
-        const tr = document.createElement("tr");
-        const stripe = d.stripe_session_id || d.stripe_payment_intent || "";
-        tr.innerHTML = `
-          <td><strong>${safeText(d.listing)}</strong><div class="muted">${safeText(d.listingId)}</div></td>
-          <td>${safeText(d.seller)}</td>
-          <td><span class="pill danger">Dispute</span> <span class="muted">${safeText(d.status)}</span></td>
-          <td>${money(d.price)}</td>
-          <td>${toISODate(d.paid_at)}</td>
-          <td>${d.pickup_confirmed_at ? "Yes" : "No"}</td>
-          <td class="muted">${safeText(stripe)}</td>
-          <td class="muted">${safeText(d.notes || "")}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-  }
-
-  function renderKPIs(data) {
-    const sellersCount = (data.sellerCards || []).filter((s) => (s.sales || 0) > 0).length;
-    $("kpi_gmv30").textContent = money(data.forecast?.d30 || 0);
-    $("kpi_sellers").textContent = String(sellersCount);
-    $("kpi_risk").textContent = String((data.riskListings || []).length);
-    $("kpi_disputes").textContent = String((data.disputes || []).length);
-  }
-
-  async function load() {
-    const key = $("adminKey").value || localStorage.getItem("adminKey") || "";
-    if (!key) {
-      alert("Enter your admin key first.");
-      return;
-    }
-
-    $("refresh").disabled = true;
-    $("refresh").textContent = "Loading…";
-
-    try {
-      const res = await fetch("/.netlify/functions/admin", {
-        headers: { "x-admin-key": key }
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to load admin data");
-
-      state.lastData = data;
-
-      renderKPIs(data);
-      renderCharts(data);
-      renderSellers(data);
-      renderDisputes(data);
-      renderRisk(data);
-      renderSLA(data);
-    } catch (e) {
-      console.error(e);
-      alert("Admin load failed: " + e.message);
-    } finally {
-      $("refresh").disabled = false;
-      $("refresh").textContent = "Refresh";
-    }
-  }
-
-  $("saveKey").addEventListener("click", () => {
-    const key = $("adminKey").value || "";
-    if (!key) return alert("Paste the admin key first.");
-    localStorage.setItem("adminKey", key);
-    alert("Saved.");
+    body: JSON.stringify({ recordId })
   });
+  loadDisputes();
+}
 
-  $("refresh").addEventListener("click", load);
-
-  $("copyDisputesCsv").addEventListener("click", async () => {
-    if (!state.lastData) return alert("Load data first.");
-    const rows = [["listingId","listing","seller","status","price","paid_at","pickup_confirmed_at","stripe_session_id","stripe_payment_intent","notes"]];
-    (state.lastData.disputes || []).forEach((d) => {
-      rows.push([
-        d.listingId || "",
-        (d.listing || "").replaceAll('"','""'),
-        (d.seller || "").replaceAll('"','""'),
-        (d.status || "").replaceAll('"','""'),
-        d.price || "",
-        d.paid_at || "",
-        d.pickup_confirmed_at || "",
-        d.stripe_session_id || "",
-        d.stripe_payment_intent || "",
-        (d.notes || "").replaceAll('"','""')
-      ]);
-    });
-
-    const csv = rows.map(r => r.map(v => `"${String(v)}"`).join(",")).join("\n");
-    try {
-      await navigator.clipboard.writeText(csv);
-      alert("Dispute CSV copied to clipboard.");
-    } catch (e) {
-      console.error(e);
-      alert("Copy failed. Your browser may block clipboard access.");
-    }
+async function loadDisputes() {
+  const data = await fetchDisputes();
+  const tbody = document.querySelector("#disputesTable tbody");
+  tbody.innerHTML = "";
+  (data.disputes || []).forEach(d => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${d.title}</td>
+      <td>${d.seller}</td>
+      <td>$${d.price}</td>
+      <td>${d.paidAt || "-"}</td>
+      <td><span class="badge badge-error">Disputed</span></td>
+      <td>${d.riskScore}</td>
+      <td><button class="btn btn-small btn-primary">Resolve</button></td>`;
+    tr.querySelector("button").onclick = () => resolveDispute(d.id);
+    tbody.appendChild(tr);
   });
+}
 
-  // boot: restore key if saved
-  const saved = localStorage.getItem("adminKey");
-  if (saved) $("adminKey").value = saved;
-})();
+document.getElementById("refreshDisputes").onclick = loadDisputes;
+
+document.getElementById("copyDisputes").onclick = async () => {
+  const data = await fetchDisputes();
+  const rows = [["Listing","Seller","Price","Paid Date","Risk"]];
+  (data.disputes || []).forEach(d => rows.push([d.title,d.seller,d.price,d.paidAt,d.riskScore]));
+  navigator.clipboard.writeText(rows.map(r => r.join(",")).join("\n"));
+  alert("Copied to clipboard");
+};
+
+loadDisputes();
 </script>
 </body>
 </html>

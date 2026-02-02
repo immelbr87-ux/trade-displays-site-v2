@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Showroom Market - Premium Floor Models at Wholesale Prices</title>
-  <meta name="description" content="Verified trade buyers. Verified inventory. Pickup-only from local showrooms. No shipping. No hassle.">
+  <title>SHOWROOM MARKET - Trade Floor Models at Wholesale Prices | B2B Marketplace</title>
+  <meta name="description" content="Plumbing, appliances, lighting, and tile from verified showrooms. Pickup-only floor models at 50%+ off retail. Trade professionals only.">
   <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="fixes.css">
+  <link rel="stylesheet" href="fixes.css">
 </head>
 <body>
   
@@ -14,61 +16,113 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <h1 class="hero-title">Premium Floor Models at Wholesale Prices</h1>
-      <p class="hero-subtitle">Verified trade buyers. Verified inventory. Pickup-only from local showrooms. No shipping. No hassle.</p>
-
-      <div class="trust-row" aria-label="Trust indicators">
-        <span class="trust-pill">✅ PICKUP-ONLY MODEL</span>
-        <span class="trust-pill">✅ TRADE VERIFIED</span>
-        <span class="trust-pill">✅ 24/7 ESCROW</span>
-        <span class="trust-pill">✅ AI AUTO POPULATED SPECS</span>
-      </div>
+      <h1 style="color: #111827;">Showroom Floor Models at Wholesale Prices</h1>
+      <p class="hero-subtitle">
+        Plumbing, appliances, lighting, and tile from verified showrooms.<br>
+        Pickup-only. No shipping. No hassle.
+      </p>
       <div class="hero-cta">
-        <a href="market.html" class="btn btn-primary">Browse Listings</a>
-        <a href="pilot-program.html" class="btn btn-secondary">List a Floor Model</a>
+        <a href="market.html" class="btn btn-primary">Browse Products</a>
+        <a href="pilot-program.html" class="btn btn-secondary">List Your Inventory</a>
       </div>
     </div>
   </section>
 
-  <!-- Top Categories (Grid) -->
-  <section class="home-categories">
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-number">🚚</span>
+      <span class="stat-label">Pickup-Only Model</span>
+      <span class="stat-sublabel">No shipping. Inspect in person.</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">👔</span>
+      <span class="stat-label">Trade Verified</span>
+      <span class="stat-sublabel">Licensed contractors, designers, builders only.</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">🔒</span>
+      <span class="stat-label">24/7 Escrow Protection</span>
+      <span class="stat-sublabel">Funds protected until pickup confirmed.</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">💰</span>
+      <span class="stat-label">50%+ Off Retail</span>
+      <span class="stat-sublabel">Premium plumbing, appliances, lighting, tile.</span>
+    </div>
+  </div>
+
+  <!-- Ticker Section -->
+  <div class="ticker-section">
+    <div class="ticker-wrapper">
+      <a href="market.html?category=plumbing" class="ticker-item">Plumbing & Fixtures <span>285 listings</span></a>
+      <a href="market.html?category=appliances" class="ticker-item">Appliances <span>68 listings</span></a>
+      <a href="market.html?category=lighting" class="ticker-item">Lighting <span>52 listings</span></a>
+      <a href="market.html?category=tile" class="ticker-item">Tile & Stone <span>43 listings</span></a>
+      <!-- Duplicate for seamless loop -->
+      <a href="market.html?category=plumbing" class="ticker-item">Plumbing & Fixtures <span>285 listings</span></a>
+      <a href="market.html?category=appliances" class="ticker-item">Appliances <span>68 listings</span></a>
+      <a href="market.html?category=lighting" class="ticker-item">Lighting <span>52 listings</span></a>
+      <a href="market.html?category=tile" class="ticker-item">Tile & Stone <span>43 listings</span></a>
+    </div>
+  </div>
+
+  <!-- Product Categories Section -->
+  <section class="categories-section">
     <div class="container">
       <div class="section-header">
-        <h2>Top Categories</h2>
-        <p>Premium floor models across major home categories</p>
+        <h2>Browse by Category</h2>
+        <p>Premium floor models from verified showrooms</p>
       </div>
-
-      <div class="home-category-grid">
-        <a class="home-category" href="market.html?category=kitchen-fixtures">
-          <div class="home-category-media" style="background-image: url('assets/cat-kitchen.jpg');"></div>
-          <div class="home-category-body">
-            <div class="home-category-title">Kitchen &amp; Fixtures</div>
-            <div class="home-category-count">200 items</div>
+      
+      <div class="categories-grid">
+        <a href="market.html?category=plumbing" class="category-card">
+          <div class="category-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2v6m0 0a3 3 0 0 1 3 3v11m-3-14a3 3 0 0 0-3 3v11m0 0H6m12 0h3"/>
+            </svg>
           </div>
+          <h3>Plumbing & Fixtures</h3>
+          <p class="category-desc">Sinks • Faucets • Showers • Tubs</p>
+          <p class="category-count">285 listings</p>
         </a>
-
-        <a class="home-category" href="market.html?category=bath-vanities">
-          <div class="home-category-media" style="background-image: url('assets/cat-bath.jpg');"></div>
-          <div class="home-category-body">
-            <div class="home-category-title">Bath &amp; Vanities</div>
-            <div class="home-category-count">180 items</div>
+        
+        <a href="market.html?category=appliances" class="category-card">
+          <div class="category-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <line x1="4" y1="9" x2="20" y2="9"/>
+              <circle cx="12" cy="15" r="3"/>
+            </svg>
           </div>
+          <h3>Appliances</h3>
+          <p class="category-desc">Refrigerators • Ranges • Dishwashers • Wine Coolers</p>
+          <p class="category-count">68 listings</p>
         </a>
-
-        <a class="home-category" href="market.html?category=appliances">
-          <div class="home-category-media" style="background-image: url('assets/cat-appliances.jpg');"></div>
-          <div class="home-category-body">
-            <div class="home-category-title">Appliances</div>
-            <div class="home-category-count">45 items</div>
+        
+        <a href="market.html?category=lighting" class="category-card">
+          <div class="category-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
           </div>
+          <h3>Lighting</h3>
+          <p class="category-desc">Chandeliers • Pendants • Sconces • Outdoor</p>
+          <p class="category-count">52 listings</p>
         </a>
-
-        <a class="home-category" href="market.html?category=lighting">
-          <div class="home-category-media" style="background-image: url('assets/cat-lighting.jpg');"></div>
-          <div class="home-category-body">
-            <div class="home-category-title">Lighting</div>
-            <div class="home-category-count">32 items</div>
+        
+        <a href="market.html?category=tile" class="category-card">
+          <div class="category-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
           </div>
+          <h3>Tile & Stone</h3>
+          <p class="category-desc">Slabs • Tile • Backsplash • Displays</p>
+          <p class="category-count">43 listings</p>
         </a>
       </div>
     </div>

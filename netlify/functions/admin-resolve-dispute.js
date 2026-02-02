@@ -1,10 +1,11 @@
+
 const {
   json,
   requireAdmin,
   airtablePatchRecord,
   airtableGetRecord,
-  canTransitionStatus,
 } = require("./_lib");
+const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
   const auth = requireAdmin(event);
@@ -15,37 +16,18 @@ exports.handler = async (event) => {
   }
 
   try {
-    const body = JSON.parse(event.body || "{}");
-    const { recordId } = body;
-
-    if (!recordId) {
-      return json(400, { error: "Missing recordId" });
-    }
+    const { recordId } = JSON.parse(event.body || "{}");
+    if (!recordId) return json(400, { error: "Missing recordId" });
 
     const baseId = process.env.AIRTABLE_BASE_ID;
     const table = process.env.AIRTABLE_TABLE || "Listings";
     const apiKey = process.env.AIRTABLE_API_KEY;
 
-    console.log("Resolving dispute for listing:", recordId);
+    const record = await airtableGetRecord({ baseId, table, recordId, apiKey });
+    const f = record.fields || {};
 
-    // Get current record
-    const record = await airtableGetRecord({
-      baseId,
-      table,
-      recordId,
-      apiKey,
-    });
-
-    const fields = record.fields || {};
-
-    if (!fields.chargeback_flag) {
-      return json(400, { error: "No active dispute on this listing" });
-    }
-
-    // Optional safety: Only allow status change if valid
-    const nextStatus = "Picked Up";
-    if (!canTransitionStatus(fields.status, nextStatus)) {
-      console.log("Status transition not allowed, keeping current status");
+    if (!f.chargeback_flag) {
+      return json(400, { error: "No active dispute" });
     }
 
     await airtablePatchRecord({
@@ -56,12 +38,35 @@ exports.handler = async (event) => {
       fields: {
         chargeback_flag: false,
         dispute_status: "resolved",
-        seller_payout_status: "Pending", // Re-enable payout
+        seller_payout_status: "Pending",
         dispute_resolved_at: new Date().toISOString(),
       },
     });
 
     console.log("Dispute resolved:", recordId);
+
+    if (process.env.MAILERSEND_API_KEY && (f.seller_email || f.showroom_email)) {
+      const toEmail = f.seller_email || f.showroom_email;
+
+      await fetch("https://api.mailersend.com/v1/email", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: {
+            email: process.env.MAILERSEND_FROM_EMAIL || "support@showroommarket.com",
+            name: "Showroom Market"
+          },
+          to: [{ email: toEmail }],
+          subject: "Dispute Resolved — Payout Reinstated",
+          text: `Good news — the payment dispute for your item "${f.title}" has been resolved. Your payout is now re-enabled and will be processed automatically.`,
+        }),
+      });
+
+      console.log("Seller notified:", toEmail);
+    }
 
     return json(200, { success: true });
   } catch (err) {

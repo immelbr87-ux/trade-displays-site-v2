@@ -748,7 +748,50 @@
     document.getElementById('pickupStart').addEventListener('change', function() {
       document.getElementById('pickupEnd').min = this.value;
     });
-  </script>
+  
+    // Create listing in Airtable via Netlify function (pilot/internal)
+    const listForm = document.getElementById('listProductForm');
+    if (listForm) {
+      listForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const btn = listForm.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+
+        const payload = {
+          title: (document.getElementById('productName')?.value || '').trim(),
+          brand: document.getElementById('brand')?.value || '',
+          sku: (document.getElementById('sku')?.value || '').trim(),
+          category: document.getElementById('category')?.value || '',
+          condition_grade: document.getElementById('condition')?.value || '',
+          price: Number(document.getElementById('price')?.value || 0),
+          description: (document.getElementById('description')?.value || '').trim(),
+          pickup_instructions: (document.getElementById('pickupInstructions')?.value || '').trim(),
+          pickup_window_start: document.getElementById('pickupStart')?.value || '',
+          pickup_window_end: document.getElementById('pickupEnd')?.value || ''
+        };
+
+        try {
+          const res = await fetch('/.netlify/functions/createListing', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (!res.ok || !data.ok) throw new Error(data.error || 'Listing create failed');
+
+          alert('Listing created! Redirecting to your listing...');
+          window.location.href = `/listing-details.html?id=${encodeURIComponent(data.id)}`;
+        } catch (err) {
+          console.error(err);
+          alert(err.message || 'Failed to create listing');
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+    }
+
+</script>
 
 </body>
 </html>

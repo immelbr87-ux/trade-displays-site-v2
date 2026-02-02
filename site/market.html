@@ -94,6 +94,58 @@
         </select>
       </div>
     </div>
+
+    <!-- Premium Buyer Alerts (90-mile default radius) -->
+    <section class="alert-card" id="alertCard">
+      <div class="alert-card__head">
+        <h3>Get new listing alerts</h3>
+        <p class="muted">Tell us what you want and we’ll email you when matching floor models are listed within 90 miles.</p>
+      </div>
+      <form id="alertForm" class="alert-form">
+        <div class="alert-grid">
+          <div class="form-group">
+            <label class="form-label" for="alertEmail">Email</label>
+            <input class="form-input" id="alertEmail" type="email" placeholder="you@company.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alertZip">ZIP Code</label>
+            <input class="form-input" id="alertZip" type="text" inputmode="numeric" placeholder="53092" required />
+            <div class="form-helper">Used for distance matching (90 miles)</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alertCategory">Category</label>
+            <select class="form-select" id="alertCategory" required>
+              <option value="">Select…</option>
+              <option value="Vanity">Vanity</option>
+              <option value="Faucet">Faucet</option>
+              <option value="Toilet">Toilet</option>
+              <option value="Shower">Shower</option>
+              <option value="Tub">Tub</option>
+              <option value="Sink">Sink</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="alertSku">SKU (optional)</label>
+            <input class="form-input" id="alertSku" type="text" placeholder="Exact SKU (optional)" />
+            <div class="form-helper">Leave blank to match similar listings</div>
+          </div>
+        </div>
+
+        <div class="alert-options">
+          <label class="check">
+            <input type="checkbox" id="alertSimilar" checked />
+            <span>Notify me of similar listings (brand/model/category)</span>
+          </label>
+          <div class="alert-radius">Radius: <strong>90 miles</strong></div>
+        </div>
+
+        <div class="alert-actions">
+          <button class="btn btn-primary" type="submit">Create alert</button>
+          <div id="alertMsg" class="muted"></div>
+        </div>
+      </form>
+    </section>
     
     <div id="resultsCount" style="margin: 2rem 0 1rem; color: var(--text-muted); font-weight: 500;">
       Loading...
@@ -132,6 +184,35 @@
     // ✅ Race-condition guard for loadDisplays()
     let isLoadingDisplays = false;
     let loadAbortController = null;
+
+    // Buyer alert signup
+    async function handleAlertSubmit(e) {
+      e.preventDefault();
+      const msg = document.getElementById('alertMsg');
+      msg.textContent = 'Creating alert...';
+      const payload = {
+        email: document.getElementById('alertEmail').value.trim(),
+        zip: document.getElementById('alertZip').value.trim(),
+        category: document.getElementById('alertCategory').value,
+        sku: document.getElementById('alertSku').value.trim(),
+        similar: document.getElementById('alertSimilar').checked,
+        radius_miles: 90,
+      };
+      try {
+        const res = await fetch('/.netlify/functions/createAlert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || 'Failed');
+        msg.textContent = 'Alert created. Check your email to confirm.';
+        document.getElementById('alertForm').reset();
+        document.getElementById('alertSimilar').checked = true;
+      } catch (err) {
+        msg.textContent = 'Could not create alert: ' + (err.message || 'error');
+      }
+    }
 
     // Fetch displays from Netlify Function
     async function loadDisplays() {
@@ -388,6 +469,10 @@
         currentSort = e.target.value;
         filterAndRenderDisplays();
       });
+
+      // Buyer alert signup
+      const alertForm = document.getElementById('alertForm');
+      if (alertForm) alertForm.addEventListener('submit', handleAlertSubmit);
       
       // Search input with debounce
       let searchTimeout;
