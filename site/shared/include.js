@@ -92,7 +92,7 @@ function initMegaMenu() {
     });
     panels.forEach(p => {
       const isActive = p.getAttribute('data-mega-panel') === key;
-      p.classList.toggle('active', isActive);
+      p.classList.toggle('is-open', isActive);
       p.setAttribute('aria-hidden', isActive ? 'false' : 'true');
     });
   }
