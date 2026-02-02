@@ -270,31 +270,3 @@ section h1 {
     max-width: 100% !important;
   }
 }
-
-/* ===== UPDATED TRUST INDICATORS (STATS BAR) ===== */
-.stat-sublabel {
-  display: block;
-  font-size: 11px !important;
-  color: #6b7280 !important;
-  margin-top: 4px !important;
-  line-height: 1.4 !important;
-}
-
-.stat-number {
-  font-size: 28px !important;
-}
-
-/* ===== CATEGORY DESCRIPTION ===== */
-.category-desc {
-  font-size: 13px !important;
-  color: #6b7280 !important;
-  margin: 8px 0 4px 0 !important;
-  line-height: 1.4 !important;
-}
-
-.category-count {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #00b85c !important;
-  margin-top: 4px !important;
-}

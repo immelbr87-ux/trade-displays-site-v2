@@ -1,126 +1,352 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reserve • Showroom Market</title>
-  <link rel="stylesheet" href="/app.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservation Confirmed - SHOWROOM MARKET</title>
+  <meta name="description" content="Your reservation is confirmed. Funds held in escrow. View pickup details, showroom contact, and inspection checklist. Ready to complete your K&B purchase.">
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="fixes.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="topbar">
-      <div class="topbar-inner">
-        <a class="brand" href="/market.html">
-          <div class="brand-mark">S</div>
-          <div class="brand-text">
-            <div class="brand-name">Showroom Market</div>
-            <div class="brand-sub">Verified Pickup Marketplace</div>
+  
+  <!-- Header inserted via include.js -->
+  
+  <section class="container" style="padding: 3rem 0;">
+    <div style="max-width: 900px; margin: 0 auto;">
+      <h1 style="margin-bottom: 0.5rem;">Confirm Your Reservation</h1>
+      <p style="color: var(--text-muted); margin-bottom: 3rem;">Complete your information to reserve this display.</p>
+      
+      <div id="confirmationForm">
+        <!-- Loading/Error States -->
+        <div id="loadingState" class="loading">
+          <div class="spinner"></div>
+          <p>Loading reservation details...</p>
+        </div>
+        
+        <div id="errorState" class="hidden alert alert-error">
+          <strong>Error:</strong> No reservation data found. Please <a href="market.html" style="color: inherit; text-decoration: underline;">browse displays</a> and try again.
+        </div>
+        
+        <!-- Main Form (hidden initially) -->
+        <div id="mainForm" class="hidden" style="display: grid; grid-template-columns: 1fr 400px; gap: 3rem;">
+          <!-- Left Column - Form -->
+          <div>
+            <!-- Contact Information -->
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+              <h3 style="margin-bottom: 1.5rem;">Contact Information</h3>
+              
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-input" id="fullName" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Email *</label>
+                  <input type="email" class="form-input" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Phone *</label>
+                  <input type="tel" class="form-input" id="phone" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Company Name *</label>
+                <input type="text" class="form-input" id="company" required>
+              </div>
+            </div>
+            
+            <!-- Event/Delivery Details -->
+            <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+              <h3 style="margin-bottom: 1.5rem;" id="deliveryTitle">Event Details</h3>
+              
+              <div class="form-group" id="eventNameGroup">
+                <label class="form-label">Event Name *</label>
+                <input type="text" class="form-input" id="eventName" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" id="eventDatesGroup">
+                <div class="form-group">
+                  <label class="form-label">Start Date *</label>
+                  <input type="date" class="form-input" id="startDate" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">End Date *</label>
+                  <input type="date" class="form-input" id="endDate" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Delivery Address *</label>
+                <input type="text" class="form-input" id="address" placeholder="Street Address" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">City *</label>
+                  <input type="text" class="form-input" id="city" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">State *</label>
+                  <input type="text" class="form-input" id="state" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">ZIP *</label>
+                  <input type="text" class="form-input" id="zip" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Special Instructions</label>
+                <textarea class="form-textarea" id="instructions" placeholder="Loading dock access, contact person, etc."></textarea>
+              </div>
+            </div>
+            
+            <!-- Payment Information (Mock) -->
+            <div class="card" style="padding: 2rem;">
+              <h3 style="margin-bottom: 1.5rem;">Payment Information</h3>
+              
+              <div class="alert alert-warning" style="margin-bottom: 1.5rem;">
+                <strong>Note:</strong> This is a demo. No real payment will be processed.
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Card Number *</label>
+                <input type="text" class="form-input" placeholder="1234 5678 9012 3456" required>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Exp. Month *</label>
+                  <input type="text" class="form-input" placeholder="MM" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Exp. Year *</label>
+                  <input type="text" class="form-input" placeholder="YY" required>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">CVV *</label>
+                  <input type="text" class="form-input" placeholder="123" required>
+                </div>
+              </div>
+            </div>
           </div>
-        </a>
+          
+          <!-- Right Column - Order Summary -->
+          <div>
+            <div class="card" style="padding: 2rem; position: sticky; top: 100px;">
+              <h3 style="margin-bottom: 1.5rem;">Order Summary</h3>
+              
+              <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);">
+                <div style="width: 100%; aspect-ratio: 1; background: var(--bg); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden;">
+                  <img id="summaryImage" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <h4 id="summaryName" style="margin-bottom: 0.5rem;">-</h4>
+                <p id="summarySKU" style="color: var(--text-muted); font-size: 0.875rem;">-</p>
+              </div>
+              
+              <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span id="priceLabel">Price</span>
+                  <span id="priceValue">$0</span>
+                </div>
+                <div id="durationRow" class="hidden" style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                  <span>Duration</span>
+                  <span id="durationValue">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-muted);">
+                  <span>Shipping</span>
+                  <span>Calculated at checkout</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-muted);">
+                  <span>Processing Fee</span>
+                  <span id="processingFee">$0</span>
+                </div>
+              </div>
+              
+              <div style="padding-top: 1.5rem; border-top: 2px solid var(--border); margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.25rem; font-weight: 700;">Total</span>
+                  <span id="totalPrice" style="font-size: 1.75rem; font-weight: 900; color: var(--accent);">$0</span>
+                </div>
+              </div>
+              
+              <button id="submitBtn" class="btn btn-primary w-full" style="padding: 1.25rem; font-size: 1.125rem;">
+                Complete Reservation
+              </button>
+              
+              <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
+                By completing this reservation, you agree to our Terms of Service and Privacy Policy.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main class="section" style="max-width: 900px;">
-    <div class="card">
-      <h2 style="margin-bottom: 8px;">Reserve this listing</h2>
-      <p style="margin-bottom: 18px;">
-        Confirm your details, then you’ll be redirected to secure checkout. Pickup is verified in-person.
-      </p>
+  <!-- Footer inserted via include.js -->
+  
+  <script src="shared/include.js"></script>
+  <script>
+    let reservationData = null;
 
-      <form id="reserveForm">
-        <div class="grid grid-2" style="gap: 16px;">
-          <div class="form-group">
-            <label class="form-label" for="customer_name">Full Name</label>
-            <input class="form-input" id="customer_name" type="text" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="buyer_company">Company (optional)</label>
-            <input class="form-input" id="buyer_company" type="text" />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="customer_email">Email</label>
-            <input class="form-input" id="customer_email" type="email" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="customer_phone">Phone (optional)</label>
-            <input class="form-input" id="customer_phone" type="tel" />
-          </div>
-        </div>
-
-        <div class="alert alert-warning" style="margin-top: 12px;">
-          You will not be charged if you cancel on the Stripe checkout page.
-        </div>
-
-        <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
-          <button class="btn btn-primary" type="submit" id="payBtn">Continue to Checkout</button>
-          <a class="btn btn-outline" id="backBtn" href="/market.html">Back</a>
-        </div>
-      </form>
-
-      <div class="loading hidden" id="loading">
-        <div class="spinner"></div>
-        Redirecting to checkout…
-      </div>
-
-      <div class="alert alert-error hidden" id="errorBox"></div>
-    </div>
-  </main>
-
-<script>
-(function(){
-  const qs = new URLSearchParams(location.search);
-  const listingId = qs.get("displayId") || qs.get("id") || qs.get("listingId");
-  const backBtn = document.getElementById("backBtn");
-  if (listingId) backBtn.href = `/listing-details.html?id=${encodeURIComponent(listingId)}`;
-
-  const form = document.getElementById("reserveForm");
-  const loading = document.getElementById("loading");
-  const errBox = document.getElementById("errorBox");
-  const payBtn = document.getElementById("payBtn");
-
-  if(!listingId){
-    errBox.classList.remove("hidden");
-    errBox.textContent = "Missing listing id. Return to the market and try again.";
-    payBtn.disabled = true;
-    return;
-  }
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    errBox.classList.add("hidden");
-    payBtn.disabled = true;
-    loading.classList.remove("hidden");
-
-    const payload = {
-      listingId,
-      origin: location.origin,
-      customer_name: document.getElementById("customer_name").value.trim(),
-      buyer_company: document.getElementById("buyer_company").value.trim(),
-      customer_email: document.getElementById("customer_email").value.trim(),
-      customer_phone: document.getElementById("customer_phone").value.trim()
-    };
-
-    try{
-      const res = await fetch("/.netlify/functions/createCheckoutSession", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if(!res.ok || !data.url){
-        throw new Error(data.error || "Checkout session failed");
+    // Load reservation data
+    function loadReservationData() {
+      const data = sessionStorage.getItem('reservationData');
+      
+      if (!data) {
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('errorState').classList.remove('hidden');
+        return;
       }
-      window.location.href = data.url;
-    }catch(err){
-      console.error(err);
-      loading.classList.add("hidden");
-      errBox.classList.remove("hidden");
-      errBox.textContent = err.message || "Checkout failed. Please try again.";
-      payBtn.disabled = false;
+      
+      reservationData = JSON.parse(data);
+      
+      // Update UI for purchase vs rental
+      if (reservationData.listingType === 'buy') {
+        document.getElementById('deliveryTitle').textContent = 'Delivery Details';
+        document.getElementById('eventNameGroup').classList.add('hidden');
+        document.getElementById('eventDatesGroup').classList.add('hidden');
+      }
+      
+      // Populate order summary
+      populateOrderSummary();
+      
+      // Show form
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('mainForm').classList.remove('hidden');
     }
-  });
-})();
-</script>
+
+    // Populate order summary
+    function populateOrderSummary() {
+      document.getElementById('summaryName').textContent = reservationData.displayName;
+      document.getElementById('summarySKU').textContent = `SKU: ${reservationData.displayId}`;
+      document.getElementById('summaryImage').src = 'https://via.placeholder.com/400';
+      
+      if (reservationData.listingType === 'rent') {
+        document.getElementById('priceLabel').textContent = 'Weekly Rate';
+        document.getElementById('priceValue').textContent = `$${reservationData.price.toLocaleString()}`;
+        document.getElementById('durationRow').classList.remove('hidden');
+        document.getElementById('durationValue').textContent = `${reservationData.duration} ${reservationData.duration === 1 ? 'week' : 'weeks'}`;
+      } else {
+        document.getElementById('priceLabel').textContent = 'Purchase Price';
+        document.getElementById('priceValue').textContent = `$${reservationData.price.toLocaleString()}`;
+      }
+      
+      const processingFee = Math.round(reservationData.totalPrice * 0.03);
+      document.getElementById('processingFee').textContent = `$${processingFee.toLocaleString()}`;
+      document.getElementById('totalPrice').textContent = `$${(reservationData.totalPrice + processingFee).toLocaleString()}`;
+    }
+
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', () => {
+      loadReservationData();
+      
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      const startDateInput = document.getElementById('startDate');
+      const endDateInput = document.getElementById('endDate');
+      
+      if (startDateInput) startDateInput.min = today;
+      if (endDateInput) endDateInput.min = today;
+      
+      // Validate end date is after start date
+      if (startDateInput) {
+        startDateInput.addEventListener('change', () => {
+          if (endDateInput) endDateInput.min = startDateInput.value;
+        });
+      }
+      
+      // Form submission
+      document.getElementById('submitBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        // Basic validation
+        const requiredFields = document.querySelectorAll('#mainForm [required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            isValid = false;
+            field.style.borderColor = 'var(--error)';
+          } else {
+            field.style.borderColor = 'var(--border)';
+          }
+        });
+        
+        if (!isValid) {
+          alert('Please fill in all required fields');
+          return;
+        }
+        
+        // Prepare submission data
+        const submissionData = {
+          display: reservationData,
+          contact: {
+            name: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            company: document.getElementById('company').value
+          },
+          delivery: {
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            zip: document.getElementById('zip').value,
+            instructions: document.getElementById('instructions').value
+          }
+        };
+        
+        if (reservationData.listingType === 'rent') {
+          submissionData.event = {
+            name: document.getElementById('eventName').value,
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value
+          };
+        }
+        
+        // Show loading state
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+        
+        try {
+          // Call Netlify Function to create display/reservation
+          const response = await fetch('/.netlify/functions/createDisplay', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionData)
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            // Clear session storage
+            sessionStorage.removeItem('reservationData');
+            
+            // Show success and redirect
+            alert('Reservation confirmed! You will receive a confirmation email shortly.');
+            window.location.href = 'index.html';
+          } else {
+            throw new Error(result.error || 'Reservation failed');
+          }
+        } catch (error) {
+          console.error('Error submitting reservation:', error);
+          alert('There was an error processing your reservation. Please try again.');
+          btn.disabled = false;
+          btn.textContent = 'Complete Reservation';
+        }
+      });
+    });
+  </script>
 </body>
 </html>

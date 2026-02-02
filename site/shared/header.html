@@ -1,88 +1,155 @@
-<header class="site-header">
+<!-- Showroom Market — Premium Mega Menu Header -->
+<header class="site-header" id="siteHeader">
   <div class="topbar">
     <div class="topbar-inner">
-
-      <a href="/" class="brand">
-        <div class="brand-mark">SM</div>
-        <div class="brand-text">
-          <div class="brand-name">SHOWROOM MARKET</div>
-          <div class="brand-sub">Pickup-Only Floor Models</div>
-        </div>
+      <a class="brand" href="/">
+        <span class="brand-mark">SM</span>
+        <span class="brand-text">
+          <span class="brand-name">SHOWROOM MARKET</span>
+          <span class="brand-sub">Pickup-Only Floor Models</span>
+        </span>
       </a>
 
-      <div class="search">
+      <div class="search" role="search">
         <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search vanities, tubs, lighting, appliances…" />
+        <input id="headerSearch" type="search" placeholder="Search brands, SKUs, categories…" aria-label="Search" />
       </div>
 
-      <nav class="main-nav">
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="megaNav">
+        <span></span><span></span><span></span>
+      </button>
 
-        <div class="nav-item has-mega">
-          <button>Bathroom</button>
-          <div class="mega-menu">
-            <div class="mega-col">
-              <h4>Shop Bathroom</h4>
-              <a href="#">Bathroom Faucets</a>
-              <a href="#">Bathroom Sinks</a>
-              <a href="#">Showers</a>
-              <a href="#">Vanities</a>
-              <a href="#">Toilets</a>
-              <a href="#">Bathtubs</a>
-              <a href="#">Shop All Bathroom →</a>
-            </div>
-          </div>
+      <nav class="topnav" id="megaNav" aria-label="Primary">
+        <button class="nav-item" data-menu="bathroom" aria-haspopup="true" aria-expanded="false">Bathroom</button>
+        <button class="nav-item" data-menu="kitchen" aria-haspopup="true" aria-expanded="false">Kitchen</button>
+        <button class="nav-item" data-menu="lighting" aria-haspopup="true" aria-expanded="false">Lighting</button>
+        <button class="nav-item" data-menu="fans" aria-haspopup="true" aria-expanded="false">Fans</button>
+        <button class="nav-item" data-menu="appliances" aria-haspopup="true" aria-expanded="false">Appliances</button>
+
+        <div class="header-cta-group">
+          <a class="btn-grey" href="/pilot-program.html">List a Floor Model</a>
+          <a class="btn-green" href="/market.html">Browse Listings</a>
         </div>
-
-        <div class="nav-item has-mega">
-          <button>Kitchen</button>
-          <div class="mega-menu">
-            <div class="mega-col">
-              <h4>Shop Kitchen</h4>
-              <a href="#">Kitchen Faucets</a>
-              <a href="#">Kitchen Sinks</a>
-              <a href="#">Kitchen Appliances</a>
-              <a href="#">Kitchen Lighting</a>
-              <a href="#">Shop All Kitchen →</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="nav-item has-mega">
-          <button>Lighting</button>
-          <div class="mega-menu">
-            <div class="mega-col">
-              <h4>Shop Lighting</h4>
-              <a href="#">Vanity Lighting</a>
-              <a href="#">Chandeliers</a>
-              <a href="#">Pendants</a>
-              <a href="#">Wall Sconces</a>
-              <a href="#">Outdoor Lighting</a>
-              <a href="#">Shop All Lighting →</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="nav-item has-mega">
-          <button>Appliances</button>
-          <div class="mega-menu">
-            <div class="mega-col">
-              <h4>Shop Appliances</h4>
-              <a href="#">Refrigerators</a>
-              <a href="#">Ranges & Ovens</a>
-              <a href="#">Dishwashers</a>
-              <a href="#">Wine Coolers</a>
-              <a href="#">Shop All Appliances →</a>
-            </div>
-          </div>
-        </div>
-
       </nav>
+    </div>
+  </div>
 
-      <div class="header-cta-group">
-        <a href="/market.html" class="btn-green">Browse Listings</a>
+  <div class="mega" id="mega" aria-hidden="true">
+    <div class="mega-inner">
+
+      <!-- Bathroom -->
+      <div class="mega-panel" data-panel="bathroom">
+        <div class="mega-grid">
+          <div class="mega-col">
+            <div class="mega-title">Bathroom</div>
+            <a class="mega-link" href="/market.html?category=Bathroom%20Faucets">Bathroom Faucets</a>
+            <a class="mega-link" href="/market.html?category=Bathroom%20Sinks">Bathroom Sinks</a>
+            <a class="mega-link" href="/market.html?category=Showers">Showers</a>
+            <a class="mega-link" href="/market.html?category=Bathroom%20Vanities">Bathroom Vanities</a>
+            <a class="mega-link" href="/market.html?category=Toilets">Toilets</a>
+            <a class="mega-link" href="/market.html?category=Bathtubs">Bathtubs</a>
+            <a class="mega-link mega-link-strong" href="/market.html?dept=Bathroom">Shop All Bathroom →</a>
+          </div>
+          <div class="mega-card">
+            <div class="mega-card-img" style="background-image:url('/assets/nav-bathroom.jpg');"></div>
+            <div class="mega-card-body">
+              <div class="mega-card-kicker">Verified inventory</div>
+              <div class="mega-card-title">Vanities, toilets, tubs & fixtures — pickup only.</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <button class="mobile-menu-toggle">☰</button>
+      <!-- Kitchen -->
+      <div class="mega-panel" data-panel="kitchen">
+        <div class="mega-grid">
+          <div class="mega-col">
+            <div class="mega-title">Kitchen</div>
+            <a class="mega-link" href="/market.html?category=Kitchen%20Faucets">Kitchen Faucets</a>
+            <a class="mega-link" href="/market.html?category=Kitchen%20Sinks">Kitchen Sinks</a>
+            <a class="mega-link" href="/market.html?category=Bar%20Faucets">Bar Faucets</a>
+            <a class="mega-link" href="/market.html?category=Bar%20%26%20Prep%20Sinks">Bar &amp; Prep Sinks</a>
+            <a class="mega-link" href="/market.html?category=Kitchen%20Appliances">Kitchen Appliances</a>
+            <a class="mega-link" href="/market.html?category=Kitchen%20Lighting">Kitchen Lighting</a>
+            <a class="mega-link mega-link-strong" href="/market.html?dept=Kitchen">Shop All Kitchen →</a>
+          </div>
+          <div class="mega-card">
+            <div class="mega-card-img" style="background-image:url('/assets/nav-kitchen.jpg');"></div>
+            <div class="mega-card-body">
+              <div class="mega-card-kicker">Trade-only pricing</div>
+              <div class="mega-card-title">Faucets, sinks, appliances and more — local pickup.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lighting -->
+      <div class="mega-panel" data-panel="lighting">
+        <div class="mega-grid">
+          <div class="mega-col">
+            <div class="mega-title">Lighting</div>
+            <a class="mega-link" href="/market.html?category=Vanity%20Lighting">Vanity Lighting</a>
+            <a class="mega-link" href="/market.html?category=Chandeliers">Chandeliers</a>
+            <a class="mega-link" href="/market.html?category=Pendants">Pendants</a>
+            <a class="mega-link" href="/market.html?category=Flush%20%26%20Semi-Flush">Flush &amp; Semi-Flush Mount</a>
+            <a class="mega-link" href="/market.html?category=Wall%20Sconces">Wall Sconces</a>
+            <a class="mega-link" href="/market.html?category=Outdoor%20Lighting">Outdoor Lighting</a>
+            <a class="mega-link mega-link-strong" href="/market.html?dept=Lighting">Shop All Lighting →</a>
+          </div>
+          <div class="mega-card">
+            <div class="mega-card-img" style="background-image:url('/assets/nav-lighting.jpg');"></div>
+            <div class="mega-card-body">
+              <div class="mega-card-kicker">Premium fixtures</div>
+              <div class="mega-card-title">Chandeliers, pendants and more — verified listings.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fans -->
+      <div class="mega-panel" data-panel="fans">
+        <div class="mega-grid">
+          <div class="mega-col">
+            <div class="mega-title">Fans</div>
+            <a class="mega-link" href="/market.html?category=Ceiling%20Fans">Ceiling Fans</a>
+            <a class="mega-link" href="/market.html?category=Ceiling%20Fans%20with%20Light">Ceiling Fans with Light</a>
+            <a class="mega-link" href="/market.html?category=Outdoor%20Ceiling%20Fans">Outdoor Ceiling Fans</a>
+            <a class="mega-link" href="/market.html?category=Smart%20Ceiling%20Fans">Smart Ceiling Fans</a>
+            <a class="mega-link mega-link-strong" href="/market.html?dept=Fans">Shop All Fans →</a>
+          </div>
+          <div class="mega-card">
+            <div class="mega-card-img" style="background-image:url('/assets/nav-fans.jpg');"></div>
+            <div class="mega-card-body">
+              <div class="mega-card-kicker">Quiet &amp; efficient</div>
+              <div class="mega-card-title">Ceiling fans for indoor, outdoor, and smart homes — pickup only.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appliances -->
+      <div class="mega-panel" data-panel="appliances">
+        <div class="mega-grid">
+          <div class="mega-col">
+            <div class="mega-title">Appliances</div>
+            <a class="mega-link" href="/market.html?category=Refrigeration">All Refrigeration Appliances</a>
+            <a class="mega-link" href="/market.html?category=Cooking">All Cooking Appliances</a>
+            <a class="mega-link" href="/market.html?category=Dishwashers">Dishwashers</a>
+            <a class="mega-link" href="/market.html?category=Ice%20Makers">Ice Makers</a>
+            <a class="mega-link" href="/market.html?category=Range%20Hoods">Range Hoods</a>
+            <a class="mega-link" href="/market.html?category=Laundry">Laundry</a>
+            <a class="mega-link mega-link-strong" href="/market.html?dept=Appliances">Shop All Appliances →</a>
+          </div>
+          <div class="mega-card">
+            <div class="mega-card-img" style="background-image:url('/assets/nav-appliances.jpg');"></div>
+            <div class="mega-card-body">
+              <div class="mega-card-kicker">High-end brands</div>
+              <div class="mega-card-title">Sub-Zero, Wolf, Thermador and more — local pickup.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </header>
