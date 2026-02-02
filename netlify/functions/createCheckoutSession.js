@@ -1,98 +1,77 @@
-// netlify/functions/createCheckoutSession.js
-// Creates a Stripe Checkout Session for a listing.
-// Also marks listing as Reserved (Active -> Reserved) before redirecting.
-//
-// Expects POST JSON:
-//  { listingId, customer_email?, customer_name?, customer_phone?, buyer_company?, origin? }
-//
-// Required env vars:
-//   STRIPE_SECRET_KEY
-//   AIRTABLE_API_KEY
-//   AIRTABLE_BASE_ID
-//   SITE_URL (fallback for success/cancel URLs)
-
 const Stripe = require("stripe");
-const { json, airtableGetRecord, airtablePatchRecord, canTransitionStatus, pick } = require("./_lib");
+const fetch = require("node-fetch");
+
 const config = require("./_config");
+const { ok, error } = require("./_response");
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+console.log("createCheckoutSession function loaded");
 
-function corsHeaders() {
-  return {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Content-Type": "application/json"
-  };
-}
+const stripe = new Stripe(config.stripeSecretKey);
 
 exports.handler = async (event) => {
-  const headers = corsHeaders();
+  console.log("createCheckoutSession start", { method: event.httpMethod });
 
-  if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers, body: "" };
-  if (event.httpMethod !== "POST") return { statusCode: 405, headers, body: JSON.stringify({ error: "Method Not Allowed" }) };
+  if (event.httpMethod !== "POST") {
+    return error("Method Not Allowed", 405);
+  }
 
   try {
-    const body = JSON.parse(event.body || "{}");
-    const listingId = body.listingId;
-    if (!listingId) return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing listingId" }) };
+    const { listingId } = JSON.parse(event.body || "{}");
+    console.log("Incoming listingId:", listingId);
 
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const apiKey = process.env.AIRTABLE_API_KEY;
-
-    const rec = await airtableGetRecord({ baseId, table: "Listings", recordId: listingId, apiKey });
-    const f = rec.fields || {};
-
-    const title = pick(f, ["title", "product_name", "name"], "Showroom Listing");
-    const priceUsd = Number(pick(f, ["price", "sale_price"], 0)) || 0;
-    const priceCents = Math.round(priceUsd * 100);
-
-    if (!priceCents || priceCents < 50) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid listing price" }) };
+    if (!listingId) {
+      return error("Missing listingId");
     }
 
-    // Mark as Reserved if possible
-    const currentStatus = f.status || "Active";
-    if (currentStatus === "Active") {
-      await airtablePatchRecord({
-        baseId,
-        table: "Listings",
-        recordId: listingId,
-        apiKey,
-        fields: { status: "Reserved", reserved_at: new Date().toISOString() }
-      });
+    const airtableUrl = `https://api.airtable.com/v0/${config.airtableBaseId}/Listings/${listingId}`;
+    console.log("Fetching Airtable record:", airtableUrl);
+
+    const airtableRes = await fetch(airtableUrl, {
+      headers: { Authorization: `Bearer ${config.airtableApiKey}` }
+    });
+
+    const airtableData = await airtableRes.json();
+    console.log("Airtable response received");
+
+    if (!airtableData.fields) {
+      return error("Listing not found", 404);
     }
 
-    // Success/cancel URLs: use request origin if provided, else SITE_URL
-    const origin = (body.origin || "").trim() || (event.headers?.origin || event.headers?.Origin || "").trim() || config.siteUrl;
-    const successUrl = `${origin.replace(/\/$/, "")}/success.html?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${origin.replace(/\/$/, "")}/cancel.html?listingId=${encodeURIComponent(listingId)}`;
+    const listing = airtableData.fields;
+
+    if (listing.locked) {
+      return error("Listing under review.", 403);
+    }
+
+    if (listing.status !== "Active") {
+      return error("Item not available.", 409);
+    }
+
+    const priceCents = Math.round(Number(listing.price) * 100);
+    console.log("Calculated price (cents):", priceCents);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      payment_method_types: ["card"],
-      customer_email: body.customer_email || undefined,
+      automatic_payment_methods: { enabled: true },
       line_items: [{
         price_data: {
           currency: "usd",
-          product_data: { name: title },
+          product_data: { name: listing.title || "Showroom Listing" },
           unit_amount: priceCents
         },
         quantity: 1
       }],
-      metadata: {
-        listingId,
-        customer_name: body.customer_name || "",
-        customer_phone: body.customer_phone || "",
-        buyer_company: body.buyer_company || ""
-      },
-      success_url: successUrl,
-      cancel_url: cancelUrl
+      metadata: { listingId },
+      success_url: `${config.siteUrl}/success.html`,
+      cancel_url: `${config.siteUrl}/cancel.html`,
     });
 
-    return { statusCode: 200, headers, body: JSON.stringify({ url: session.url }) };
+    console.log("Stripe session created:", session.id);
+
+    return ok({ url: session.url });
+
   } catch (err) {
-    console.error("createCheckoutSession error:", err?.message || err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: "Checkout failed" }) };
+    console.error("Checkout error:", err);
+    return error("Checkout failed", 500);
   }
 };
