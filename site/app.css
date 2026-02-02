@@ -2214,3 +2214,22 @@ canvas {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== MEGA MENU BACKDROP ===== */
+.mega-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+  z-index: 999;
+}
+
+.site-header.mega-open .mega-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
